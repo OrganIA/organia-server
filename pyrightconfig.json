@@ -1,0 +1,15 @@
+{
+	"verboseOutput": false,
+	"reportMissingImports": "warning",
+	"reportMissingModuleSource": false,
+	"reportGeneralTypeIssues": false,
+	"reportUnboundVariable": "warning",
+	"executionEnvironments": [
+		{
+			"root": "app"
+		}, {
+			"root": "app/tests",
+			"extraPaths": ["app"]
+		}
+	]
+}
