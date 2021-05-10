@@ -33,6 +33,7 @@ class Base_:
 
     @classmethod
     def updater(cls, attribute):
+        """Register a method as a setter for use in `Base.update`"""
         def decorator(f):
             @wraps(f)
             def decorated(*args, **kwargs):
@@ -41,8 +42,10 @@ class Base_:
             return decorated
         return decorator
 
-    def update(self, d: dict):
-        for key, value in d.items():
+    def update(self, data, update_schema=False):
+        if update_schema:
+            data = data.dict(exclude_unset=True)
+        for key, value in data.items():
             if key in self.updaters:
                 self.updaters[key](self, value)
             else:
@@ -64,7 +67,7 @@ def get_or_404(*args, **kwargs):
     return result
 
 
-Base = orm.declarative_base(cls=Base_)
+Base: Base_ = orm.declarative_base(cls=Base_)
 engine = sa.create_engine('sqlite:///./app.db', echo=True)
 Session = orm.sessionmaker(bind=engine)
 session = Session()

@@ -26,7 +26,6 @@ async def create_user(user: UserCreateSchema):
 @router.post('/{user_id}')
 async def update_user(user_id: int, data: UserUpdateSchema):
     user = db.get_or_404(User, user_id)
-    data = data.dict(exclude_unset=True)
-    user.update(data)
+    user.update(data, update_schema=True)
     db.session.commit()
     return await get_user(user_id)
