@@ -1,4 +1,5 @@
 from app import db
+from app.errors import AlreadyTakenError
 from app.models import User, UserCreateSchema
 from . import router
 
@@ -15,6 +16,7 @@ async def get_user(user_id: int):
 
 @router.post('/', status_code=201)
 async def create_user(user: UserCreateSchema):
+    AlreadyTakenError.check(User, 'email', user.email)
     user = User(name=user.name, email=user.email)
     db.session.add(user)
     db.session.commit()
