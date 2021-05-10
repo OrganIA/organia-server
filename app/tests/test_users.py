@@ -5,6 +5,7 @@ from app.api import PREFIX
 
 client = TestClient(app)
 
+
 def test_users():
     response = client.get(f'{PREFIX}/users')
     assert response.status_code == 200
