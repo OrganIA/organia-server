@@ -7,7 +7,7 @@ class User(TimedMixin, Base):
     email = sa.Column(sa.String, nullable=False, unique=True)
 
 
-class UserSchema(Schema):
+class UserSchema(TimedMixin.Schema):
     name: str
     email: str
 
