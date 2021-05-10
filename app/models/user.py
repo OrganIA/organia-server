@@ -18,4 +18,4 @@ class UserSchema(Schema):
 class UserCreateSchema(Schema):
     name: str
     email: str
-    password: str
+    # password: str
