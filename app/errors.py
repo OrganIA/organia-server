@@ -1,5 +1,6 @@
 from fastapi import HTTPException
 
+
 class AlreadyTakenError(HTTPException):
     def __init__(self, key, value):
         super().__init__(
@@ -7,7 +8,7 @@ class AlreadyTakenError(HTTPException):
         )
 
     @classmethod
-    def check(cls, model, column, value):
+    def check(cls, model, column, value, filters=None):
         """Check for unique constraints
 
         Fast way to check if inserting a new row in table `model` with field
@@ -15,5 +16,15 @@ class AlreadyTakenError(HTTPException):
         error accordingly if it will, otherwise do nothing
         """
         from app import db
-        if db.session.query(model).filter_by(**{column: value}).first():
+        query = db.session.query(model)
+        if filters:
+            query = query.filter(filters)
+        if query.filter_by(**{column: value}).first():
             raise cls(column, value)
+
+
+class NotFoundError(HTTPException):
+    def __init__(self, msg=None):
+        super().__init__(
+            status_code=404, detail=msg or 'Not found.'
+        )

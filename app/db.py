@@ -1,14 +1,9 @@
 from datetime import datetime
+from functools import wraps
 from typing import Optional
 from pydantic import BaseModel as Schema
 import sqlalchemy as sa
 from sqlalchemy import orm
-
-
-def camel_to_snake(s: str) -> str:
-    return ''.join([
-        f'_{c.lower()}' if c.isupper() else c for c in s
-    ]).lstrip('_')
 
 
 @orm.declarative_mixin
@@ -29,13 +24,47 @@ class TimedMixin(IdMixin):
         updated_at: Optional[datetime]
 
 
-class NamedBase:
+class Base_:
+    updaters = {}
+
     @orm.declared_attr
     def __tablename__(cls):
         return f'{camel_to_snake(cls.__name__)}s'
 
+    @classmethod
+    def updater(cls, attribute):
+        def decorator(f):
+            @wraps(f)
+            def decorated(*args, **kwargs):
+                cls.updaters[attribute] = f
+                return f(*args, **kwargs)
+            return decorated
+        return decorator
 
-Base = orm.declarative_base(cls=NamedBase)
+    def update(self, d: dict):
+        for key, value in d.items():
+            if key in self.updaters:
+                self.updaters[key](self, value)
+            else:
+                setattr(self, key, value)
+
+
+def camel_to_snake(s: str) -> str:
+    return ''.join([
+        f'_{c.lower()}' if c.isupper() else c for c in s
+    ]).lstrip('_')
+
+
+def get_or_404(*args, **kwargs):
+    """Calls sqlalchemy.session.get and raises a 404 if nothing is found"""
+    from app.errors import NotFoundError
+    result = session.get(*args, **kwargs)
+    if result is None:
+        raise NotFoundError
+    return result
+
+
+Base = orm.declarative_base(cls=Base_)
 engine = sa.create_engine('sqlite:///./app.db', echo=True)
 Session = orm.sessionmaker(bind=engine)
 session = Session()
