@@ -24,7 +24,7 @@ class TimedMixin(IdMixin):
 class NamedBase:
     @orm.declared_attr
     def __tablename__(cls):
-        return camel_to_snake(cls.__name__) + 's'
+        return f'{camel_to_snake(cls.__name__)}s'
 
 
 Base = orm.declarative_base(cls=NamedBase)
