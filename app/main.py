@@ -5,6 +5,7 @@ from .api import api
 
 app = FastAPI()
 
+
 @app.get('/')
 async def index():
     return RedirectResponse(api.prefix)
