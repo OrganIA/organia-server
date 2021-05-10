@@ -1,3 +1,5 @@
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8-alpine3.10
 
-COPY ./organia-server /app/app
+COPY . /app
+RUN apk add gcc g++ musl-dev
+RUN pip install -r requirements.txt
