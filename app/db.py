@@ -31,3 +31,6 @@ Base = orm.declarative_base(cls=NamedBase)
 engine = sa.create_engine('sqlite:///./app.db', echo=True)
 Session = orm.sessionmaker(bind=engine)
 session = Session()
+
+
+from pydantic import BaseModel as Schema

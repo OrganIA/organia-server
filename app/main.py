@@ -11,3 +11,5 @@ async def index():
     return RedirectResponse(api.prefix)
 
 app.include_router(api)
+
+from . import models

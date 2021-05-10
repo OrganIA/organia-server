@@ -1,8 +1,10 @@
+from typing import List
+
 from app.db import session
+from app.models import User, UserSchema
 from . import router
-from .models import User
 
 
-@router.get('/')
+@router.get('/', response_model=List[UserSchema])
 async def users():
-    return [x.name for x in session.query(User).all()]
+    return session.query(User).all()
