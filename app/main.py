@@ -10,6 +10,20 @@ app = FastAPI()
 async def index():
     return RedirectResponse(api.prefix)
 
-app.include_router(api)
 
-from . import models
+"""
+FIXME deprecation warning
+@app.middleware('http')
+async def return_204_for_empty_response(request: Request, call_next):
+    with warnings.catch_warnings():
+        response = await call_next(request)
+        if (
+            response.status_code < 300
+            # TODO: check if actually empty instead
+            and int(response.headers['content-length']) == len('null')
+        ):
+            response.status_code = 204
+        return response
+"""
+
+app.include_router(api)
