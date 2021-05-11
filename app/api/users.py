@@ -1,7 +1,11 @@
+from fastapi import APIRouter
+
 from app import db
 from app.errors import AlreadyTakenError
 from app.models import User, UserCreateSchema, UserUpdateSchema
-from . import router
+
+
+router = APIRouter(prefix='/users')
 
 
 @router.get('/')
@@ -25,7 +29,14 @@ async def create_user(user: UserCreateSchema):
 
 @router.post('/{user_id}')
 async def update_user(user_id: int, data: UserUpdateSchema):
-    user = db.get_or_404(User, user_id)
+    user = await get_user(user_id)
     user.update(data, update_schema=True)
     db.session.commit()
     return await get_user(user_id)
+
+
+@router.delete('/{user_id}')
+async def delete_user(user_id: int):
+    user = await get_user(user_id)
+    db.session.delete(user)
+    db.session.commit()
