@@ -1,14 +1,14 @@
 from typing import Optional
 import sqlalchemy as sa
-from app.db import Base, TimedMixin, Schema
+from app import db
 from app.errors import AlreadyTakenError
 
 
-class User(TimedMixin, Base):
+class User(db.TimedMixin, db.Base):
     name = sa.Column(sa.String, nullable=False)
     email = sa.Column(sa.String, nullable=False, unique=True)
 
-    @Base.updater('email')
+    @db.Base.updater('email')
     def set_unique_email(self, value):
         AlreadyTakenError.check(
             type(self), 'email', value, type(self).id != self.id
@@ -16,7 +16,7 @@ class User(TimedMixin, Base):
         self.email = value
 
 
-class UserSchema(TimedMixin.Schema):
+class UserSchema(db.TimedMixin.Schema):
     name: str
     email: str
 
@@ -24,12 +24,12 @@ class UserSchema(TimedMixin.Schema):
         orm_mode = True
 
 
-class UserCreateSchema(Schema):
+class UserCreateSchema(db.Schema):
     name: str
     email: str
     # password: str
 
 
-class UserUpdateSchema(Schema):
+class UserUpdateSchema(db.Schema):
     name: Optional[str]
     email: Optional[str]

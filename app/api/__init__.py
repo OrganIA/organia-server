@@ -7,5 +7,5 @@ PREFIX = f'/api/{VERSION}'
 api = APIRouter(prefix=PREFIX)
 
 for name in ['users']:
-    module = importlib.import_module(f'app.{name}')
+    module = importlib.import_module(f'{__name__}.{name}')
     api.include_router(module.router)
