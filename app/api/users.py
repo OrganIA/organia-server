@@ -15,7 +15,7 @@ async def get_users():
 
 @router.get('/{user_id}')
 async def get_user(user_id: int):
-    return db.get_or_404(User, user_id)
+    return 'bip boup'
 
 
 @router.post('/', status_code=201)
