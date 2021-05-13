@@ -1,5 +1,4 @@
 from functools import wraps
-import sqlalchemy as sa
 from sqlalchemy import orm
 
 from app.helpers import str_format
