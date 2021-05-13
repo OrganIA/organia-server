@@ -1,3 +1,4 @@
 [flake8]
+max-line-length = 80
 # import not at top, import not used, line break before operator
 ignore = E402, F401, W503
