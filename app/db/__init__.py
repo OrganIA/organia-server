@@ -2,26 +2,27 @@ import os
 import sqlalchemy as sa
 from sqlalchemy import orm
 
+from app import config
 from .base import Base as Base_
 
 
-DB_URL = os.environ.get('DB_URL', 'sqlite:///./app.db')
-
 Base: Base_ = orm.declarative_base(cls=Base_)
 
-engine = None
 session = None
+engine = None
 
 
-def setup_db(url=None):
+def setup_db(url=None, force=False):
     global engine, session
-    url = url or DB_URL
-    engine = sa.create_engine(DB_URL, echo=True)
+    if not force and session is not None:
+        return
+    url = url or config.DB_URL
+    engine = sa.create_engine(url, echo=True)
     Session = orm.sessionmaker(bind=engine)
     session = Session()
 
 
 setup_db()
 
-from .helpers import get_or_404
+
 from .mixins import Schema, IdMixin, TimedMixin

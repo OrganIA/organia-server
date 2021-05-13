@@ -15,7 +15,10 @@ def get_users():
 
 
 def create_user():
-    response = client.post(f'{PREFIX}/users/', json=SAMPLE_USER)
+    response = client.post(
+        f'{PREFIX}/users/',
+        json=SAMPLE_USER | {'password': 'a'}
+    )
     return assert_response(response, status_code=201)
 
 

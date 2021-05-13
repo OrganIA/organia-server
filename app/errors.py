@@ -1,6 +1,13 @@
 from fastapi import HTTPException
 
 
+class RaisableMixin:
+    @classmethod
+    def r(cls, *args, **kwargs):
+        """Raises itself"""
+        raise cls(*args, **kwargs)
+
+
 class AlreadyTakenError(HTTPException):
     def __init__(self, key, value):
         super().__init__(
@@ -23,8 +30,11 @@ class AlreadyTakenError(HTTPException):
             raise cls(column, value)
 
 
-class NotFoundError(HTTPException):
+class NotFoundError(RaisableMixin, HTTPException):
     def __init__(self, msg=None):
-        super().__init__(
-            status_code=404, detail=msg or 'Not found.'
-        )
+        super().__init__(status_code=404, detail=msg or 'Not found.')
+
+
+class PasswordMismatchError(HTTPException):
+    def __init__(self, msg=None):
+        super().__init__(status_code=401, detail=msg or 'Password mismatch.')
