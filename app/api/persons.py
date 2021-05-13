@@ -1,7 +1,10 @@
 from fastapi import APIRouter
 
 from app import db
-from app.models import Person
+from app.errors import NotFoundError
+from app.models import (
+    Person, PersonSchema, PersonCreateSchema, PersonUpdateSchema
+)
 
 router = APIRouter(prefix='/persons')
 
@@ -13,7 +16,23 @@ async def get_persons():
 
 @router.get('/{person_id}')
 async def get_person(person_id: int):
-    return db.get_or_404(Person, person_id)
+    return db.session.get(Person, person_id) or NotFoundError.r()
+
+
+@router.post('/', status_code=201)
+async def create_person(person: PersonCreateSchema):
+    person = Person(**person.dict())
+    db.session.add(person)
+    db.session.commit()
+    return await get_person(person.id)
+
+
+@router.post('/{person_id}', response_model=PersonSchema)
+async def update_person(person_id: int, data: PersonUpdateSchema):
+    person = await get_person(person_id)
+    person.update(data)
+    db.session.commit()
+    return person
 
 
 @router.delete('/{person_id}')
