@@ -1,6 +1,11 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8-alpine3.10
+FROM python:3.9-alpine
 
 COPY . /app
-RUN apk add gcc g++ libffi-dev musl-dev
-RUN pip install -U pip
-RUN pip install -r requirements.txt
+WORKDIR /app
+ENV PYTHONPATH=/app
+RUN apk add --no-cache --virtual .build-deps gcc g++ libffi-dev make musl-dev
+RUN pip install --no-cache -U pip uvicorn[standard]
+RUN pip install --no-cache -r requirements.txt
+
+EXPOSE 80
+CMD uvicorn app.main:app --port 80
