@@ -1,7 +1,10 @@
-from datetime import datetime, timedelta
-from typing import Optional
-import os
 import secrets
+
+from app import config
+
+
+def generate_token() -> str:
+    return secrets.token_hex()
 
 
 def get_secret_key():
@@ -9,15 +12,7 @@ def get_secret_key():
         key = f.read()
         if key:
             return key
-    key = os.environ.get('key', secrets.token_hex())
+    key = config.SECRET_KEY or generate_token()
     with open('secret.key', 'w') as f:
         f.write(key)
     return key
-
-
-ALGORITHM = 'HS256'
-
-
-def create_token(data: dict, delta: Optional[timedelta] = None):
-    data = data.copy()
-    data['exp'] = datetime.utcnow() + (delta or timedelta(days=30))

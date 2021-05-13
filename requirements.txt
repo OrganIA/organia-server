@@ -1,5 +1,4 @@
 fastapi
 passlib[bcrypt]
-python-jose
 sqlalchemy
 uvicorn
