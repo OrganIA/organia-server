@@ -1,6 +1,5 @@
-from . import client, PREFIX
+from . import assert_response, client, PREFIX
 from .fixtures import clean_db
-from .helpers import assert_response
 
 
 SAMPLE_USER = {
@@ -14,10 +13,11 @@ def get_users():
     return assert_response(response, type_=list)
 
 
-def create_user():
+def create_user(data=None, **kwargs):
+    data = SAMPLE_USER | (data or {}) | kwargs
     response = client.post(
         f'{PREFIX}/users/',
-        json=SAMPLE_USER | {'password': 'a'}
+        json={'password': 'a'} | data
     )
     return assert_response(response, status_code=201)
 
