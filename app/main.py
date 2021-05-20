@@ -1,9 +1,18 @@
+import importlib
 from fastapi import FastAPI
 from starlette.responses import RedirectResponse
 
 from .api import api
 
+
+MIDDLEWARES = ['cors']
+
 app = FastAPI()
+
+
+for name in MIDDLEWARES:
+    module = importlib.import_module(f'app.{name}')
+    module.mount(app)
 
 
 @app.get('/')
