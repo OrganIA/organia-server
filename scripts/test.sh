@@ -1,5 +1,7 @@
 #!/bin/sh
 
+[ -d .venv ] && source .venv/bin/activate
+
 code=0
 
 

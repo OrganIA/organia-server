@@ -1,14 +1,18 @@
 #!/bin/bash
 
-docker-compose down -t 2 || podman-compose down -t 2
+set -e
+
+podman-compose down -t 2 || docker-compose down -t 2 || echo Could not down container
+
+touch app.db
 
 if [ "$1" == 'build' ]; then
-	docker-compose build || podman-compose build
+	podman-compose build || docker-compose build
 fi
 
 if [[ "$1" == 'test' || "$2" == 'test' ]]; then
-	docker-compose run backend ./scripts/test.sh || podman-compose run backend ./scripts/test.sh
+	podman-compose run backend ./scripts/test.sh || docker-compose run backend ./scripts/test.sh
 	exit $?
 fi
 
-docker-compose up || podman-compose up
+podman-compose up || docker-compose up

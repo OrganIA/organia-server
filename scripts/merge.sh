@@ -1,5 +1,7 @@
 #! /bin/sh
 
+[ -d .venv ] && source .venv/bin/activate
+
 cmd="alembic merge" && \
 echo "$(alembic heads)" > merging_cache && \
 while read l; do

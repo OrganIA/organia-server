@@ -6,6 +6,7 @@ ENV PYTHONPATH=/app
 RUN apk add gcc g++ libffi-dev make musl-dev
 RUN pip install -U pip
 RUN pip install -r requirements.txt
+RUN pip install alembic
 
 EXPOSE 80
-CMD uvicorn app.main:app --port 80
+CMD ./scripts/run.sh 80
