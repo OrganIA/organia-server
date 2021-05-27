@@ -9,4 +9,5 @@ RUN pip install -r requirements.txt
 RUN pip install alembic
 
 EXPOSE 80
-CMD ./scripts/run.sh 80
+ENV PORT=80
+CMD ./scripts/run.sh $PORT
