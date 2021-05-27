@@ -4,6 +4,8 @@ from fastapi import APIRouter
 from app import db
 from app.errors import NotFoundError
 from app.models import User, UserSchema, UserCreateSchema, UserUpdateSchema
+from . import permissions
+from .dependencies import logged_user
 
 
 router = APIRouter(prefix='/users')
@@ -28,8 +30,11 @@ async def create_user(data: UserCreateSchema):
 
 
 @router.post('/{user_id}', response_model=UserSchema)
-async def update_user(user_id: int, data: UserUpdateSchema):
+async def update_user(
+    user_id: int, data: UserUpdateSchema, logged_user=logged_user
+):
     user = await get_user(user_id)
+    permissions.users.can_edit(logged_user, user)
     user.update(data)
     db.session.commit()
     return user

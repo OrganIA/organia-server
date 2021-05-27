@@ -5,8 +5,9 @@ from app.errors import NotFoundError
 from app.models import (
     Person, PersonSchema, PersonCreateSchema, PersonUpdateSchema
 )
+from .dependencies import logged_user
 
-router = APIRouter(prefix='/persons')
+router = APIRouter(prefix='/persons', dependencies=[logged_user])
 
 
 @router.get('/')

@@ -3,6 +3,7 @@ import sqlalchemy as sa
 from sqlalchemy import orm
 
 from app import config, db, security
+from app.errors import InvalidAuthToken
 
 
 class LoginToken(db.TimedMixin, db.Base):
@@ -36,10 +37,10 @@ class LoginToken(db.TimedMixin, db.Base):
         try:
             id = int(id)
         except ValueError as e:
-            raise Exception('No valid ID found in token') from e
-        result = db.get(cls, id)
+            raise InvalidAuthToken('No valid ID found in token') from e
+        result = db.session.get(cls, id)
         if result.value != token:
-            raise Exception('Mismatching token')
+            raise InvalidAuthToken('Mismatching token')
         return result
 
     @staticmethod

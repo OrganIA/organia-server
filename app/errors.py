@@ -8,6 +8,21 @@ class RaisableMixin:
         raise cls(*args, **kwargs)
 
 
+class Unauthorized(RaisableMixin, HTTPException):
+    DEFAULT = None
+
+    def __init__(self, msg=None):
+        super().__init__(status_code=401, detail=msg or self.DEFAULT)
+
+
+class InsufficientPermissions(Unauthorized):
+    DEFAULT = 'You do not have the required permissions to perform this action'
+
+
+class InvalidAuthToken(Unauthorized):
+    DEFAULT = 'Invalid auth token'
+
+
 class AlreadyTakenError(HTTPException):
     def __init__(self, key, value):
         super().__init__(
