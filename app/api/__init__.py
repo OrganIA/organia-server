@@ -1,9 +1,10 @@
 import importlib
 from fastapi import APIRouter
 
-VERSION = 'v1'
-PREFIX = f'/api/{VERSION}'
-ROUTERS = ['auth', 'users', 'persons']
+# VERSION = 'v1'
+# PREFIX = f'/api/{VERSION}'
+PREFIX = '/api'
+ROUTERS = ['auth', 'info', 'users', 'persons']
 
 api = APIRouter(prefix=PREFIX)
 
