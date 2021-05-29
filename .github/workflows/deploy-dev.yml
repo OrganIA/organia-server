@@ -7,7 +7,6 @@ on:
 jobs:
   update:
     name: Push to dev
-    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Restart dev server
