@@ -1,0 +1,19 @@
+name: CI deploy release
+on:
+  workflow_dispatch:
+  release:
+    types: [ published ]
+
+jobs:
+  update:
+    name: Push to production
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restart production server
+        uses: appleboy/ssh-action@master
+        with:
+          username: ${{ secrets.PROD_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          host: ${{ secrets.PROD_HOST }}
+          script: |
+            sudo systemctl restart organia-prod
