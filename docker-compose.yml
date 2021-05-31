@@ -7,7 +7,7 @@ services:
     build:
       context: .
     volumes:
-      - ./app:/app/app
-      - ./app.db:/app/app.db
-      - ./scripts:/app/scripts
+      - ./app:/app/app:z
+      - ./app.db:/app/app.db:z
+      - ./scripts:/app/scripts:z
     command: ./scripts/run.sh 80
