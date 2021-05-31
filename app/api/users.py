@@ -16,6 +16,11 @@ async def get_users():
     return db.session.query(User).all()
 
 
+@router.get('/me', response_model=UserSchema)
+async def get_me(logged_user=logged_user):
+    return logged_user
+
+
 @router.get('/{user_id}', response_model=UserSchema)
 async def get_user(user_id: int):
     return db.session.get(User, user_id) or NotFoundError.r()
