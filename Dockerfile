@@ -10,4 +10,5 @@ RUN pip install alembic
 
 EXPOSE 80
 ENV PORT=80
+ENV container=server
 CMD ./scripts/run.sh $PORT
