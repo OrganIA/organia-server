@@ -2,7 +2,7 @@ from fastapi import APIRouter
 
 from app import db
 from app.models import LoginToken, User, UserSchema
-from app.errors import NotFoundError
+from app.errors import InvalidRequest
 
 router = APIRouter(prefix='/auth')
 
@@ -19,7 +19,7 @@ async def login(data: LoginSchema):
     """
     user: User = (
         db.session.query(User).filter_by(email=data.email).first()
-        or NotFoundError.r('User not found.')
+        or InvalidRequest.r('User not found')
     )
     user.check_password(data.password)
     token = LoginToken.get_valid_for_user(user)
