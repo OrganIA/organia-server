@@ -4,7 +4,6 @@ from .fixtures import clean_db
 
 SAMPLE_USER = {
     'email': 'simple@example.com',
-    'name': 'simple',
 }
 
 
@@ -33,7 +32,7 @@ def test_create_user():
 
 
 def test_update_user():
-    data = {'name': 'amazing meatball'}
+    data = {'email': 'amazing@meatba.ll'}
     response = client.post(f'{PREFIX}/users/1', json=data)
     assert_response(response, include=data)
 

@@ -1,11 +1,18 @@
 import sqlalchemy as sa
-from sqlalchemy import orm
+from sqlalchemy import orm, MetaData
 
 from app import config
 from .base import Base as Base_
 
+meta = MetaData(naming_convention={
+    'ix': 'ix_%(column_0_label)s',
+    'uq': 'uq_%(table_name)s_%(column_0_name)s',
+    'ck': 'ck_%(table_name)s_%(column_0_name)s',
+    'fk': 'fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s',
+    'pk': 'pk_%(table_name)s'
+})
 
-Base: Base_ = orm.declarative_base(cls=Base_)
+Base: Base_ = orm.declarative_base(cls=Base_, metadata=meta)
 
 session = None
 engine = None
@@ -24,4 +31,4 @@ def setup_db(url=None, force=False):
 setup_db()
 
 
-from .mixins import Schema, IdMixin, TimedMixin
+from .mixins import Schema, DurationMixin, IdMixin, TimedMixin

@@ -7,6 +7,7 @@ class RaisableMixin:
         """Raises itself"""
         raise cls(*args, **kwargs)
 
+
 class InvalidRequest(RaisableMixin, HTTPException):
     def __init__(self, msg=None):
         super().__init__(status_code=422, detail=msg)

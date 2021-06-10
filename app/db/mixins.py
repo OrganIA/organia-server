@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from typing import Optional
 from pydantic import BaseModel as Schema
 import sqlalchemy as sa
@@ -21,3 +21,13 @@ class TimedMixin(IdMixin):
     class Schema(IdMixin.Schema):
         created_at: Optional[datetime]
         updated_at: Optional[datetime]
+
+
+@orm.declarative_mixin
+class DurationMixin(IdMixin):
+    start_date = sa.Column(sa.Date)
+    end_date = sa.Column(sa.Date)
+
+    class Schema(IdMixin.Schema):
+        start_date: Optional[date]
+        end_date: Optional[date]

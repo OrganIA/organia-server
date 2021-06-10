@@ -5,7 +5,6 @@ from .fixtures import clean_db
 
 
 USER = {
-    'name': 'loginner',
     'email': 'login@testi.com',
 }
 
@@ -46,4 +45,4 @@ def test_login_unexisting_user():
     response = client.post(f'{PREFIX}/auth/', json={
         'email': USER['email'], 'password': 'something else',
     })
-    assert_response(response, status_code=404)
+    assert_response(response, status_code=422)
