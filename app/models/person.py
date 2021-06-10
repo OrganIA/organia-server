@@ -4,6 +4,7 @@ import enum
 
 from app import db
 
+
 class Gender(enum.Enum):
     MALE = enum.auto()
     FEMALE = enum.auto()

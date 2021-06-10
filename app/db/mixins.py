@@ -22,6 +22,7 @@ class TimedMixin(IdMixin):
         created_at: Optional[datetime]
         updated_at: Optional[datetime]
 
+
 @orm.declarative_mixin
 class DurationMixin(IdMixin):
     start_date = sa.Column(sa.Date)

@@ -4,6 +4,7 @@ import enum
 
 from app import db
 
+
 class Organ(enum.Enum):
     HEART = enum.auto()
 
