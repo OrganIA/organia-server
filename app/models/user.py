@@ -39,7 +39,6 @@ class User(db.TimedMixin, db.Base):
 
 
 class UserSchema(db.TimedMixin.Schema):
-    name: str
     email: str
 
     class Config:
@@ -47,12 +46,10 @@ class UserSchema(db.TimedMixin.Schema):
 
 
 class UserCreateSchema(db.Schema):
-    name: str
     email: str
     password: str
 
 
 class UserUpdateSchema(db.Schema):
-    name: Optional[str]
     email: Optional[str]
     password: Optional[str]
