@@ -1,5 +1,6 @@
 from typing import Optional
 import sqlalchemy as sa
+from sqlalchemy import orm
 from passlib.context import CryptContext
 
 from app import db
@@ -13,9 +14,10 @@ class User(db.TimedMixin, db.Base):
         'password': 'get_hashed_password'
     }
 
-    name = sa.Column(sa.String, nullable=False)
     email = sa.Column(sa.String, nullable=False, unique=True)
     password = sa.Column(sa.String)
+
+    person = orm.relationship('Person', uselist=False, back_populates='user')
 
     @classmethod
     def get_unique_email(cls, value, obj=None):
