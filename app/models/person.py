@@ -3,27 +3,25 @@ from sqlalchemy import orm
 import enum
 
 from app import db
-
-
-class Gender(enum.Enum):
-    MALE = enum.auto()
-    FEMALE = enum.auto()
-    OTHER = enum.auto()
-
-
-class ABO(enum.Enum):
-    A = enum.auto()
-    B = enum.auto()
-    AB = enum.auto()
-    O = enum.auto()
-
-
-class Rhesus(enum.Enum):
-    POSITIVE = '+'
-    NEGATIVE = '-'
+from app.helpers.enums import EnumStr
 
 
 class Person(db.TimedMixin, db.Base):
+    class Gender(EnumStr):
+        MALE = enum.auto()
+        FEMALE = enum.auto()
+        OTHER = enum.auto()
+
+    class ABO(EnumStr):
+        A = enum.auto()
+        B = enum.auto()
+        AB = enum.auto()
+        O = enum.auto()
+
+    class Rhesus(enum.Enum):
+        POSITIVE = '+'
+        NEGATIVE = '-'
+
     first_name = sa.Column(sa.String, nullable=False)
     last_name = sa.Column(sa.String, nullable=False)
     birthday = sa.Column(sa.Date, nullable=False)
