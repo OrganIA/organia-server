@@ -1,15 +1,15 @@
+import enum
 import sqlalchemy as sa
 from sqlalchemy import orm
-import enum
 
 from app import db
-
-
-class Organ(enum.Enum):
-    HEART = enum.auto()
+from app.helpers.enums import EnumStr
 
 
 class Listing(db.DurationMixin, db.Base):
+    class Organ(EnumStr):
+        HEART = enum.auto()
+
     person_id = sa.Column(sa.ForeignKey('persons.id'))
     notes = sa.Column(sa.String)
     hospital_id = sa.Column(sa.ForeignKey('hospitals.id'))
