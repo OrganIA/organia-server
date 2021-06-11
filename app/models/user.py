@@ -36,20 +36,3 @@ class User(db.TimedMixin, db.Base):
         if not result and exc:
             raise exc if isinstance(exc, Exception) else PasswordMismatchError
         return result
-
-
-class UserSchema(db.TimedMixin.Schema):
-    email: str
-
-    class Config:
-        orm_mode = True
-
-
-class UserCreateSchema(db.Schema):
-    email: str
-    password: str
-
-
-class UserUpdateSchema(db.Schema):
-    email: Optional[str]
-    password: Optional[str]

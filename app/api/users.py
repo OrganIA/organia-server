@@ -3,7 +3,8 @@ from fastapi import APIRouter
 
 from app import db
 from app.errors import NotFoundError
-from app.models import User, UserSchema, UserCreateSchema, UserUpdateSchema
+from app.models import User
+from app.api.schemas.user import UserSchema, UserCreateSchema, UserUpdateSchema
 from . import permissions
 from .dependencies import logged_user
 

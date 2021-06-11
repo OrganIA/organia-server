@@ -11,7 +11,7 @@ router = APIRouter(prefix='/listings')
 
 
 @router.get('/', response_model=List[ListingGetSchema])
-async def get_donors():
+async def get_listings():
     return db.session.query(Listing).all()
 
 
@@ -21,7 +21,7 @@ async def get_donors():
 
 
 @router.get('/receivers', response_model=List[ListingGetSchema])
-async def get_donors():
+async def get_receivers():
     return db.session.query(Listing).filter(~Listing.donor).all()
 
 
@@ -31,6 +31,7 @@ async def create_listing(data: ListingCreateSchema):
     db.session.add(listing)
     db.session.commit()
     return listing
+
 
 @router.get('/{listing_id}', response_model=ListingGetSchema)
 async def get_listing(listing_id):

@@ -1,8 +1,9 @@
 from fastapi import APIRouter
 
 from app import db
-from app.models import LoginToken, User, UserSchema
 from app.errors import InvalidRequest
+from app.models import LoginToken, User
+from app.api.schemas.user import UserSchema
 
 router = APIRouter(prefix='/auth')
 
