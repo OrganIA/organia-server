@@ -51,7 +51,7 @@ def upgrade():
         batch_op.add_column(sa.Column('abo', sa.Enum('A', 'B', 'AB', 'O', name='abo'), nullable=True))
         batch_op.add_column(sa.Column('rhesus', sa.Enum('POSITIVE', 'NEGATIVE', name='rhesus'), nullable=True))
         batch_op.create_unique_constraint(batch_op.f('uq_persons_user_id'), ['user_id'])
-        batch_op.drop_constraint('fk_persons_supervisor_id_users', type_='foreignkey')
+        # batch_op.drop_constraint('fk_persons_supervisor_id_users', type_='foreignkey')
         batch_op.create_foreign_key(batch_op.f('fk_persons_user_id_users'), 'users', ['user_id'], ['id'])
         batch_op.drop_column('supervisor_id')
 

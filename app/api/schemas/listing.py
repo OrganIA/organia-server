@@ -16,6 +16,12 @@ class ListingSchema(db.Schema):
         orm_mode = True
 
 
+class ListingUpdateSchema(ListingSchema):
+    organ: Optional[Listing.Organ]
+    donor: Optional[bool]
+    person_id: Optional[int]
+
+
 class ListingCreateSchema(ListingSchema):
     person_id: int
 
