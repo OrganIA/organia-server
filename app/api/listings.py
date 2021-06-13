@@ -12,6 +12,11 @@ from app.api.schemas.listing import (
 router = APIRouter(prefix='/listings')
 
 
+@router.get('/organs')
+async def get_organs():
+    return Listing.Organ.values()
+
+
 @router.get('/', response_model=List[ListingGetSchema])
 async def get_listings():
     return db.session.query(Listing).all()
