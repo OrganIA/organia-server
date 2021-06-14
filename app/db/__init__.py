@@ -23,7 +23,7 @@ def setup_db(url=None, force=False):
     if not force and session is not None:
         return
     url = url or config.DB_URL
-    engine = sa.create_engine(url, echo=True)
+    engine = sa.create_engine(url, echo=config.LOG_SQL)
     Session = orm.sessionmaker(bind=engine)
     session = Session()
 
