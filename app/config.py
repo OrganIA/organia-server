@@ -18,3 +18,5 @@ DB_URL = os.environ.get('DB_URL', 'sqlite:///./app.db')
 CORS_ORIGINS = os.environ.get('CORS_ORIGINS', '*').split(',')
 
 FORCE_LOGIN = bool(os.environ.get('FORCE_LOGIN'))
+
+DISCORD_LOGS = os.environ.get('DISCORD_LOGS')
