@@ -8,5 +8,11 @@ if [ "$container" == "" ]; then
 	pip install alembic uvicorn[standard]
 fi
 
+if [ "$NO_RELOAD" != "" ]; then
+	reload_opts=''
+else
+	reload_opts='--reload'
+fi
+
 alembic upgrade head
-uvicorn app.main:app --reload --host 0.0.0.0 --port ${1:-8000}
+uvicorn app.main:app $reload_opts --host 0.0.0.0 --port ${1:-8000}
