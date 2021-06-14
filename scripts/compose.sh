@@ -2,9 +2,9 @@
 
 set -e
 
-podman-compose down -t 2 || docker-compose down -t 2 || echo Could not down container
-
 touch app.db
+
+podman-compose down -t 2 || docker-compose down -t 2 || echo Could not down container
 
 if [ "$1" == 'build' ]; then
 	podman-compose build || docker-compose build
