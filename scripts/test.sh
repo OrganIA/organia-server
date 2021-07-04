@@ -5,11 +5,11 @@
 code=0
 
 
-pip install pytest requests >/dev/null
+pip install pytest pytest-cov requests >/dev/null
 echo
 echo Running pytest
 echo
-DB_URL='sqlite://' pytest app/tests || code=1
+DB_URL='sqlite://' pytest app/tests --cov=app --cov-fail-under=90 || code=1
 
 
 pip install flake8 >/dev/null
