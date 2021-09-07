@@ -14,13 +14,13 @@ router = APIRouter(prefix='/hospitals')
 async def get_hospitals():
     return db.session.query(Hospital).all()
 
-@router.get('/{hospital_name}', response_model=List[HospitalSchema])
+@router.get('/{hospital_name}')
 async def get_hospital(hospital_name: str):
-    return db.session.get(Hospital, hospital_name) or NotFoundError.r()
+    return db.session.query(Hospital).filter_by(name=hospital_name).all() or NotFoundError.r()
 
 @router.post('/', status_code=201)
 async def create_hospital(hospital: HospitalSchema):
     hospital = Hospital(**hospital.dict())
     db.session.add(hospital)
     db.session.commit()
-    return await get_hospital(hospital.h_name)
+    return await get_hospital(hospital.name)
