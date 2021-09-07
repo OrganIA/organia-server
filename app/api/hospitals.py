@@ -10,7 +10,7 @@ from app.api.schemas.hospital import (
 
 router = APIRouter(prefix='/hospitals')
 
-@router.get('/', response_model=List[HospitalSchema])
+@router.get('/')
 async def get_hospitals():
     return db.session.query(Hospital).all()
 
