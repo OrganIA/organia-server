@@ -19,9 +19,7 @@ class User(db.TimedMixin, db.Base):
 
     person = orm.relationship('Person', uselist=False, back_populates='user')
     
-    role_id = sa.Column(sa.Integer)
-    role = orm.relationship('Role', back_populates="roles")
-    
+    role_id = sa.Column(sa.ForeignKey('roles.id'), unique=True)    
     @classmethod
     def get_unique_email(cls, value, obj=None):
         AlreadyTakenError.check(
