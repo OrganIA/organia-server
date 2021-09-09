@@ -18,9 +18,9 @@ async def get_hospitals(name: Optional[str] = None, city: Optional[str] = None):
         | Hospital.city.ilike(f'%{city}%')
     ).all() or db.session.query(Hospital).all() or NotFoundError.r('Hospital not found.')
 
-@router.get('/{hospital_id}')
-async def get_hospital(hospital_id: int):
-    return db.session.get(Hospital).filter_by(id=hospital_id).first() or NotFoundError.r()
+@router.get('/{id}')
+async def get_hospital(id: int):
+    return db.session.get(Hospital, id) or NotFoundError.r()
 
 @router.post('/', status_code=201)
 async def create_hospital(hospital: HospitalSchema):
