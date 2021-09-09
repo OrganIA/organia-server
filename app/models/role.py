@@ -8,6 +8,7 @@ from app.errors import AlreadyTakenError, PasswordMismatchError
 
 
 class Role(db.TimedMixin, db.Base):
+    name = sa.Column(sa.String, nullable=False, unique=True)
     can_manage_users = sa.Column(sa.Boolean, default=False, nullable=False)
     can_manage_persons = sa.Column(sa.Boolean, default=False, nullable=False)
     can_manage_roles = sa.Column(sa.Boolean, default=False, nullable=False)
