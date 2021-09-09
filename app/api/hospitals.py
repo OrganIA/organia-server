@@ -13,10 +13,12 @@ router = APIRouter(prefix='/hospitals')
 
 @router.get('/')
 async def get_hospitals(name: Optional[str] = None, city: Optional[str] = None):
-    return db.session.query(Hospital).filter(
-        Hospital.name.ilike(f'%{name}%')
-        | Hospital.city.ilike(f'%{city}%')
-    ).all() or db.session.query(Hospital).all() or NotFoundError.r('Hospital not found.')
+    query = db.session.query(Hospital)
+    if name:
+        query = query.filter(Hospital.name.ilike(f'%{name}%'))
+    if city:
+        query = query.filter(Hospital.city.ilike(f'%{city}%'))
+    return query.all() or NotFoundError.r('Hospital not found.')
 
 @router.get('/{id}')
 async def get_hospital(id: int):
