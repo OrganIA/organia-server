@@ -6,6 +6,7 @@ from app.models import Role
 
 
 class RoleSchema(db.Schema):
+    name: str
     can_manage_users: bool
     can_manage_persons: bool
     can_manage_roles: bool
@@ -14,8 +15,17 @@ class RoleSchema(db.Schema):
     class Config:
         orm_mode = True
 
+class RoleCreateSchema(db.Schema):
+    name: str
+    can_manage_users: bool
+    can_manage_persons: bool
+    can_manage_roles: bool
+    can_manage_hospitals: bool
+    can_invite: bool
+
 
 class RoleGetSchema(RoleSchema, db.TimedMixin.Schema):
+    name: str
     can_manage_users: bool
     can_manage_persons: bool
     can_manage_roles: bool
@@ -24,6 +34,7 @@ class RoleGetSchema(RoleSchema, db.TimedMixin.Schema):
 
 
 class RoleUpdateSchema(RoleSchema):
+    name: str
     can_manage_users: bool
     can_manage_persons: bool
     can_manage_roles: bool
