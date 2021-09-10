@@ -33,15 +33,17 @@ async def create_role(data: RoleSchema, logged_user=logged_user):
     return role
 
 
-# @router.post('/{role_id}', response_model=RoleSchema)
-# async def update_role(
-#     role_id: int, data: RoleUpdateSchema, logged_user=logged_user
-# ):
-#     role = await get_role(role_id)
-#     permissions.users.can_edit(logged_user, user)
-#     role.update(data)
-#     db.session.commit()
-#     return role
+@router.post('/{role_id}', response_model=RoleSchema)
+async def update_role(
+    role_id: int, data: RoleUpdateSchema, logged_user=logged_user
+):
+    role = await get_role(role_id)
+    permissions.roles.can_edit(logged_user)
+    if db.session.query(Role).filter_by(name=data.name).first():
+        raise AlreadyTakenError("name", data.name)
+    role.update(data)
+    db.session.commit()
+    return role
 
 
 # @router.delete('/{role_id}')
