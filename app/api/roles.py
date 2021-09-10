@@ -1,10 +1,10 @@
 from typing import List
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
 from app import db
-from app.errors import NotFoundError
+from app.errors import AlreadyTakenError, NotFoundError
 from app.models import Role
-from app.api.schemas.role import RoleSchema, RoleCreateSchema, RoleUpdateSchema
+from app.api.schemas.role import RoleSchema, RoleUpdateSchema
 from . import permissions
 from .dependencies import logged_user
 
@@ -23,7 +23,10 @@ async def get_role(role_id: int):
 
 
 @router.post('/', status_code=201, response_model=RoleSchema)
-async def create_role(data: RoleCreateSchema):
+async def create_role(data: RoleSchema, logged_user=logged_user):
+    permissions.roles.can_edit(logged_user)
+    if db.session.query(Role).filter_by(name=data.name).first():
+        raise AlreadyTakenError("name", data.name)
     role = Role.from_data(data)
     db.session.add(role)
     db.session.commit()

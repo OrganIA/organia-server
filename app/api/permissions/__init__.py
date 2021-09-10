@@ -6,4 +6,4 @@ def check(value: bool, msg=None):
         raise InsufficientPermissions(msg)
 
 
-from . import users
+from . import roles, users
