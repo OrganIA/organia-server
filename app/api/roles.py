@@ -1,5 +1,7 @@
 from typing import List
 from fastapi import APIRouter, HTTPException
+from fastapi.encoders import jsonable_encoder
+from starlette.responses import JSONResponse
 
 from app import db
 from app.errors import AlreadyTakenError, NotFoundError
@@ -46,8 +48,10 @@ async def update_role(
     return role
 
 
-# @router.delete('/{role_id}')
-# async def delete_role(role_id: int):
-#     role = await get_role(role_id)
-#     db.session.delete(role)
-#     db.session.commit()
+@router.delete('/{role_id}')
+async def delete_role(role_id: int, logged_user=logged_user):
+    role = await get_role(role_id)
+    permissions.roles.can_edit(logged_user)
+    db.session.delete(role)
+    db.session.commit()
+    return JSONResponse(content=jsonable_encoder({"message": "deleted successfully"}))
