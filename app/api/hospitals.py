@@ -20,9 +20,9 @@ async def get_hospitals(name: Optional[str] = None, city: Optional[str] = None):
         query = query.filter(Hospital.city.ilike(f'%{city}%'))
     return query.all() or NotFoundError.r('Hospital not found.')
 
-@router.get('/{id}')
-async def get_hospital(id: int):
-    return db.session.get(Hospital, id) or NotFoundError.r()
+@router.get('/{hospital_id}')
+async def get_hospital(hospital_id: int):
+    return db.session.get(Hospital, hospital_id) or NotFoundError.r()
 
 @router.post('/', status_code=201)
 async def create_hospital(hospital: HospitalSchema):
@@ -30,3 +30,11 @@ async def create_hospital(hospital: HospitalSchema):
     db.session.add(hospital)
     db.session.commit()
     return await get_hospital(hospital.id)
+
+
+@router.delete('/{hospital_id}')
+async def delete_hospital(hospital_id: int):
+    hospital = await get_hospital(hospital_id)
+    db.session.delete(hospital)
+    db.session.commit()
+    return "Hospital deleted"
