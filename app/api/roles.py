@@ -54,4 +54,3 @@ async def delete_role(role_id: int, logged_user=logged_user):
     permissions.roles.can_edit(logged_user)
     db.session.delete(role)
     db.session.commit()
-    return JSONResponse(content=jsonable_encoder({"message": "deleted successfully"}))

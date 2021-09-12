@@ -19,8 +19,9 @@ class Role(db.TimedMixin, db.Base):
 
     @classmethod
     def get_default_role(cls):
-        if not (role := db.session.query(cls)
-                .filter_by(name="default").first()):
+        if not (
+            role := db.session.query(cls).filter_by(name="default").first()
+        ):
             role = cls(name="default")
             db.session.add(role)
             db.session.commit()
