@@ -12,12 +12,12 @@ from app.api.schemas.hospital import (
 router = APIRouter(prefix='/hospitals')
 
 @router.get('/')
-async def get_hospitals(name: Optional[str] = None, city: Optional[str] = None):
+async def get_hospitals(name: Optional[str] = None, city_id: Optional[int] = None):
     query = db.session.query(Hospital)
     if name:
         query = query.filter(Hospital.name.ilike(f'%{name}%'))
-    if city:
-        query = query.filter(Hospital.city.ilike(f'%{city}%'))
+    if city_id:
+        query = query.filter(Hospital.city_id.ilike(f'%{city_id}%'))
     return query.all() or NotFoundError.r('Hospital not found.')
 
 @router.get('/{hospital_id}')

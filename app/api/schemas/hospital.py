@@ -1,6 +1,9 @@
 from app import db
 
 class HospitalSchema(db.Schema):
-    department: int
-    city: str
+    city_id: int
     name: str
+
+class City(db.Schema):
+    name: str
+    department_code: str
