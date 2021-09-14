@@ -15,8 +15,10 @@ class UserSchema(db.TimedMixin.Schema):
 class UserCreateSchema(db.Schema):
     email: str
     password: str
+    role_id: Optional[int]
 
 
 class UserUpdateSchema(db.Schema):
     email: Optional[str]
     password: Optional[str]
+    role_id: Optional[int]
