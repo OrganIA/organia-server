@@ -47,7 +47,8 @@ async def update_user(
 
 
 @router.delete('/{user_id}')
-async def delete_user(user_id: int):
+async def delete_user(user_id: int, logged_user=logged_user):
     user = await get_user(user_id)
+    permissions.users.can_edit(logged_user, user)
     db.session.delete(user)
     db.session.commit()
