@@ -5,7 +5,7 @@ from app import db
 from app.models import Role
 
 
-class RoleSchema(db.Schema):
+class RoleSchema(db.TimedMixin.Schema):
     name: str
     can_manage_users: bool
     can_manage_persons: bool
