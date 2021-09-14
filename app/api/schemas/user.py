@@ -20,4 +20,3 @@ class UserCreateSchema(db.Schema):
 class UserUpdateSchema(db.Schema):
     email: Optional[str]
     password: Optional[str]
-
