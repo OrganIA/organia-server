@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 [ -d .venv ] && source .venv/bin/activate
 
