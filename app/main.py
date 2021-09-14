@@ -29,7 +29,7 @@ async def index():
 
 
 @app.on_event("startup")
-async def create_admin():
+async def create_basic_roles():
     from app.models import Role
     Role.setup_roles()
 
