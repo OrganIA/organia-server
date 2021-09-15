@@ -4,7 +4,7 @@ from fastapi import APIRouter
 from app import db
 from typing import Optional
 from app.errors import NotFoundError
-from app.models import Hospital
+from app.models import Hospital, City
 from app.api.schemas.hospital import (
     HospitalSchema,
 )
@@ -17,7 +17,7 @@ async def get_hospitals(name: Optional[str] = None, city_id: Optional[int] = Non
     if name:
         query = query.filter(Hospital.name.ilike(f'%{name}%'))
     if city_id:
-        query = query.filter(Hospital.city_id.ilike(f'%{city_id}%'))
+        query = query.filter(Hospital.city_id==city_id)
     return query.all() or NotFoundError.r('Hospital not found.')
 
 @router.get('/{hospital_id}')
@@ -37,4 +37,4 @@ async def delete_hospital(hospital_id: int):
     hospital = await get_hospital(hospital_id)
     db.session.delete(hospital)
     db.session.commit()
-    return "Hospital deleted"
+    return "Hospital " + hospital.name + " deleted" 

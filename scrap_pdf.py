@@ -2,11 +2,12 @@ import pdftotext
 import logging
 import re
 
+
 from app import db
-from app.models import Hospital
-from app.api.schemas.hospital import (
-    HospitalSchema,
-)
+import sqlalchemy as sa
+
+from app.models import Hospital, City
+
 
 IS_DEPARTMENT = re.compile(r'^\d(?:\d|A|B)\d?$')
 
@@ -15,19 +16,20 @@ IS_DEPARTMENT = re.compile(r'^\d(?:\d|A|B)\d?$')
 with open("./liste.pdf", "rb") as f:
     pdf = pdftotext.PDF(f)
 
+def check_city(department, city):
+    return db.session.query(City).filter_by(name=city).first()
 
-# Read all the text into one string
-# print("\n\n".join(pdf))
 
-
-# How many pages?
-print(len(pdf))
-
-def store_hospital(department, city, name, hospital: HospitalSchema):
-    hospital = Hospital(**hospital.dict())
-    hospital.department = department
-    hospital.city = city
+def store_hospital(department, city, name):
+    hospital = Hospital()
+    cities = City()
+    if check_city(department, city) == None:
+        cities.department_code = department
+        cities.name = city
+        db.session.add(cities)
+        db.session.commit()
     hospital.name = name
+    hospital.city_id = db.session.query(City).filter_by(name=city).first().id
     db.session.add(hospital)
     db.session.commit()
 
@@ -46,15 +48,15 @@ def convert(string):
             hospital = ' '.join(remove_space[start_hospital: next_department]).strip()
             for var in [city, hospital]:
                 if IS_DEPARTMENT.match(var) or var.startswith("TCA : "):
-                    logging.warning("department: %s, city: %s, hospital: %s", department_code, city, hospital)
+                    # logging.warning("department: %s, city: %s, hospital: %s", department_code, city, hospital)
                     raise Exception
-            print(department_code, city, hospital, sep='/')
+            # print(department_code, city, hospital, sep='/')
             store_hospital(department_code, city, hospital)
         except Exception:
             print("Skipped")
 
 
 for number, page in enumerate(pdf):
-    print(number)
+    print("Page: ", number)
     convert(page)
     
