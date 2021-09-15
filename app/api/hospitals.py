@@ -11,18 +11,21 @@ from app.api.schemas.hospital import (
 
 router = APIRouter(prefix='/hospitals')
 
+
 @router.get('/')
 async def get_hospitals(name: Optional[str] = None, city_id: Optional[int] = None):
     query = db.session.query(Hospital)
     if name:
         query = query.filter(Hospital.name.ilike(f'%{name}%'))
     if city_id:
-        query = query.filter(Hospital.city_id==city_id)
+        query = query.filter(Hospital.city_id == city_id)
     return query.all() or NotFoundError.r('Hospital not found.')
+
 
 @router.get('/{hospital_id}')
 async def get_hospital(hospital_id: int):
     return db.session.get(Hospital, hospital_id) or NotFoundError.r()
+
 
 @router.post('/', status_code=201)
 async def create_hospital(hospital: HospitalSchema):
@@ -37,4 +40,4 @@ async def delete_hospital(hospital_id: int):
     hospital = await get_hospital(hospital_id)
     db.session.delete(hospital)
     db.session.commit()
-    return "Hospital " + hospital.name + " deleted" 
+    return "Hospital " + hospital.name + " deleted"
