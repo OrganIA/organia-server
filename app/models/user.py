@@ -23,7 +23,7 @@ class User(db.TimedMixin, db.Base):
 
     def __init__(self, *args, **kwargs):
         from .role import Role
-        role = Role.get_default_role()
+        role = Role.get_role_by_id(kwargs.get("role_id")) or Role.get_default_role()
         super().__init__(*args, **kwargs, role=role)
 
     @classmethod

@@ -23,6 +23,11 @@ class Role(db.TimedMixin, db.Base):
         return role
 
     @classmethod
+    def get_role_by_id(cls, role_id):
+        role = db.session.query(cls).filter_by(id=role_id).first()
+        return role
+
+    @classmethod
     def get_admin_role(cls):
         role = db.session.query(cls).filter_by(name="admin").first()
         return role
