@@ -28,8 +28,9 @@ async def get_user(user_id: int):
 
 
 @router.post('/', status_code=201, response_model=UserSchema)
-async def create_user(data: UserCreateSchema):
+async def create_user(data: UserCreateSchema, logged_user=logged_user):
     user = User.from_data(data)
+    permissions.users.can_edit(logged_user, user)
     db.session.add(user)
     db.session.commit()
     return user
