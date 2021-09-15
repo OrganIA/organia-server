@@ -1,5 +1,5 @@
 import logging
-# import requests
+import requests
 
 
 class WebhookHandler(logging.Handler):
