@@ -3,7 +3,7 @@ from .fixtures import clean_db
 from .helpers import assert_response
 
 SAMPLE_HOSPITAL = {
-    'name' : 'Robert Ballanger',
+    'name': 'Robert Ballanger',
     'city_id': '1',
 }
 
@@ -12,9 +12,11 @@ def get_hospital():
     response = client.get(f'{PREFIX}/hospital/')
     return assert_response(response, type_=list)
 
+
 def get_hospital_id(id):
     response = client.get(f'{PREFIX}/hospital_id/{id}')
     return assert_response(response, status_code=200)
+
 
 def create_hospital():
     response = client.post(
