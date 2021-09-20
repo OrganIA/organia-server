@@ -5,7 +5,7 @@ from app import db
 from app.errors import NotFoundError
 from app.models import Person
 from app.api.schemas.person import (
-    PersonSchema, PersonGetSchema, PersonUpdateSchema,
+    PersonSchema, PersonGetSchema, PersonUpdateSchema, PersonUpdateScoring,
 )
 from .dependencies import logged_user
 
@@ -32,6 +32,14 @@ async def create_person(person: PersonSchema):
 
 @router.post('/{person_id}', response_model=PersonGetSchema)
 async def update_person(person_id: int, data: PersonUpdateSchema):
+    person = await get_person(person_id)
+    person.update(data)
+    db.session.commit()
+    return person
+
+
+@router.post('/{person_id}', response_model=PersonGetSchema)
+async def update_scoring(person_id: int, data: PersonUpdateScoring):
     person = await get_person(person_id)
     person.update(data)
     db.session.commit()

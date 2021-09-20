@@ -26,3 +26,7 @@ class PersonUpdateSchema(PersonSchema):
     first_name: Optional[str]
     last_name: Optional[str]
     birthday: Optional[date]
+
+class PersonUpdateScoring(PersonSchema):
+    heart_scoring: Optional[float]
+    lung_scoring: Optional[float]
