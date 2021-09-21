@@ -5,3 +5,5 @@ from .person import Person
 from .staff import Staff
 from .user import User
 from .invitation import Invitation, InvitationCreateSchema, InvitationSchema
+from .chats import Chat
+from .messages import Message
