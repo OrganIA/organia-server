@@ -2,6 +2,8 @@ import sqlalchemy as sa
 from sqlalchemy import orm
 import enum
 
+from sqlalchemy.sql.expression import null
+
 from app import db
 from app.helpers.enums import EnumStr
 
@@ -21,6 +23,9 @@ class Person(db.TimedMixin, db.Base):
     class Rhesus(enum.Enum):
         POSITIVE = '+'
         NEGATIVE = '-'
+
+    class Score():
+        heart = sa.Column(sa.Float, nullable=True)
 
     first_name = sa.Column(sa.String, nullable=False)
     last_name = sa.Column(sa.String, nullable=False)
