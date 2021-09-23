@@ -1,20 +1,20 @@
-import pdftotext
-import logging
-import re
-
-
 from app import db
-import sqlalchemy as sa
-
 from app.models import Hospital, City
+
+import logging
+import pdftotext
+import re
+import sqlalchemy as sa
+import sys
 
 
 IS_DEPARTMENT = re.compile(r'^\d(?:\d|A|B)\d?$')
 
 
 # Load your PDF
-with open("./liste.pdf", "rb") as f:
+with open(sys.argv[1], "rb") as f:
     pdf = pdftotext.PDF(f)
+
 
 def check_city(department, city):
     return db.session.query(City).filter_by(name=city).first()
@@ -32,6 +32,7 @@ def store_hospital(department, city, name):
     hospital.city_id = db.session.query(City).filter_by(name=city).first().id
     db.session.add(hospital)
     db.session.commit()
+
 
 def convert(string):
     li = string.split("\n")

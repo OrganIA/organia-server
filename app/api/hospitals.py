@@ -18,7 +18,7 @@ async def get_hospitals(name: Optional[str] = None, city_id: Optional[int] = Non
     if name:
         query = query.filter(Hospital.name.ilike(f'%{name}%'))
     if city_id:
-        query = query.filter(Hospital.city_id == city_id)
+        query = query.filter_by(city_id = city_id)
     return query.all() or NotFoundError.r('Hospital not found.')
 
 
@@ -40,4 +40,3 @@ async def delete_hospital(hospital_id: int):
     hospital = await get_hospital(hospital_id)
     db.session.delete(hospital)
     db.session.commit()
-    return "Hospital " + hospital.name + " deleted"
