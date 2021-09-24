@@ -1,11 +1,9 @@
+import re
+import sys
+import pdftotext
+
 from app import db
 from app.models import Hospital, City
-
-import logging
-import pdftotext
-import re
-import sqlalchemy as sa
-import sys
 
 
 IS_DEPARTMENT = re.compile(r'^\d(?:\d|A|B)\d?$')
@@ -16,20 +14,12 @@ with open(sys.argv[1], "rb") as f:
     pdf = pdftotext.PDF(f)
 
 
-def check_city(department, city):
-    return db.session.query(City).filter_by(name=city).first()
-
-
 def store_hospital(department, city, name):
-    hospital = Hospital()
-    cities = City()
-    if check_city(department, city) == None:
-        cities.department_code = department
-        cities.name = city
-        db.session.add(cities)
-        db.session.commit()
-    hospital.name = name
-    hospital.city_id = db.session.query(City).filter_by(name=city).first().id
+    if not (city_obj := db.session.query(City).filter_by(name=city).first()):
+        city_obj = City(name=city, department_code=department)
+        db.session.add(city_obj)
+        db.session.flush()
+    hospital = Hospital(name=name, city=city_obj)
     db.session.add(hospital)
     db.session.commit()
 
@@ -57,7 +47,7 @@ def convert(string):
             print("Skipped")
 
 
-for number, page in enumerate(pdf):
-    print("Page: ", number)
-    convert(page)
-    
+if __name__ == '__main__':
+    for number, page in enumerate(pdf):
+        print("Page: ", number)
+        convert(page)
