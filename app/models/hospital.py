@@ -4,4 +4,5 @@ from app import db
 
 
 class Hospital(db.IdMixin, db.Base):
-    name = sa.Column(sa.String)
+    city_id = sa.Column(sa.Integer, nullable=False)
+    name = sa.Column(sa.String, nullable=False)
