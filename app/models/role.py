@@ -23,11 +23,6 @@ class Role(db.TimedMixin, db.Base):
         return role
 
     @classmethod
-    def get_role_by_id(cls, role_id):
-        role = db.session.query(cls).filter_by(id=role_id).first()
-        return role
-
-    @classmethod
     def get_admin_role(cls):
         role = db.session.query(cls).filter_by(name="admin").first()
         return role
@@ -39,21 +34,18 @@ class Role(db.TimedMixin, db.Base):
 
     @classmethod
     def setup_admin_role(cls):
-        if not (
-            role := db.session.query(cls).filter_by(name="admin").first()
-            ):
-            role = cls(name="admin", can_manage_users=True, can_manage_persons=True,
-                       can_manage_roles=True, can_manage_hospitals=True, can_invite=True)
-            db.session.add(role)
-            db.session.commit()
-        return
+        if db.session.query(cls).filter_by(name="admin").first():
+            return
+        role = cls(name="admin", can_manage_users=True, can_manage_persons=True,
+                   can_manage_roles=True, can_manage_hospitals=True,
+                   can_invite=True)
+        db.session.add(role)
+        db.session.commit()
 
     @classmethod
     def setup_default_role(cls):
-        if not (
-            role := db.session.query(cls).filter_by(name="default").first()
-            ):
-            role = cls(name="default")
-            db.session.add(role)
-            db.session.commit()
-        return
+        if db.session.query(cls).filter_by(name="default").first():
+            return
+        role = cls(name="default")
+        db.session.add(role)
+        db.session.commit()

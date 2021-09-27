@@ -1,7 +1,5 @@
 from typing import List
-from fastapi import APIRouter, HTTPException
-from fastapi.encoders import jsonable_encoder
-from starlette.responses import JSONResponse
+from fastapi import APIRouter
 
 from app import db
 from app.errors import AlreadyTakenError, NotFoundError
