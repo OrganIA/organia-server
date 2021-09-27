@@ -23,7 +23,10 @@ class User(db.TimedMixin, db.Base):
 
     def __init__(self, *args, **kwargs):
         from .role import Role
-        role = db.session.get(Role, kwargs["role_id"]) or Role.get_default_role()
+        if kwargs.get("role_id"):
+            role = db.session.get(Role, kwargs["role_id"]) 
+        else:
+            role = Role.get_default_role()
         super().__init__(*args, **kwargs, role=role)
 
     @classmethod
