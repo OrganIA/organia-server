@@ -2,8 +2,9 @@ from typing import List
 from fastapi import APIRouter
 
 from app import db
-from app.errors import AlreadyTakenError, NotFoundError
+from app.errors import AlreadyTakenError, NotFoundError, NotAcceptableError
 from app.models import Role
+from app.models import User
 from app.api.schemas.role import RoleSchema, RoleUpdateSchema, RoleCreateSchema
 from . import permissions
 from .dependencies import logged_user
@@ -48,7 +49,12 @@ async def update_role(
 
 @router.delete('/{role_id}')
 async def delete_role(role_id: int, logged_user=logged_user):
-    role = await get_role(role_id)
     permissions.roles.can_edit(logged_user)
+    role = await get_role(role_id)
+    user_list = db.session.query(User).filter_by(role_id=role_id).first()
+    if role == None:
+        raise NotFoundError()
+    elif user_list is not None:
+        raise NotAcceptableError(msg="Please remove or update all users who have this role before removing it.")
     db.session.delete(role)
     db.session.commit()
