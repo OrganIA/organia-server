@@ -28,6 +28,11 @@ async def index():
     return RedirectResponse(api.prefix)
 
 
+@app.get('/test/{module}')
+async def test(module):
+    module = importlib.import_module(f'app.{module}')
+    return module.test()
+
 """
 FIXME deprecation warning
 @app.middleware('http')
