@@ -1,4 +1,4 @@
-FROM winnerokay/uvicorn-gunicorn-fastapi:python3.9-alpine
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9-alpine3.14
 
 COPY . /app
 WORKDIR /app

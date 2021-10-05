@@ -6,7 +6,7 @@ from fastapi import APIRouter
 PREFIX = '/api'
 ROUTERS = [
     'auth', 'info', 'invitation',
-    'listings', 'users', 'persons', 'roles'
+    'listings', 'users', 'persons', 'roles', 'hospitals'
 ]
 
 api = APIRouter(prefix=PREFIX)
