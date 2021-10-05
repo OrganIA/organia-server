@@ -25,6 +25,7 @@ class RoleCreateSchema(db.Schema):
     can_manage_hospitals: bool
     can_invite: bool
 
+
 class RoleUpdateSchema(db.Schema):
     name: Optional[str]
     can_manage_users: Optional[bool]

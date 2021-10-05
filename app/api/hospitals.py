@@ -13,7 +13,9 @@ router = APIRouter(prefix='/hospitals')
 
 
 @router.get('/')
-async def get_hospitals(name: Optional[str] = None, city_id: Optional[int] = None):
+async def get_hospitals(
+    name: Optional[str] = None, city_id: Optional[int] = None
+):
     query = db.session.query(Hospital)
     if name:
         query = query.filter(Hospital.name.ilike(f'%{name}%'))

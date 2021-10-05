@@ -33,7 +33,9 @@ async def create_person(person: PersonSchema, logged_user=logged_user):
 
 
 @router.post('/{person_id}', response_model=PersonGetSchema)
-async def update_person(person_id: int, data: PersonUpdateSchema, logged_user=logged_user):
+async def update_person(
+    person_id: int, data: PersonUpdateSchema, logged_user=logged_user
+):
     permissions.persons.can_edit(logged_user)
     person = await get_person(person_id)
     person.update(data)
