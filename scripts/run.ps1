@@ -1,5 +1,5 @@
 touch app.db
-python -m venv venv
+py -m venv venv
 .\venv\Scripts\Activate.ps1
 pip install -U pip
 pip install -r requirements.txt
