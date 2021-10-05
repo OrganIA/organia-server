@@ -15,8 +15,8 @@ class LoginToken(db.TimedMixin, db.Base):
     def __str__(self):
         return self.value
 
-    def __init__(self, *args, **kwargs):
-        value = kwargs.pop('value', False) or security.generate_token()
+    def __init__(self, *args, value=None, **kwargs):
+        value = value or security.generate_token()
         db.Base.__init__(self, *args, **kwargs, _value=value)
 
     def refresh(self):

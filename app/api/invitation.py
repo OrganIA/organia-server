@@ -2,8 +2,7 @@ from typing import List
 from fastapi import APIRouter
 
 from app import db
-from app.errors import AlreadyTakenError, InvalidRequest, NotFoundError
-from app.models import User
+from app.errors import InvalidRequest
 from app.api.schemas.user import UserSchema, UserCreateSchema
 from app.models import Invitation, InvitationSchema, InvitationCreateSchema
 from app.api.users import create_user
@@ -27,11 +26,11 @@ async def get_invitations():
 
 @router.post('/', status_code=201, response_model=InvitationSchema)
 async def create_invitation(invitation: InvitationCreateSchema):
-    # AlreadyTakenError.check(Invitation, 'consumer_id', invitation.consumer_id)
-    invitation = Invitation(user_id=invitation.user_id)
+    invitation = Invitation(author_id=invitation.user_id)
     db.session.add(invitation)
     db.session.commit()
     return invitation
+
 
 @router.post('/{invite_token}', status_code=201, response_model=UserSchema)
 async def create_invite_user(user: UserCreateSchema, invite_token: str):

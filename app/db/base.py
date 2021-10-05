@@ -10,6 +10,24 @@ class Base:
     def __tablename__(cls):
         return f'{str_format.camel_to_snake(cls.__name__)}s'
 
+    def __repr__(self):
+        if isinstance(self, type):
+            class_ = self
+        else:
+            class_ = type(self)
+        header = [class_.__name__]
+        if getattr(self, 'id'):
+            header.append(f'#{self.id}')
+        body = [
+            f'{column.name}={getattr(self, column.name)}'
+            for column in class_.__table__.columns
+            if column.name != 'id'
+        ]
+        return '<{header}: {body}>'.format(
+            header=' '.join(header),
+            body=', '.join(body)
+        )
+
     def update(self, data=None, exclude_unset=True, **kwargs):
         if data:
             data = self.unpack_if_schema(data, exclude_unset=exclude_unset)
