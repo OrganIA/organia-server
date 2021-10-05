@@ -51,10 +51,9 @@ async def update_role(
 async def delete_role(role_id: int, logged_user=logged_user):
     permissions.roles.can_edit(logged_user)
     role = await get_role(role_id)
-    user_list = db.session.query(User).filter_by(role_id=role_id).first()
-    if role == None:
+    if not role:
         raise NotFoundError()
-    elif user_list is not None:
+    elif role.users:
         raise NotAcceptableError(msg="Please remove or update all users who have this role before removing it.")
     db.session.delete(role)
     db.session.commit()
