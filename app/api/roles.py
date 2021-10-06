@@ -55,7 +55,8 @@ async def delete_role(role_id: int, logged_user=logged_user):
         raise NotFoundError()
     elif role.users:
         raise NotAcceptableError(
-            msg="Please remove or update all users who have this role before " \
-                "removing it.")
+            "Please remove or update all users who have this role before "
+            "removing it."
+        )
     db.session.delete(role)
     db.session.commit()
