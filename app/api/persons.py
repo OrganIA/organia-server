@@ -7,6 +7,7 @@ from app.models import Person
 from app.api.schemas.person import (
     PersonSchema, PersonGetSchema, PersonUpdateSchema,
 )
+from . import permissions
 from .dependencies import logged_user
 
 router = APIRouter(prefix='/persons', dependencies=[logged_user])
@@ -23,7 +24,8 @@ async def get_person(person_id: int):
 
 
 @router.post('/', status_code=201)
-async def create_person(person: PersonSchema):
+async def create_person(person: PersonSchema, logged_user=logged_user):
+    permissions.persons.can_edit(logged_user)
     person = Person(**person.dict())
     db.session.add(person)
     db.session.commit()
@@ -31,7 +33,10 @@ async def create_person(person: PersonSchema):
 
 
 @router.post('/{person_id}', response_model=PersonGetSchema)
-async def update_person(person_id: int, data: PersonUpdateSchema):
+async def update_person(
+    person_id: int, data: PersonUpdateSchema, logged_user=logged_user
+):
+    permissions.persons.can_edit(logged_user)
     person = await get_person(person_id)
     person.update(data)
     db.session.commit()
@@ -39,7 +44,8 @@ async def update_person(person_id: int, data: PersonUpdateSchema):
 
 
 @router.delete('/{person_id}')
-async def delete_person(person_id: int):
+async def delete_person(person_id: int, logged_user=logged_user):
+    permissions.persons.can_edit(logged_user)
     person = await get_person(person_id)
     db.session.delete(person)
     db.session.commit()
