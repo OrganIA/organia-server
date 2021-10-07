@@ -45,6 +45,6 @@ class Person(db.TimedMixin, db.Base):
 
     @property
     def age(self):
-        today = datetime.utcnow().date().today()
+        today = datetime.utcnow().date()
         age = today.year - self.birthday.year - ((today.month, today.day) < (self.birthday.month, self.birthday.day))
         return f'{age}'
