@@ -6,6 +6,7 @@ from sqlalchemy.sql.expression import null
 
 from app import db
 from app.helpers.enums import EnumStr
+from datetime import datetime
 
 
 class Person(db.TimedMixin, db.Base):
@@ -24,8 +25,9 @@ class Person(db.TimedMixin, db.Base):
         POSITIVE = '+'
         NEGATIVE = '-'
 
-    class Score():
-        heart = sa.Column(sa.Float, nullable=True)
+    # class Score():
+    #     heart = sa.Column(sa.Float, nullable=True)
+    #A voir plus tard
 
     first_name = sa.Column(sa.String, nullable=False)
     last_name = sa.Column(sa.String, nullable=False)
@@ -35,7 +37,7 @@ class Person(db.TimedMixin, db.Base):
     gender = sa.Column(sa.Enum(Gender))
     abo = sa.Column(sa.Enum(ABO))
     rhesus = sa.Column(sa.Enum(Rhesus))
-
+    
     user = orm.relationship('User', uselist=False, back_populates='person')
     staff = orm.relation('Staff', uselist=False, back_populates='person')
 
@@ -44,3 +46,11 @@ class Person(db.TimedMixin, db.Base):
         if not self.abo or not self.rhesus:
             return None
         return f'{self.abo.name}{self.rhesus.value}'
+
+    @property
+    def age_from_birthday(self):
+        birthday = self.birthday
+        age_format = datetime.strptime(str(birthday), "%Y-%m-%d").date()
+        today = age_format.today()
+        age = today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day))
+        return f'{age}'
