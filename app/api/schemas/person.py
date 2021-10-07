@@ -20,10 +20,10 @@ class PersonSchema(db.Schema):
 
 class PersonGetSchema(PersonSchema, db.TimedMixin.Schema):
     blood_type: Optional[str]
+    age: Optional[int]
 
 
 class PersonUpdateSchema(PersonSchema):
     first_name: Optional[str]
     last_name: Optional[str]
     birthday: Optional[date]
-    age: Optional[int]
