@@ -5,7 +5,7 @@ from .log import WebhookHandler
 
 logging.basicConfig(
     level=logging.DEBUG,
-    handlers=[WebhookHandler(config.DISCORD_LOGS), logging.StreamHandler()],
+    handlers=[WebhookHandler(config.DISCORD_LOGS)],
 )
 
 logger = logging.getLogger(__name__)
