@@ -19,7 +19,6 @@ def log(action, obj, message=None, author=None, properties=None):
     session.add(log)
     session.commit()
     logger.info(str(log))
-    print(log)
 
 
 def commit():
