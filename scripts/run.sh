@@ -1,17 +1,17 @@
 #!/bin/sh
 
 if [ "$container" == "" ]; then
-	python -m venv .venv
-	source .venv/bin/activate
-	pip install -U pip
-	pip install -r requirements.txt
-	pip install alembic uvicorn[standard]
+    python -m venv .venv
+    source .venv/bin/activate
+    pip install -U pip
+    pip install -r requirements.txt
+    pip install alembic uvicorn[standard]
 fi
 
 if [ "$NO_RELOAD" != "" ]; then
-	reload_opts=''
+    reload_opts=''
 else
-	reload_opts='--reload'
+    reload_opts='--reload'
 fi
 
 alembic upgrade head

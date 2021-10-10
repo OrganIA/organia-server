@@ -2,4 +2,3 @@ fastapi
 requests
 passlib[bcrypt]
 sqlalchemy
-sendgrid

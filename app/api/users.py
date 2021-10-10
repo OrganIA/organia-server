@@ -30,6 +30,7 @@ async def get_user(user_id: int):
 @router.post('/', status_code=201, response_model=UserSchema)
 async def create_user(data: UserCreateSchema):
     user = User.from_data(data)
+    # permissions.users.can_edit(logged_user, user)
     db.session.add(user)
     db.session.commit()
     return user
@@ -47,7 +48,8 @@ async def update_user(
 
 
 @router.delete('/{user_id}')
-async def delete_user(user_id: int):
+async def delete_user(user_id: int, logged_user=logged_user):
     user = await get_user(user_id)
+    permissions.users.can_edit(logged_user, user)
     db.session.delete(user)
     db.session.commit()

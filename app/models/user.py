@@ -16,8 +16,18 @@ class User(db.TimedMixin, db.Base):
 
     email = sa.Column(sa.String, nullable=False, unique=True)
     password = sa.Column(sa.String)
+    role_id = sa.Column(sa.ForeignKey('roles.id'), nullable=False)
 
+    role = orm.relationship('Role', back_populates='users')
     person = orm.relationship('Person', uselist=False, back_populates='user')
+
+    def __init__(self, *args, **kwargs):
+        from .role import Role
+        if kwargs.get("role_id"):
+            role = db.session.get(Role, kwargs["role_id"])
+        else:
+            role = Role.get_default_role()
+        super().__init__(*args, **kwargs, role=role)
 
     @classmethod
     def get_unique_email(cls, value, obj=None):

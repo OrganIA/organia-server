@@ -33,6 +33,12 @@ async def test(module):
     module = importlib.import_module(f'app.{module}')
     return module.test()
 
+
+@app.on_event("startup")
+async def create_basic_roles():
+    from app.models import Role
+    Role.setup_roles()
+
 """
 FIXME deprecation warning
 @app.middleware('http')
