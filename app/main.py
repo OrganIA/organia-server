@@ -4,18 +4,11 @@ from fastapi import FastAPI
 from starlette.responses import RedirectResponse
 
 from .api import api
-from .logger import WebhookHandler
-from . import config
 
 
 MIDDLEWARES = ['cors']
 
 app = FastAPI()
-
-logging.basicConfig(
-    level=logging.DEBUG,
-    handlers=[WebhookHandler(config.DISCORD_LOGS)],
-)
 
 
 for name in MIDDLEWARES:
