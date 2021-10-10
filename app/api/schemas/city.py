@@ -1,6 +1,9 @@
 from app import db
 
 
-class City(db.Schema):
+class CitySchema(db.Schema):
     name: str
     department_code: str
+
+    class Config:
+        orm_mode = True

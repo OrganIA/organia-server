@@ -31,4 +31,4 @@ FORCE_LOGIN = _get_bool('FORCE_LOGIN')
 
 DISCORD_LOGS = os.environ.get('DISCORD_LOGS')
 
-LOG_SQL = _get_bool('LOG_SQL', "yes")
+LOG_SQL = _get_bool('LOG_SQL', "no")

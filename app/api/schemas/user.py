@@ -1,7 +1,6 @@
 from typing import Optional
 
 from app import db
-from .role import RoleSchema
 
 
 class UserSchema(db.TimedMixin.Schema):

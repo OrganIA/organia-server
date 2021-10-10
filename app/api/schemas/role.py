@@ -1,8 +1,6 @@
-from datetime import date
 from typing import Optional
 
 from app import db
-from app.models import Role
 
 
 class RoleSchema(db.TimedMixin.Schema):
