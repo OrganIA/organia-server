@@ -7,7 +7,6 @@ from . import session
 
 def log(action, obj, message=None, author=None, properties=None):
     from app.models.action_log import ActionLog
-    from app import logger
     log = ActionLog(
         action=action,
         target_type=type(obj).__name__,
@@ -18,7 +17,7 @@ def log(action, obj, message=None, author=None, properties=None):
     )
     session.add(log)
     session.commit()
-    logger.info(str(log))
+    logging.info(str(log))
 
 
 def commit():

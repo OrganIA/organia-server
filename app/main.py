@@ -1,7 +1,5 @@
 import importlib
-import logging
 from fastapi import FastAPI
-from starlette.requests import Request
 from starlette.responses import RedirectResponse
 
 from .api import api
@@ -34,6 +32,7 @@ async def create_basic_roles():
     Role.setup_roles()
 
 
+"""
 @app.middleware('http')
 async def log_each_request(request: Request, call_next):
     from . import logger
@@ -44,6 +43,7 @@ async def log_each_request(request: Request, call_next):
         (await request.body()).decode(),
     )
     return await call_next(request)
+"""
 
 """
 FIXME deprecation warning
