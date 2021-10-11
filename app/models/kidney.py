@@ -1,6 +1,8 @@
 #from _typeshed import Self
+from _typeshed import IdentityFunction
 from sqlalchemy.sql.elements import Null
 from datetime import date
+import math
 
 
 class AgeScore:
@@ -19,12 +21,11 @@ class AgeScore:
         if (self.age >= 100):
             return 1
         return (100 - self.age) / 55
-
-
-class FagScore: #Besoin de la base de donnée -> basé sur la rareté du score Hla
     @classmethod
-    def getFagScore(self):
-        return 0
+    def getAge(self):
+        return self.age
+
+
 class HlaScore: #human leucocyte antigen incompatibilité
     A = 0
     B = 0
@@ -37,22 +38,30 @@ class HlaScore: #human leucocyte antigen incompatibilité
         if (x >= 4):
             return 0
         return (4 - x) / 4
+    @classmethod
     def getDrScore(self):
         if (self.DR >= 2):
             return 0
         return (2- self.DR) / 2
+    @classmethod
     def getDqScore(self):
         if (self.DQ >= 2):
             return 0
         return (2 - self.DQ) / 2
+    @classmethod #basé sur la rareté du score Hla
+    def getFagScore(self):
+        return 0
 
-
-
+#La date de Début de dialyse (en cours) est définie comme la date de début du traitement de
+#suppleance en cours au moment de la saisie.
+#Pour les patients en attente d’une retransplantation, la date de Début de dialyse correspond à la
+#Date de retour en dialyse (qui est également la date d’arrêt fonctionnel du greffon).
 class DialyseScore:
-    isDialyse = True#https://www.fondation-du-rein.org/quest-ce-que-la-dialyse/
+    isDialyse = True #https://www.fondation-du-rein.org/quest-ce-que-la-dialyse/
     isRetransplantation = False #first time or not
-    DateNewDialyse = date(2021, 10, 1) #n
-    DateOldDialyse = date(2019, 5, 5) #n - 1
+    DateStartDialyse = date(2021, 10, 1) #n
+    DateReturnDialyse = date(2019, 5, 5) #n - 1
+    DateInscription =  date(2019, 5, 5)
     DateGreffe = Null
     DateArf = Null #Arrêt fonctionnel du greffon
 
@@ -62,17 +71,17 @@ class DialyseScore:
             return 0
         #
         if self.isRetransplantation == False:
-            if self.DateNewDialyse != Null:
-                return self.DateNewDialyse
+            if self.DateStartDialyse != Null:
+                return self.DateStartDialyse
             else:
                 return 0
         #
-        if self.DateOldDialyse != Null & self.DateOldDialyse > self.Greffe:
-            return self.DateOldDialyse
+        if self.DateReturnDialyse != Null & self.DateReturnDialyse > self.DateGreffe:
+            return self.DateReturnDialyse
         #
         if self.DateArf != Null:
             return self.DateArf
-        else: return self.DateNewDialyse
+        else: return self.DateStartDialyse
     @classmethod
     def getScore(self):
         try:
@@ -88,18 +97,47 @@ class DialyseScore:
             return 0
     @classmethod
     def getWaitingTime(self):
-        
+        if self.isRetransplantation or (self.DateInscription - self.DateStartDialyse) < 360:
+            return self.DateInscription
+        if self.isRetransplantation == False and (self.DateInscription - self.DateStartDialyse) >= 360:
+            return 12 + self.DateStartDialyse
+        return -1 #need to check error
+    @classmethod
+    def getWaitingScore(self):
+        if self.getWaitingTime() >= 3600:
+            return 1
+        else:
+            return 1 / 120 * self.getWaitingTime()
 
 class Score_HAge:
     DS = DialyseScore()
     HLA =  HlaScore()
-    FAG = FagScore()
     AGE = AgeScore()
-    ageDonneur = 30
+    isIdf = True
+    distance = 60
    # Score = 100 * DD + 200 * f2(DA, DD) + [100 x f3(A,B) + 400 x f4(DR) + 100 x f4(DQ) + 150 x f7(FAG)] x f5(AgeR, 45, 75) + 750 x f6(AgeR, 45, 100)
     @classmethod
-    def getScore(self):
-        return 100 * self.DS.getScore() + 200 * self.DS.getScore() + (100 * self.HLA.getAbScore() + 400 * self.HLA.getDrScore + 100 * self.HLA.getDqScore + 150 * self.FAG.getFagScore) * self.AGE.getAgeMalus() + 750 * self.AGE.getAgeBonus()
+    def getWithoutAgeScore(self):
+        return 100 * self.DS.getScore() + 200 * self.DS.getScore() + (100 * self.HLA.getAbScore() + 400 * self.HLA.getDrScore + 100 * self.HLA.getDqScore + 150 * self.HLA.getFagScore) * self.AGE.getAgeMalus() + 750 * self.AGE.getAgeBonus()
+    @classmethod
+    def getWithAgeScore(self, AgeD):
+        x = 0
+        y = 0
+        if self.AGE.age > (AgeD + 20):
+            x = 0
+        else:
+            x = self.getScore()
+        if self.AGE.age > AgeD + 5:
+            y = 100
+        else:
+            y = abs(self.AGE.age - AgeD)
+        y = math.exp(0.02 * y ** 0.85)
+        return x / y
+    @classmethod
+    def getNationalScore(self, isIdf, distance, AgeD): # distance = valeur en minute entre le donneur et le reçeveur
+        if self.isIdf & isIdf:
+            return self.getWithAgeScore(AgeD)
+        return (1/math.exp(0.0000002 * distance ** 2.9)) * self.getWithAgeScore(AgeD)
 
 #def main():
 #    test = DialyseScore
