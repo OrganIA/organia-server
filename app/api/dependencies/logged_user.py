@@ -7,8 +7,8 @@ from app.models import LoginToken
 
 async def logged_user(request: Request, authorization: str = Header(None)):
     if config.FORCE_LOGIN:
-        from app.models import User
-        return User(email='admin')
+        from app.models import Role
+        return Role.get_admin_role().users[0]
 
     if authorization is None:
         raise InvalidAuthToken('Missing Authorization header')

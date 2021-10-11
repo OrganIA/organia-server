@@ -64,16 +64,18 @@ def get_or_create(
 def get(
     table,
     filter_keys: Union[int, dict],
-    error_on_unfound=False,
+    error_on_unfound=None,
     unfound_error_type=errors.NotFoundError
 ):
+    if error_on_unfound is None:
+        error_on_unfound = isinstance(filter_keys, int)
     if isinstance(filter_keys, int):
         result = session.get(table, filter_keys)
     else:
         result = session.query(table).filter_by(**filter_keys).first()
     if result is None and error_on_unfound:
         raise unfound_error_type(
-            f"Could not find a {table} when searching {filter_keys}"
+            f'Could not find a {table.__name__} when searching {filter_keys}'
         )
     return result
 
