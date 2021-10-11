@@ -38,10 +38,10 @@ async def create_basic_roles():
 async def log_each_request(request: Request, call_next):
     from . import logger
     logger.info(
-        'Got %s %s | path %s | query %s | by %s',
+        'Got %s %s %s',
         request.method,
         request.url,
-        await request.body(),
+        (await request.body()).decode(),
     )
     return await call_next(request)
 

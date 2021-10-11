@@ -12,6 +12,8 @@ class WebhookHandler(logging.Handler):
             return
         if 'urllib' in record.name or 'request' in record.name:
             return
+        if record.levelname == 'DEBUG':
+            return
         message = record.getMessage()
         if message is None:
             return
