@@ -1,9 +1,10 @@
 #from _typeshed import Self
-from _typeshed import IdentityFunction
+#from _typeshed import IdentityFunction
 from sqlalchemy.sql.elements import Null
 from datetime import date
 import math
-
+import json
+#https://www.agence-biomedecine.fr/IMG/pdf/guide_score_rein_v1.pdf
 
 class AgeScore:
     age = 45
@@ -25,7 +26,8 @@ class AgeScore:
     def getAge(self):
         return self.age
 
-
+#HLA-A, B, DR 4 400 (35 %) 400 x (1-nombre d’incompatibilités HLA/6)
+#Probabilité d’incompatibilité 1 100 (8 %) 100 x (1-[ABO[1] x (1-[% anticorps anti-HLA/100]) x (INCp0[2] + INCp1)])1 000
 class HlaScore: #human leucocyte antigen incompatibilité
     A = 0
     B = 0
@@ -91,7 +93,6 @@ class DialyseScore:
             if s < 0:
                 print("Error: Date invalid")
                 return 0
-            print(s)
             return s / 3650
         except:
             return 0
@@ -140,8 +141,10 @@ class Score_HAge:
         return (1/math.exp(0.0000002 * distance ** 2.9)) * self.getWithAgeScore(AgeD)
 
 #def main():
-#    test = DialyseScore
-#    print(test.getScore())
+ #   test = DialyseScore
+  #  print(test.getScore())
+   # f = open ('data.json', "r")
+    #data = json.loads(f.read())
 
 #if __name__ == "__main__":
 #    main()
