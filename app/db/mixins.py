@@ -14,12 +14,18 @@ class IdMixin:
 
 
 @orm.declarative_mixin
-class TimedMixin(IdMixin):
+class CreatedMixin(IdMixin):
     created_at = sa.Column(sa.DateTime, default=datetime.utcnow)
-    updated_at = sa.Column(sa.DateTime, onupdate=datetime.utcnow)
 
     class Schema(IdMixin.Schema):
         created_at: Optional[datetime]
+
+
+@orm.declarative_mixin
+class TimedMixin(CreatedMixin):
+    updated_at = sa.Column(sa.DateTime, onupdate=datetime.utcnow)
+
+    class Schema(CreatedMixin.Schema):
         updated_at: Optional[datetime]
 
 

@@ -3,7 +3,7 @@ from fastapi import APIRouter
 
 from app import db
 from app.errors import NotFoundError, InvalidRequest
-from app.models import Listing
+from app.models import Person, Listing
 from app.api.schemas.listing import (
     ListingGetSchema, ListingCreateSchema, ListingUpdateSchema,
 )
@@ -34,9 +34,9 @@ async def get_receivers():
 
 @router.post('/', response_model=ListingGetSchema)
 async def create_listing(data: ListingCreateSchema):
-    listing = Listing.from_data(data)
-    db.session.add(listing)
-    db.session.commit()
+    db.get(Person, data.person_id)
+    data = data.dict(exclude_unset=True)
+    listing = db.add(Listing, data)
     return listing
 
 
@@ -53,11 +53,11 @@ async def update_listing(listing_id, data: ListingUpdateSchema):
         db.session.rollback()
         raise InvalidRequest('Could not find a corresponding person')
     db.session.commit()
+    db.log("edit", listing, properties=data.dict())
     return listing
 
 
 @router.delete('/{listing_id}')
 async def delete_listing(listing_id: int):
     listing = await get_listing(listing_id)
-    db.session.delete(listing)
-    db.session.commit()
+    db.delete(listing)

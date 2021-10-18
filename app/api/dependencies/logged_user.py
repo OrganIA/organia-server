@@ -1,14 +1,19 @@
 from fastapi import Request, Header
 
 from app import config
+from app import db
 from app.errors import InvalidAuthToken
 from app.models import LoginToken
 
 
 async def logged_user(request: Request, authorization: str = Header(None)):
     if config.FORCE_LOGIN:
-        from app.models import User
-        return User(email='admin')
+        from app.models import Role, User
+        return db.get_or_create(
+            User,
+            search_keys={'role': Role.get_admin_role()},
+            create_keys={'email': 'admin@admin'},
+        )
 
     if authorization is None:
         raise InvalidAuthToken('Missing Authorization header')
