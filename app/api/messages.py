@@ -2,9 +2,10 @@ from typing import List
 from fastapi import APIRouter
 
 from app import db
-from app.errors import NotFoundError
-from app.models import Chat
+from app.errors import NotFoundError, Unauthorized
+from app.models import Chat, Message
 from app.api.schemas.chat import ChatSchema, ChatCreateSchema
+from app.api.schemas.messages import MessageSchema, MessageCreateSchema
 # from . import permissions
 from .dependencies import logged_user
 
@@ -13,13 +14,31 @@ router = APIRouter(prefix='/chats')
 
 
 @router.get('/', response_model=List[ChatSchema])
-async def get_chats(logged_user=logged_user):
-    print("CACAAAAAAAAAAAAAAA")
-    print(logged_user.id)
-    print("COCOOOOOOOOOOOOOOOOOO")
+async def get_chats_of_user(logged_user=logged_user):
     result = db.session.query(Chat).filter_by(user_a_id=logged_user.id).all()
     result += db.session.query(Chat).filter_by(user_b_id=logged_user.id).all()
     return result
+
+
+@router.get('/{chat_id}', response_model=ChatSchema)
+async def get_chat_by_id(chat_id: int, logged_user=logged_user):
+    return db.session.get(Chat, chat_id)
+
+
+@router.get('/messages/{chat_id}', response_model=List[MessageSchema])
+async def get_messages_of_chat(chat_id: int, logged_user=logged_user):
+    chat = db.session.get(Chat, chat_id)
+    if (logged_user.id != chat.user_a_id and logged_user.id != chat.user_a_id):
+        raise Unauthorized("You do not have access to this chat.")
+    return db.session.query(Message).filter_by(chat_id=chat_id).all()
+
+
+@router.post('/', status_code=201, response_model=ChatSchema)
+async def create_chat(data: ChatCreateSchema, logged_user=logged_user):
+    chat = Chat.from_data(data)
+    db.session.add(chat)
+    db.session.commit()
+    return chat
 
 
 # @router.get('/me', response_model=UserSchema)

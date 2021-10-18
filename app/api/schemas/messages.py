@@ -1,15 +1,16 @@
 from app import db
 
 
-class MessageSchema(db.TimedMixin.Schema):
-    sender_id: int
-    chat_id: id
+class MessageSchema(db.IdMixin.Schema):
+    sender: int
+    chat: int
     content: str
+
     class Config:
         orm_mode = True
 
 
-class MessageCreateSchema(db.Schema):
-    sender_id: int
-    chat_id: int
-    content:str
+class MessageCreateSchema(db.IdMixin.Schema):
+    sender: int
+    chat: int
+    content: str
