@@ -18,7 +18,6 @@ class User(db.TimedMixin, db.Base):
     password = sa.Column(sa.String)
 
     person = orm.relationship('Person', uselist=False, back_populates='user')
-
     @classmethod
     def get_unique_email(cls, value, obj=None):
         AlreadyTakenError.check(

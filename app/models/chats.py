@@ -5,7 +5,5 @@ from app import db
 
 
 class Chat(db.IdMixin, db.Base):
-    user_a = sa.Column(sa.ForeignKey('users.id'), nullable=False)
-    user_b = sa.Column(sa.ForeignKey('users.id'), nullable=False)
-
-    user = orm.relationship('User', back_populates='chats')
+    user_a_id = sa.Column(sa.ForeignKey('users.id'), nullable=False)
+    user_b_id = sa.Column(sa.ForeignKey('users.id'), nullable=False)
