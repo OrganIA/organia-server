@@ -10,7 +10,7 @@ class MessageSchema(db.IdMixin.Schema):
         orm_mode = True
 
 
-class MessageCreateSchema(db.IdMixin.Schema):
+class MessageCreateSchema(db.Schema):
     sender: int
     chat: int
     content: str
