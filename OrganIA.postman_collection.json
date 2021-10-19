@@ -436,6 +436,59 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get all messages of chat",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/chats/messages/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"chats",
+								"messages",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a message",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sender\": 1,\r\n    \"chat\": 1,\r\n    \"content\": \"zebi\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/chats/messages/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"chats",
+								"messages",
+								"1"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -497,7 +550,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "1-1-97659368895e9d20317bcffc3656fc516c44a6bf92dba5ea02dd4e443a84e199",
+				"value": "1-1-7f6964833bb267436a879b98fc17ef6acf3290ff0e72c3abf5823c36607eea57",
 				"type": "string"
 			}
 		]
