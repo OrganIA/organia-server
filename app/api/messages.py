@@ -6,7 +6,6 @@ from app.errors import NotFoundError, Unauthorized, InvalidRequest
 from app.models import Chat, Message
 from app.api.schemas.chat import ChatSchema, ChatCreateSchema
 from app.api.schemas.messages import MessageSchema, MessageCreateSchema
-# from . import permissions
 from .dependencies import logged_user
 
 
@@ -35,7 +34,10 @@ async def create_chat(data: ChatCreateSchema, logged_user=logged_user):
         raise InvalidRequest()
     elif logged_user.id != chat.user_a_id and logged_user.id != chat.user_b_id:
         raise InvalidRequest(msg="Cannot create a chat for other users.")
-    elif db.session.query(Chat).filter_by(user_a_id=chat.user_a_id, user_b_id=chat.user_b_id).first():
+    elif db.session.query(Chat).filter_by(
+        user_a_id=chat.user_a_id,
+        user_b_id=chat.user_b_id
+    ).first():
         raise InvalidRequest(msg="A chat between these users alredy exists.")
     db.session.add(chat)
     db.session.commit()
@@ -47,13 +49,17 @@ async def get_messages_of_chat(chat_id: int, logged_user=logged_user):
     chat = db.session.get(Chat, chat_id)
     if not chat:
         raise NotFoundError("No chat found with this id.")
-    elif (logged_user.id != chat.user_a_id and logged_user.id != chat.user_a_id):
+    elif (logged_user.id != chat.user_a_id
+          and logged_user.id != chat.user_a_id):
         raise Unauthorized("You do not have access to this chat.")
     return db.session.query(Message).filter_by(chat=chat_id).all()
 
 
 @router.post('/messages/{chat_id}', response_model=MessageSchema)
-async def get_chats_of_user(chat_id: int, data: MessageCreateSchema, logged_user=logged_user):
+async def send_message(chat_id: int,
+                       data: MessageCreateSchema,
+                       logged_user=logged_user
+                       ):
     chat = db.session.get(Chat, chat_id)
     if not chat:
         raise NotFoundError("No chat found with this id.")
