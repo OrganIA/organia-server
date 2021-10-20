@@ -11,6 +11,22 @@ from .dependencies import logged_user
 
 router = APIRouter(prefix='/chats')
 
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    print('Accepting client connection...')
+    await websocket.accept()
+    while True:
+        try:
+            # Wait for any message from the client
+            msg = await websocket.receive_text()
+            # Send message to the client
+            print(msg)
+            resp = {'value': random.uniform(0, 1)}
+            await websocket.send_json(resp)
+        except Exception as e:
+            print('error:', e)
+            break
+    print('Bye..')
 
 @router.get('/', response_model=List[ChatSchema])
 async def get_chats_of_user(logged_user=logged_user):
