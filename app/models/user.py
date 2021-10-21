@@ -22,14 +22,7 @@ class User(db.TimedMixin, db.Base):
     role = orm.relationship('Role', back_populates='users')
     person = orm.relationship('Person', uselist=False, back_populates='user')
     messages = orm.relationship("Message", back_populates="sender")
-
-    @hybrid_property
-    def chats(self):
-        return db.session.query(Chat).filter(
-          (Chat.user_a == self)
-          or (Chat.user_b == self)
-        )
-
+    groups = orm.relationship("ChatGroup", back_populates="user")
 
     def __init__(self, *args, **kwargs):
         from .role import Role
