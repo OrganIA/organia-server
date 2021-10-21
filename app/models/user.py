@@ -2,9 +2,10 @@ from typing import Optional
 import sqlalchemy as sa
 from sqlalchemy import orm
 from passlib.context import CryptContext
-
+from app.models.chats import Chat
 from app import db
 from app.errors import AlreadyTakenError, PasswordMismatchError
+from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 
 
 class User(db.TimedMixin, db.Base):
@@ -21,6 +22,14 @@ class User(db.TimedMixin, db.Base):
     role = orm.relationship('Role', back_populates='users')
     person = orm.relationship('Person', uselist=False, back_populates='user')
     messages = orm.relationship("Message", back_populates="sender")
+
+    @hybrid_property
+    def chats(self):
+        return db.session.query(Chat).filter(
+          (Chat.user_a == self)
+          or (Chat.user_b == self)
+        )
+
 
     def __init__(self, *args, **kwargs):
         from .role import Role
