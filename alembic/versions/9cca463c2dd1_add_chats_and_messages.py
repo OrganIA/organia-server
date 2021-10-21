@@ -1,8 +1,8 @@
 """add chats and messages
 
-Revision ID: 4e7dc5899fc4
+Revision ID: 9cca463c2dd1
 Revises: 2c4d1baa13d0
-Create Date: 2021-10-18 20:52:41.151604
+Create Date: 2021-10-21 12:10:10.379399
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '4e7dc5899fc4'
+revision = '9cca463c2dd1'
 down_revision = '2c4d1baa13d0'
 branch_labels = None
 depends_on = None
@@ -31,10 +31,10 @@ def upgrade():
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.Column('content', sa.String(), nullable=False),
-    sa.Column('chat', sa.Integer(), nullable=True),
-    sa.Column('sender', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['chat'], ['chats.id'], name=op.f('fk_messages_chat_chats')),
-    sa.ForeignKeyConstraint(['sender'], ['users.id'], name=op.f('fk_messages_sender_users')),
+    sa.Column('chat_id', sa.Integer(), nullable=True),
+    sa.Column('sender_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['chat_id'], ['chats.id'], name=op.f('fk_messages_chat_id_chats')),
+    sa.ForeignKeyConstraint(['sender_id'], ['users.id'], name=op.f('fk_messages_sender_id_users')),
     sa.PrimaryKeyConstraint('id', name=op.f('pk_messages'))
     )
     with op.batch_alter_table('hospitals', schema=None) as batch_op:

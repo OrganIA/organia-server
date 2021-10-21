@@ -2,8 +2,8 @@ from app import db
 
 
 class MessageSchema(db.IdMixin.Schema):
-    sender: int
-    chat: int
+    sender_id: int
+    chat_id: int
     content: str
 
     class Config:
@@ -11,6 +11,6 @@ class MessageSchema(db.IdMixin.Schema):
 
 
 class MessageCreateSchema(db.Schema):
-    sender: int
-    chat: int
+    sender_id: int
+    chat_id: int
     content: str

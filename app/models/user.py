@@ -20,6 +20,7 @@ class User(db.TimedMixin, db.Base):
 
     role = orm.relationship('Role', back_populates='users')
     person = orm.relationship('Person', uselist=False, back_populates='user')
+    messages = orm.relationship("Message", back_populates="sender")
 
     def __init__(self, *args, **kwargs):
         from .role import Role

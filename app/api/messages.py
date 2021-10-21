@@ -21,9 +21,11 @@ async def get_chats_of_user(logged_user=logged_user):
 
 @router.get('/{chat_id}', response_model=ChatSchema)
 async def get_chat_by_id(chat_id: int, logged_user=logged_user):
-    chat = db.session.get(Chat, chat_id)
+    chat = db.get(Chat, chat_id)
     if not chat:
         raise NotFoundError("No chat found with this id.")
+    if logged_user.id not in (chat.user_a_id, chat_user_b_id):
+        raise Unauthorized("You do not have access to this chat.")
     return chat
 
 
@@ -32,9 +34,9 @@ async def create_chat(data: ChatCreateSchema, logged_user=logged_user):
     chat = Chat.from_data(data)
     if not chat:
         raise InvalidRequest()
-    elif logged_user.id != chat.user_a_id and logged_user.id != chat.user_b_id:
+    if logged_user.id not in (chat.user_a_id, chat_user_b_id):
         raise InvalidRequest(msg="Cannot create a chat for other users.")
-    elif db.session.query(Chat).filter_by(
+    if db.session.query(Chat).filter_by(
         user_a_id=chat.user_a_id,
         user_b_id=chat.user_b_id
     ).first():
@@ -46,13 +48,10 @@ async def create_chat(data: ChatCreateSchema, logged_user=logged_user):
 
 @router.get('/messages/{chat_id}', response_model=List[MessageSchema])
 async def get_messages_of_chat(chat_id: int, logged_user=logged_user):
-    chat = db.session.get(Chat, chat_id)
-    if not chat:
-        raise NotFoundError("No chat found with this id.")
-    elif (logged_user.id != chat.user_a_id
-          and logged_user.id != chat.user_a_id):
+    chat = db.get(Chat, chat_id)
+    if logged_user.id not in (chat.user_a_id, chat_user_b_id):
         raise Unauthorized("You do not have access to this chat.")
-    return db.session.query(Message).filter_by(chat=chat_id).all()
+    return db.session.query(Message).filter_by(chat_id=chat_id).all()
 
 
 @router.post('/messages/{chat_id}', response_model=MessageSchema)
@@ -60,10 +59,8 @@ async def send_message(chat_id: int,
                        data: MessageCreateSchema,
                        logged_user=logged_user
                        ):
-    chat = db.session.get(Chat, chat_id)
-    if not chat:
-        raise NotFoundError("No chat found with this id.")
-    elif logged_user.id != chat.user_a_id and logged_user.id != chat.user_b_id:
+    chat = db.get(Chat, chat_id)
+    if logged_user.id not in (chat.user_a_id, chat_user_b_id):
         raise InvalidRequest(msg="User does not belong to this chat.")
     message = Message.from_data(data)
     if not message:
