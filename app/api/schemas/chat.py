@@ -1,15 +1,16 @@
 from app import db
 from app.api.schemas.user import UserSchema
+from typing import List
 
 
-class ChatSchema(db.IdMixin.Schema):
-    user_a: UserSchema
-    user_b: UserSchema
+class ChatGroupSchema(db.Schema):
+    chat_id: int
+    users: List[int]
 
-    class Config:
-        orm_mode = True
+
+class ChatGroupCreateSchema(db.Schema):
+    user_id: int
 
 
 class ChatCreateSchema(db.Schema):
-    user_a_id: int
-    user_b_id: int
+    users_ids: List[ChatGroupCreateSchema]

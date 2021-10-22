@@ -1,7 +1,7 @@
 from app import db
 
 
-class MessageSchema(db.IdMixin.Schema):
+class MessageSchema(db.TimedMixin.Schema):
     sender_id: int
     chat_id: int
     content: str
