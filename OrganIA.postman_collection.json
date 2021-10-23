@@ -15,7 +15,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"sober@saber.com\",\n    \"password\": \"saber\"\n}",
+							"raw": "{\n    \"email\": \"saber@saber.com\",\n    \"password\": \"saber\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -118,7 +118,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"tutu@toto.com\",\n    \"password\": \"saber\",\n    \"role_id\": 50\n}",
+							"raw": "{\n    \"email\": \"tutu@toto.com\",\n    \"password\": \"saber\",\n    \"role_id\": 1\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -368,26 +368,6 @@
 					"response": []
 				},
 				{
-					"name": "Get all chats",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8000/api/chats",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"api",
-								"chats"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Get chat by id",
 					"request": {
 						"method": "GET",
@@ -415,7 +395,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"user_a_id\": 1,\r\n    \"user_b_id\": 2\r\n}",
+							"raw": "{\r\n    \"users_ids\":\r\n    [\r\n        {\"user_id\":1},\r\n        {\"user_id\":2}\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -466,7 +446,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"sender\": 1,\r\n    \"chat\": 1,\r\n    \"content\": \"zebi\"\r\n}",
+							"raw": "{\r\n    \"sender_id\": 1,\r\n    \"chat_id\": 1,\r\n    \"content\": \"zebi\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -550,7 +530,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "1-1-7f6964833bb267436a879b98fc17ef6acf3290ff0e72c3abf5823c36607eea57",
+				"value": "1-1-d9ff781d1daac7c2fefd8cafa6d14312b4f5c4f03f72128c9c527e8d09c8d12b",
 				"type": "string"
 			}
 		]
