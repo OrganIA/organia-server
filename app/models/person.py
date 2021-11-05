@@ -33,7 +33,7 @@ class Person(db.TimedMixin, db.Base):
     gender = sa.Column(sa.Enum(Gender))
     abo = sa.Column(sa.Enum(ABO))
     rhesus = sa.Column(sa.Enum(Rhesus))
-    
+
     user = orm.relationship('User', uselist=False, back_populates='person')
     staff = orm.relation('Staff', uselist=False, back_populates='person')
 

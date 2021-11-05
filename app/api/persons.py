@@ -37,6 +37,7 @@ async def update_person(person_id: int, data: PersonUpdateSchema):
     db.session.commit()
     return person
 
+
 @router.delete('/{person_id}')
 async def delete_person(person_id: int):
     person = await get_person(person_id)
