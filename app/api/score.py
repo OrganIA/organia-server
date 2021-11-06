@@ -41,16 +41,40 @@ def compute_scoring(donor: Listing, receiver: Listing):
     organs_score = organs_priority(receiver.organ)
 
     age = int(donor.person.age)
+    # TODO : Add conditions to check the organ and redirect to correct scoring functions
     score = 100 * (organs_score * (blood_type + age)) / 3.5
     return score
 
 
-@router.get('/listing/{person_id}')
-async def calculate_heart(person_id: int):
+def calculate_heart(person_id: int):
     heart_listing = []
-    donor = db.session.query(Listing).filter(Listing.person_id == person_id).first()
+    donor = db.session.query(Listing).filter(Listing.person_id==person_id).first()
+    if (donor == None):
+        return "No listing found for this person id"
     receivers = db.session.query(Listing).filter_by(donor=False).all()
     for receiver in receivers:
         score = compute_scoring(donor, receiver)
         heart_listing.append({"listing": receiver, "score": score})
-    return (heart_listing)
+    return (sorted(heart_listing, key=lambda x: x["score"], reverse=True))
+
+
+def calculate_lungs(person_id: int):
+    return "placeholder response for lungs"
+
+
+def calculate_liver(person_id: int):
+    return "placeholder response for liver"
+
+
+@router.get('/listing/{person_id}/{organ}')
+async def calculate_organ(person_id: int, organ: str):
+    result_listing = []
+    # Organ condition needed only if we decide that a donor can have multiple organs to donate
+    donor = db.session.query(Listing).filter((Listing.person_id==person_id) & (Listing.organ==organ)).first()
+    if (donor == None):
+        return "No listing found for this person_id with this organ"
+    receivers = db.session.query(Listing).filter_by(donor=False).all()
+    for receiver in receivers:
+        score = compute_scoring(donor, receiver)
+        result_listing.append({"listing": receiver, "score": score})
+    return sorted(result_listing, key=lambda x: x["score"], reverse=True)
