@@ -21,11 +21,6 @@ from .dependencies import logged_user
 router = APIRouter(prefix='/score') # Do not forget to add permissions
 
 
-@router.get('/{listing_id}')
-async def get_receivers_from_donor():
-    return db.session.query(Person).all()
-
-
 def organs_priority(organs):
     if organs == "HEART":
         organs_score = 1
@@ -36,14 +31,27 @@ def organs_priority(organs):
     return organs_score
 
 
+def get_blood_donor(donor: Listing, receiver: Listing):
+    if (donor.person.abo.value == "O"):
+        return compatibility_O(receiver.person.blood_type, receiver.person.rhesus)
+    elif (donor.person.abo.value == "A"):
+        return compatibility_A(receiver.person.blood_type, receiver.person.rhesus)
+    elif (donor.person.abo.value == "B"):
+        return compatibility_B(receiver.person.blood_type, receiver.person.rhesus)
+    elif (donor.person.abo.value == "AB"):
+        return compatibility_A(receiver.person.blood_type, receiver.person.rhesus)
+
+
 def compute_scoring(donor: Listing, receiver: Listing):
-    blood_type = compatibility_O(receiver.person.blood_type, receiver.person.blood_type)
+    blood_type = get_blood_donor(donor, receiver)
     organs_score = organs_priority(receiver.organ)
 
-    age = int(donor.person.age)
+    age = int(receiver.person.age)
     # TODO : Add conditions to check the organ and redirect to correct scoring functions
-    score = 100 * (organs_score * (blood_type + age)) / 3.5
+    score = organs_score * (100 + (blood_type + age)) / 3.5
     return score
+
+
 
 
 def calculate_heart(person_id: int):
@@ -56,14 +64,6 @@ def calculate_heart(person_id: int):
         score = compute_scoring(donor, receiver)
         heart_listing.append({"listing": receiver, "score": score})
     return (sorted(heart_listing, key=lambda x: x["score"], reverse=True))
-
-
-def calculate_lungs(person_id: int):
-    return "placeholder response for lungs"
-
-
-def calculate_liver(person_id: int):
-    return "placeholder response for liver"
 
 
 @router.get('/listing/{person_id}/{organ}')

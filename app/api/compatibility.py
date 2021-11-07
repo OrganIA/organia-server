@@ -2,7 +2,7 @@
 
 def compatibility_O(receiver_blood, rhesus_receiver):
     blood_score = 1
-    if (rhesus_receiver == '-'):
+    if (rhesus_receiver.value == '-'):
         if (receiver_blood == 'O+'):
             blood_score = 9
         if (receiver_blood == 'O-'):
@@ -33,7 +33,7 @@ def compatibility_O(receiver_blood, rhesus_receiver):
 
 def compatibility_A(receiver_blood, rhesus_receiver):
     blood_score = 1
-    if (rhesus_receiver == '-'):
+    if (rhesus_receiver.value == '-'):
         if (receiver_blood == 'AB+'):
             blood_score = 10
         if (receiver_blood == 'AB-'):
@@ -53,7 +53,7 @@ def compatibility_A(receiver_blood, rhesus_receiver):
 
 def compatibility_B(receiver_blood, rhesus_receiver):
     blood_score = 1
-    if (rhesus_receiver == '-'):
+    if (rhesus_receiver.value == '-'):
         if (receiver_blood == 'AB+'):
             blood_score = 10
         if (receiver_blood == 'AB-'):
@@ -72,7 +72,7 @@ def compatibility_B(receiver_blood, rhesus_receiver):
 
 def compatibility_AB(receiver_blood, rhesus_receiver):
     blood_score = 1
-    if (rhesus_receiver == '-'):
+    if (rhesus_receiver.value == '-'):
         if (receiver_blood == 'AB+'):
             blood_score = 10
         if (receiver_blood == 'AB-'):
