@@ -39,7 +39,7 @@ def get_blood_donor(donor: Listing, receiver: Listing):
     elif (donor.person.abo.value == "B"):
         return compatibility_B(receiver.person.blood_type, receiver.person.rhesus)
     elif (donor.person.abo.value == "AB"):
-        return compatibility_A(receiver.person.blood_type, receiver.person.rhesus)
+        return compatibility_AB(receiver.person.blood_type, receiver.person.rhesus)
 
 
 def compute_scoring(donor: Listing, receiver: Listing):
@@ -57,7 +57,7 @@ def compute_scoring(donor: Listing, receiver: Listing):
 def calculate_heart(person_id: int):
     heart_listing = []
     donor = db.session.query(Listing).filter(Listing.person_id==person_id).first()
-    if (donor == None):
+    if (donor is None):
         return "No listing found for this person id"
     receivers = db.session.query(Listing).filter_by(donor=False).all()
     for receiver in receivers:
@@ -71,7 +71,7 @@ async def calculate_organ(person_id: int, organ: str):
     result_listing = []
     # Organ condition needed only if we decide that a donor can have multiple organs to donate
     donor = db.session.query(Listing).filter((Listing.person_id==person_id) & (Listing.organ==organ)).first()
-    if (donor == None):
+    if (donor is None):
         return "No listing found for this person_id with this organ"
     receivers = db.session.query(Listing).filter_by(donor=False).all()
     for receiver in receivers:

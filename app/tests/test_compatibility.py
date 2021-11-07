@@ -1,6 +1,7 @@
 from . import client, PREFIX
 from .fixtures import clean_db
 from .helpers import assert_response
+import enum
 from app.api.compatibility import (
     compatibility_O,
     compatibility_A,
@@ -8,93 +9,95 @@ from app.api.compatibility import (
     compatibility_AB
 )
 
-rhesus_neg = '-'
-rhesus_positive = '+'
+
+class Rhesus(enum.Enum):
+    POSITIVE = '+'
+    NEGATIVE = '-'
 
 
 def test_compatibility_O_negative():
-    score = compatibility_O('O+', rhesus_neg)
+    score = compatibility_O('O+', Rhesus.NEGATIVE)
     assert score == 9
-    score = compatibility_O('O-', rhesus_neg)
+    score = compatibility_O('O-', Rhesus.NEGATIVE)
     assert score == 9
-    score = compatibility_O('AB+', rhesus_neg)
+    score = compatibility_O('AB+', Rhesus.NEGATIVE)
     assert score == 10
-    score = compatibility_O('AB-', rhesus_neg)
+    score = compatibility_O('AB-', Rhesus.NEGATIVE)
     assert score == 10
-    score = compatibility_O('A+', rhesus_neg)
+    score = compatibility_O('A+', Rhesus.NEGATIVE)
     assert score == 9
-    score = compatibility_O('A-', rhesus_neg)
+    score = compatibility_O('A-', Rhesus.NEGATIVE)
     assert score == 9
-    score = compatibility_O('B+', rhesus_neg)
+    score = compatibility_O('B+', Rhesus.NEGATIVE)
     assert score == 10
-    score = compatibility_O('B-', rhesus_neg)
+    score = compatibility_O('B-', Rhesus.NEGATIVE)
     assert score == 10
 
 
 def test_compatibility_O_positive():
-    score = compatibility_O('O+', rhesus_positive)
+    score = compatibility_O('O+', Rhesus.POSITIVE)
     assert score == 5
-    score = compatibility_O('AB+', rhesus_positive)
+    score = compatibility_O('AB+', Rhesus.POSITIVE)
     assert score == 9
-    score = compatibility_O('A+', rhesus_positive)
+    score = compatibility_O('A+', Rhesus.POSITIVE)
     assert score == 5
-    score = compatibility_O('B+', rhesus_positive)
+    score = compatibility_O('B+', Rhesus.POSITIVE)
     assert score == 8
 
 
 def test_compatibility_A_negative():
-    score = compatibility_A('AB+', rhesus_neg)
+    score = compatibility_A('AB+', Rhesus.NEGATIVE)
     assert score == 10
-    score = compatibility_A('AB-', rhesus_neg)
+    score = compatibility_A('AB-', Rhesus.NEGATIVE)
     assert score == 10
-    score = compatibility_A('A+', rhesus_neg)
+    score = compatibility_A('A+', Rhesus.NEGATIVE)
     assert score == 9
-    score = compatibility_A('A-', rhesus_neg)
+    score = compatibility_A('A-', Rhesus.NEGATIVE)
     assert score == 9
 
 
 def test_compatibility_A_positive():
-    score = compatibility_A('AB+', rhesus_positive)
+    score = compatibility_A('AB+', Rhesus.POSITIVE)
     assert score == 5
-    score = compatibility_A('A+', rhesus_positive)
+    score = compatibility_A('A+', Rhesus.POSITIVE)
     assert score == 5
 
 
 def test_compatibility_B_negative():
-    score = compatibility_B('AB+', rhesus_neg)
+    score = compatibility_B('AB+', Rhesus.NEGATIVE)
     assert score == 10
-    score = compatibility_B('AB-', rhesus_neg)
+    score = compatibility_B('AB-', Rhesus.NEGATIVE)
     assert score == 10
-    score = compatibility_B('B+', rhesus_neg)
+    score = compatibility_B('B+', Rhesus.NEGATIVE)
     assert score == 10
-    score = compatibility_B('B-', rhesus_neg)
+    score = compatibility_B('B-', Rhesus.NEGATIVE)
     assert score == 10
 
 
 def test_compatibility_B_positive():
-    score = compatibility_B('AB+', rhesus_positive)
+    score = compatibility_B('AB+', Rhesus.POSITIVE)
     assert score == 9
-    score = compatibility_B('B+', rhesus_positive)
+    score = compatibility_B('B+', Rhesus.POSITIVE)
     assert score == 8
 
 
 def test_compatibility_AB_negative():
-    score = compatibility_AB('AB+', rhesus_neg)
+    score = compatibility_AB('AB+', Rhesus.NEGATIVE)
     assert score == 10
-    score = compatibility_A('AB-', rhesus_neg)
+    score = compatibility_A('AB-', Rhesus.NEGATIVE)
     assert score == 10
 
 
 def test_compatibility_AB_positive():
-    score = compatibility_AB('AB+', rhesus_positive)
+    score = compatibility_AB('AB+', Rhesus.POSITIVE)
     assert score == 9
 
-def test_no_compability():
-    score = compatibility_O('TEST', rhesus_positive)
+def test_no_compatibility():
+    score = compatibility_O('TEST', Rhesus.POSITIVE)
     assert score == 1
-    score = compatibility_A('TEST', rhesus_positive)
+    score = compatibility_A('TEST', Rhesus.POSITIVE)
     assert score == 1
-    score = compatibility_B('TEST', rhesus_positive)
+    score = compatibility_B('TEST', Rhesus.POSITIVE)
     assert score == 1
-    score = compatibility_AB('TEST', rhesus_positive)
+    score = compatibility_AB('TEST', Rhesus.POSITIVE)
     assert score == 1
