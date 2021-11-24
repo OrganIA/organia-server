@@ -11,6 +11,7 @@ from .dependencies import logged_user
 
 router = APIRouter(prefix='/chats')
 
+
 @router.get('/', response_model=List[ChatGroupSchema])
 async def get_chats_of_user(logged_user=logged_user):
     chat_group = db.session.query(ChatGroup).filter_by(
@@ -82,11 +83,15 @@ async def send_message(chat_id: int,
                        data: MessageCreateSchema,
                        logged_user=logged_user
                        ):
+    print("HELLOOOOOO")
     chat = db.session.query(ChatGroup).filter_by(
         chat_id=chat_id, user_id=logged_user.id).all()
     if not chat:
         raise NotFoundError("No chat found for the user with this id.")
     message = Message.from_data(data)
+    print('Message from data 2:')
+    print(message)
+    print('//////////')
     if not message:
         raise InvalidRequest()
     db.session.add(message)
