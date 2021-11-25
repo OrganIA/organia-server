@@ -93,9 +93,6 @@ async def send_message(
     if not chat:
         raise NotFoundError("No chat found for the user with this id.")
     message = Message.from_data(data)
-    print('Message from data 2:')
-    print(message)
-    print('//////////')
     if not message:
         raise InvalidRequest
     db.session.add(message)
