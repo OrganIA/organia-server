@@ -1,6 +1,10 @@
+[{
+    "code": 0,
+    "token": "Bearer 1-1-aa1a55281c3ab6a68af238f88805e662b8d22891f1ab2656a63b9f3feeaf98fb"
+},
 {
-    "chat": 1,
+    "code": 1,
+    "chat_id": 1,
     "content": "zebi",
-    "token": "1-1-aa1a55281c3ab6a68af238f88805e662b8d22891f1ab2656a63b9f3feeaf98fb",
-    "sender": 1
-}
+    "sender_id": 1
+}]

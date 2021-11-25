@@ -1,40 +1,66 @@
 from typing import List
-from fastapi import APIRouter, WebSocket
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
-from app import config
 from app import db
-from app.models import LoginToken
-from app.api.schemas.messages import MessageCreateSchema
-from json import loads
-from collections import namedtuple
 from app.models import ChatGroup, Message
+from app.api.schemas.messages import MessageCreateSchema
+from app.errors import InvalidRequest, NotFoundError
+from app.utils import websocket_manager
+from collections import namedtuple
+from json import loads
 
 router = APIRouter(prefix='/chats')
 
 
+manager = websocket_manager.ConnectionManager()
+
+
 @router.websocket('/{chat_id}')
-async def websocket_endpoint(chat_id: int, websocket: WebSocket):
+async def websocket_routek(chat_id: int, websocket: WebSocket):
     print('Accepting client connection...')
-    await websocket.accept()
-    while True:
-        try:
-            # Wait for any message from the client
+    await manager.connect(websocket)
+    try:
+        while True:
             data = loads(await websocket.receive_text())
-            # Send message to the client
             print('DATA:')
             print(data)
             print('//////////')
-            message_from_data = check_messages(data.copy())
-            print('Message from data:')
-            print(message_from_data)
-            print('//////////')
-            logged_user = await websocket_logged_user(authorization=data["token"])
-            send_message(chat_id=chat_id, data=message_from_data,
-                         logged_user=logged_user)
-        except Exception as e:
-            print(e.args)
-            await websocket.send_json({"error": e.args})
+            if "code" not in data:
+                await websocket.send_json({"Status": 404, "message": "No protocol found."})
+                continue
+            elif (data["code"] == 0):
+                if "token" not in data:
+                    await websocket.send_json({"Status": 401, "message": "No Bearer token given."})
+                else:
+                    manager.get_client(websocket).login(data["token"])
+                    await websocket.send_json({"Status": 200, "message": "Login successful."})
+            elif (data["code"] == 1):
+                if not manager.get_client(websocket).get_if_logged():
+                    await websocket.send_json({"Status": 401, "message": "You are not logged in."})
+                else:
+                    await manager.broadcast_json({"Status": 200, "message": "Nice cock"}, websocket)
+            else:
+                await websocket.send_json({"Error": "Invalid protocol code."})
+    except WebSocketDisconnect:
+        is_logged = manager.get_client(websocket).get_if_logged()
+        manager.disconnect(websocket)
+        if is_logged:
+            await manager.broadcast_text(f"Client #{manager.get_client(websocket).getId()} left the chat", websocket)
+        else:
+            await manager.broadcast_text("Unknown client left the chat", websocket)
+    except Exception as e:
+        await websocket.send_text(e.args)
+        print(e.args)
     print('Bye..')
+    # message_from_data = check_messages(data.copy())
+    # print('Message from data:')
+    # print(message_from_data)
+    # print('//////////')
+    # send_message(chat_id=chat_id, data=message_from_data,
+    #              logged_user=logged_user)
+    # except Exception as e:
+    #     print(e.args)
+    #     await websocket.send_json({"error": e.args[0]})
 
 
 def check_messages(data: dict):
@@ -43,31 +69,6 @@ def check_messages(data: dict):
     token = data["token"]
     data.pop("token", token)
     return namedtuple("MessageCreateSchema", data.keys())(*data.values())
-
-
-async def websocket_logged_user(authorization: str = None):
-    print('LOGGED USER')
-    if config.FORCE_LOGIN:
-        print("t'es dans le if")
-        from app.models import Role, User
-        return db.get_or_create(
-            User,
-            search_keys={'role': Role.get_admin_role()},
-            create_keys={'email': 'admin@admin'},
-        )
-    print('1')
-    if authorization is None:
-        raise InvalidAuthToken('Missing Authorization header')
-    print('2')
-    PREFIX = 'Bearer '
-    print('3')
-    authorization.startswith(PREFIX) or InvalidAuthToken.r(
-        f'Malformed token, does not start with prefix "{PREFIX}"'
-    )
-    print('4')
-    token = LoginToken.get_from_token(authorization[len(PREFIX):])
-    print('5')
-    return token.user
 
 
 def send_message(chat_id: int,
