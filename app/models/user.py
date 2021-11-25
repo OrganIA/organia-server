@@ -1,11 +1,12 @@
-from typing import Optional
+from passlib.context import CryptContext
 import sqlalchemy as sa
 from sqlalchemy import orm
-from passlib.context import CryptContext
-from app.models.chats import Chat
+from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
+from typing import Optional
+
 from app import db
 from app.errors import AlreadyTakenError, PasswordMismatchError
-from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
+from app.models.chats import Chat
 
 
 class User(db.TimedMixin, db.Base):
