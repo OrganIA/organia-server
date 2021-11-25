@@ -35,7 +35,8 @@ async def get_chats_of_user(logged_user=logged_user):
 @router.get('/{chat_id}', response_model=ChatGroupSchema)
 async def get_chat_by_id(chat_id: int, logged_user=logged_user):
     chat = db.session.query(ChatGroup).filter_by(
-        chat_id=chat_id, user_id=logged_user.id).all()
+        chat_id=chat_id, user_id=logged_user.id
+    ).all()
     if not chat:
         raise NotFoundError("No chat found for the user with this id.")
     group = db.session.query(ChatGroup).filter_by(chat_id=chat_id).all()
@@ -89,7 +90,9 @@ async def send_message(
     logged_user=logged_user
 ):
     chat = db.session.query(ChatGroup).filter_by(
-        chat_id=chat_id, user_id=logged_user.id).all()
+        chat_id=chat_id,
+        user_id=logged_user.id
+    ).all()
     if not chat:
         raise NotFoundError("No chat found for the user with this id.")
     message = Message.from_data(data)
