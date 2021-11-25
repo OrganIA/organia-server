@@ -1,10 +1,9 @@
-from typing import List
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
 from app import db
 from app.models import ChatGroup, Message
 from app.api.schemas.messages import MessageCreateSchema
-from app.errors import InvalidRequest, NotFoundError
+from app.errors import InvalidRequest, NotFounderror
 from app.utils import websocket_manager
 from collections import namedtuple
 from json import loads
@@ -26,21 +25,26 @@ async def websocket_routek(chat_id: int, websocket: WebSocket):
             print(data)
             print('//////////')
             if "code" not in data:
-                await websocket.send_json({"Status": 404, "message": "No protocol found."})
+                await websocket.send_json({"status": 404, "message": "No protocol found."})
                 continue
             elif (data["code"] == 0):
                 if "token" not in data:
-                    await websocket.send_json({"Status": 401, "message": "No Bearer token given."})
+                    await websocket.send_json({"status": 401, "message": "No Bearer token given."})
+                    continue
                 else:
                     manager.get_client(websocket).login(data["token"])
-                    await websocket.send_json({"Status": 200, "message": "Login successful."})
+                    await websocket.send_json({"status": 200, "message": "Login successful."})
+                    continue
             elif (data["code"] == 1):
                 if not manager.get_client(websocket).get_if_logged():
-                    await websocket.send_json({"Status": 401, "message": "You are not logged in."})
+                    await websocket.send_json({"status": 401, "message": "You are not logged in."})
+                    continue
                 else:
-                    await manager.broadcast_json({"Status": 200, "message": "Nice cock"}, websocket)
+                    await manager.broadcast_json({"status": 200, "message": "Nice cock"}, websocket)
+                    continue
             else:
-                await websocket.send_json({"Error": "Invalid protocol code."})
+                await websocket.send_json({"error": "Invalid protocol code."})
+                continue
     except WebSocketDisconnect:
         is_logged = manager.get_client(websocket).get_if_logged()
         manager.disconnect(websocket)
@@ -49,8 +53,7 @@ async def websocket_routek(chat_id: int, websocket: WebSocket):
         else:
             await manager.broadcast_text("Unknown client left the chat", websocket)
     except Exception as e:
-        await websocket.send_text(e.args)
-        print(e.args)
+        await websocket.send_json({"error": e.args})
     print('Bye..')
     # message_from_data = check_messages(data.copy())
     # print('Message from data:')
@@ -83,7 +86,7 @@ def send_message(chat_id: int,
     print("got chat")
     if not chat:
         print("chat empty")
-        raise NotFoundError("No chat found for the user with this id.")
+        raise NotFounderror("No chat found for the user with this id.")
     print("chat not empty")
     print("Data is:")
     print(data)
