@@ -11,7 +11,6 @@ class ConnectionManager:
 
     async def connect(self, websocket: WebSocket):
         await websocket.accept()
-        print("connect here")
         self.active_connections.append(WebSocketClient(websocket=websocket))
 
     def disconnect(self, websocket: WebSocket):
@@ -60,7 +59,7 @@ class WebSocketClient:
             return False
 
 
-async def websocket_logged_user(authorization: str = None):
+def websocket_logged_user(authorization: str = None):
     if config.FORCE_LOGIN:
         from app.models import Role, User
         return db.get_or_create(
