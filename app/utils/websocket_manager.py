@@ -29,7 +29,8 @@ class ConnectionManager:
 
     async def broadcast_json(self, message: dict, websocket: WebSocket):
         for client in self.active_connections:
-            if client.websocket != websocket and client.get_if_logged() :
+            if client.websocket != websocket and client.get_if_logged():
+                print(message)
                 await client.websocket.send_json(message)
 
     def get_client(self, websocket: WebSocket):

@@ -4,7 +4,7 @@ from typing import List
 from app import db
 from app.api.schemas.chat import ChatGroupsCreateSchema, ChatGroupSchema
 from app.api.schemas.messages import MessageSchema, MessageCreateSchema
-from app.errors import NotFoundError, Unauthorized, InvalidRequest
+from app.errors import NotFoundError, InvalidRequest
 from app.models import Chat, Message, ChatGroup
 from .dependencies import logged_user
 
