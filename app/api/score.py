@@ -45,10 +45,8 @@ def get_blood_donor(donor: Person, receiver: Person):
 def compute_scoring(donor: Person, receiver: Person, receiver_listing: Listing):
     blood_type = get_blood_donor(donor, receiver)
     organs_score = organs_priority(receiver_listing.organ)
-
-    age = int(receiver.age)
-
-    # TODO : Add conditions to check the organ and redirect to correct scoring functions
+    
+    age = receiver.age
     score = organs_score * (100 + (blood_type + age)) / 3.5
     return score
 
@@ -56,7 +54,6 @@ def compute_scoring(donor: Person, receiver: Person, receiver_listing: Listing):
 @router.get('/listing/{person_id}')
 async def calculate_organ(person_id: int):
     result_listing = []
-    # Organ condition needed only if we decide that a donor can have multiple organs to donate
     donor = db.session.query(Listing).filter((Listing.person_id==person_id)).first()
     if (donor is None):
         NotFoundError.r('Donor is not found')
