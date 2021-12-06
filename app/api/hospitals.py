@@ -8,8 +8,10 @@ from app.models import Hospital, City
 from app.api.schemas.hospital import (
     HospitalSchema,
 )
+from .dependencies import logged_user
 
-router = APIRouter(prefix='/hospitals')
+
+router = APIRouter(prefix='/hospitals', dependencies=[logged_user])
 
 
 @router.get('/')

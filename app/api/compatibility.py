@@ -1,83 +1,30 @@
 from app.models import Person
 
-def compatibility_O(receiver: Person):
-    blood_score = 1
+
+def compatibility_positive(receiver: Person):
+    return {
+        "O+": 9,
+        "O-": 9,
+        "AB+": 10,
+        "AB-": 10,
+        "A+": 9,
+        "A-": 9,
+        "B+": 10,
+        "B-": 10,
+    }.get(receiver.blood_type, 1)
+
+
+def compatibility_negative(receiver: Person):
+    return {
+        "O+": 5,
+        "AB+": 9,
+        "A+": 5,
+        "B+": 8,
+    }.get(receiver.blood_type, 1)
+
+
+def compatibility_score(receiver: Person):
     if (receiver.rhesus == Person.Rhesus.NEGATIVE):
-        if (receiver.blood_type == 'O+'):
-            blood_score = 9
-        if (receiver.blood_type == 'O-'):
-            blood_score = 9
-        if (receiver.blood_type == 'AB+'):
-            blood_score = 10
-        if (receiver.blood_type == 'AB-'):
-            blood_score = 10
-        if (receiver.blood_type == 'A+'):
-            blood_score = 9
-        if (receiver.blood_type == 'A-'):
-            blood_score = 9
-        if (receiver.blood_type == 'B+'):
-            blood_score = 10
-        if (receiver.blood_type == 'B-'):
-            blood_score = 10
+        return compatibility_negative(Person)
     else:
-        if (receiver.blood_type == 'O+'):
-            blood_score = 5
-        if (receiver.blood_type == 'AB+'):
-            blood_score = 9
-        if (receiver.blood_type == 'A+'):
-            blood_score = 5
-        if (receiver.blood_type == 'B+'):
-            blood_score = 8
-    return blood_score
-
-
-def compatibility_A(receiver: Person):
-    blood_score = 1
-    if (receiver.rhesus == Person.Rhesus.NEGATIVE):
-        if (receiver.blood_type == 'AB+'):
-            blood_score = 10
-        if (receiver.blood_type == 'AB-'):
-            blood_score = 10
-
-        if (receiver.blood_type == 'A+'):
-            blood_score = 9
-        if (receiver.blood_type == 'A-'):
-            blood_score = 9
-    else:
-        if (receiver.blood_type == 'AB+'):
-            blood_score = 5
-        if (receiver.blood_type == 'A+'):
-            blood_score = 5
-    return blood_score
-
-
-def compatibility_B(receiver: Person):
-    blood_score = 1
-    if (receiver.rhesus == Person.Rhesus.NEGATIVE):
-        if (receiver.blood_type == 'AB+'):
-            blood_score = 10
-        if (receiver.blood_type == 'AB-'):
-            blood_score = 10
-        if (receiver.blood_type == 'B+'):
-            blood_score = 10
-        if (receiver.blood_type == 'B-'):
-            blood_score = 10
-    else:
-        if (receiver.blood_type == 'AB+'):
-            blood_score = 9
-        if (receiver.blood_type == 'B+'):
-            blood_score = 8
-    return blood_score
-
-
-def compatibility_AB(receiver: Person):
-    blood_score = 1
-    if (receiver.rhesus == Person.Rhesus.NEGATIVE):
-        if (receiver.blood_type == 'AB+'):
-            blood_score = 10
-        if (receiver.blood_type == 'AB-'):
-            blood_score = 10
-    else:
-        if (receiver.blood_type == 'AB+'):
-            blood_score = 9
-    return blood_score
+        return compatibility_positive(Person)

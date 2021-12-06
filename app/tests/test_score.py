@@ -2,24 +2,13 @@ from . import client, PREFIX
 from .fixtures import clean_db
 from .helpers import assert_response
 from app.helpers.enums import EnumStr
+from app.models import Person
+from app.models import Listing
 from app.api.score import (
     organs_priority,
     compute_scoring
 )
-from app.api.compatibility import (
-    compatibility_B,
-)
-import enum
 
-class Rhesus(enum.Enum):
-    POSITIVE = '+'
-    NEGATIVE = '-'
-
-class ABO(EnumStr):
-    A = enum.auto()
-    B = enum.auto()
-    AB = enum.auto()
-    O = enum.auto()
 
 SAMPLE_LISTING_1 = {
     "start_date": "2021-10-11",
@@ -42,6 +31,7 @@ SAMPLE_LISTING_1 = {
         "age": 27
     }
 }
+
 
 SAMPLE_LISTING_2 = {
     "start_date": "2021-10-11",
@@ -70,23 +60,19 @@ SAMPLE_LISTING_2 = {
 }
 
 
-def compute_scoring(receiver_blood_type, receiver_organ, receiver_age):
-    blood_type = compatibility_B(receiver_blood_type, Rhesus.POSITIVE)
-    organs_score = organs_priority(receiver_organ)
-
-    age = int(receiver_age)
-    # TODO : Add conditions to check the organ and redirect to correct scoring functions
-    score = organs_score * (100 + (blood_type + age)) / 3.5
-    return score
-
 def test_organs_priority_heart():
     assert organs_priority("HEART") == 1
+
 
 def test_organs_priority_kidney():
     assert organs_priority("KIDNEYS") == 2
 
+
 def test_organs_priority_other():
     assert organs_priority(" ") == 3
 
+
 def test_compute_scoring():
-    assert compute_scoring(SAMPLE_LISTING_1["person"]["blood_type"], SAMPLE_LISTING_1["organ"], SAMPLE_LISTING_2["person"]["age"]) == 43.142857142857146
+    assert compute_scoring(SAMPLE_LISTING_1["person"]["blood_type"],
+        SAMPLE_LISTING_1["organ"],
+        SAMPLE_LISTING_2["person"]["age"]) == 43.142857142857146

@@ -7,10 +7,7 @@ from app.errors import NotFoundError
 from app.models import Person
 from app.models import Listing
 from app.api.compatibility import (
-    compatibility_O,
-    compatibility_A,
-    compatibility_B,
-    compatibility_AB
+    compatibility_score,
 )
 from app.api.schemas.person import (
     PersonSchema, PersonGetSchema, PersonUpdateSchema,
@@ -18,34 +15,20 @@ from app.api.schemas.person import (
 from .dependencies import logged_user
 
 
-router = APIRouter(prefix='/score') # Do not forget to add permissions
+router = APIRouter(prefix='/score', dependencies=[logged_user])
 
 
 def organs_priority(organs):
-    if organs == "HEART":
-        organs_score = 1
-    elif organs == "KIDNEYS":
-        organs_score = 2
-    else:
-        organs_score = 3
-    return organs_score
-
-
-def get_blood_donor(donor: Person, receiver: Person):
-    if (donor.abo.value == "O"):
-        return compatibility_O(receiver)
-    elif (donor.abo.value == "A"):
-        return compatibility_A(receiver)
-    elif (donor.abo.value == "B"):
-        return compatibility_B(receiver)
-    elif (donor.abo.value == "AB"):
-        return compatibility_AB(receiver)
+    return {
+        "HEART": 1,
+        "KIDNEYS": 2,
+    }.get(organs, 3)
 
 
 def compute_scoring(donor: Person, receiver: Person, receiver_listing: Listing):
-    blood_type = get_blood_donor(donor, receiver)
+    blood_type = compatibility_score(receiver)
     organs_score = organs_priority(receiver_listing.organ)
-    
+
     age = receiver.age
     score = organs_score * (100 + (blood_type + age)) / 3.5
     return score
@@ -54,13 +37,16 @@ def compute_scoring(donor: Person, receiver: Person, receiver_listing: Listing):
 @router.get('/listing/{person_id}')
 async def calculate_organ(person_id: int):
     result_listing = []
-    donor = db.session.query(Listing).filter((Listing.person_id==person_id)).first()
+    donor = db.session.query(Listing)\
+        .filter((Listing.person_id == person_id)).first()
     if (donor is None):
         NotFoundError.r('Donor is not found')
-    receivers = db.session.query(Listing).filter_by(donor=False).all()
+    receivers = db.session.query(Listing)\
+        .filter_by(donor=False).all()
     if (receivers is None):
         NotFoundError.r('List of receiver is not found')
     for receiver in receivers:
         score = compute_scoring(donor.person, receiver.person, receiver)
         result_listing.append({"listing": receiver, "score": score})
-    return sorted(result_listing, key=lambda x: x["score"], reverse=True)
+    # return sorted(result_listing, key=lambda x: x["score"], reverse=True)
+    return donor.person
