@@ -6,9 +6,10 @@ class Info:
     # DialyseScore
     isDialyse = True #https://www.fondation-du-rein.org/quest-ce-que-la-dialyse/
     isRetransplantation = False #first time or not
-    DateStartDialyse = date(2021, 10, 1) #n
-    DateReturnDialyse = date(2019, 5, 5) #n - 1
+    DateStartDialyse = date(2019, 10, 1) #n
+    DateReturnDialyse = date(2021, 11, 5) #n - 1
     DateInscription =  date(2019, 5, 5)
+    CurrentDate = date(2021, 10, 21)
     DateGreffe = Null
     DateArf = Null #Arrêt fonctionnel du greffon
 

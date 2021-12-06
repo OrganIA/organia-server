@@ -17,7 +17,7 @@ class Score_HAge:
     
    # Score = 100 * DD + 200 * f2(DA, DD) + [100 x f3(A,B) + 400 x f4(DR) + 100 x f4(DQ) + 150 x f7(FAG)] x f5(AgeR, 45, 75) + 750 x f6(AgeR, 45, 100)
     def getHAge(self):
-        return 100 * self.DS.getScore() + 200 * self.DS.getScore() + (100 * self.HLA.getAbScore() + 400 * self.HLA.getDrScore() + 100 * self.HLA.getDqScore() + 150 * self.HLA.getFagScore() * self.AGE.getAgeMalus() + 750 * self.AGE.getAgeBonus())
+        return 100 * self.DS.getScore() + 200 * self.DS.getWaitingScore() + (100 * self.HLA.getAbScore() + 400 * self.HLA.getDrScore() + 100 * self.HLA.getDqScore() + 150 * self.HLA.getFagScore() * self.AGE.getAgeMalus() + 750 * self.AGE.getAgeBonus())
 
 class DifferentialAge:
     def __init__(self, Info):
@@ -35,14 +35,23 @@ class DifferentialAge:
         return 1 / (math.exp(pow(0.02 * age, 0.85)))
 
 class KidneyScoring:
-    AllInfo = Other.Info
-    HAge = Score_HAge(AllInfo).getHAge()
-    FAge = DifferentialAge(AllInfo).getDifferentialAge()
+    def __init__(self):
+        self.AllInfo = Other.Info
+        self.HAge = Score_HAge(self.AllInfo).getHAge()
+        self.FAge = DifferentialAge(self.AllInfo).getDifferentialAge()
 
     def getScoreHD(self):
-        if self.Info.AgeR > (self.Info.AgeD + 20):
+        if self.AllInfo.ageR > (self.AllInfo.ageD + 20):
             check = 0
         else:
             check = 1
-        return (self.Info.HAge * check) / self.Info.FAge
+        return (self.HAge * check) / self.FAge
+
+def main():
+    KidneyScoringClass = KidneyScoring()
+    score = KidneyScoringClass.getScoreHD()
+    print(score)
+
+if __name__ == "__main__":
+    main()
 

@@ -11,8 +11,8 @@ class DialyseScore:
         self.DateInscription =  Info.DateInscription
         self.DateGreffe = Info.DateGreffe
         self.DateArf = Info.DateArf
+        self.CurrentDate = Info.CurrentDate
 
-    @classmethod
     def getDate(self):
         if self.isDialyse == False:
             return 0
@@ -29,7 +29,7 @@ class DialyseScore:
         if self.DateArf != Null:
             return self.DateArf
         else: return self.DateStartDialyse
-    @classmethod
+    
     def getScore(self):
         try:
             s = (date.today() - self.getDate()).days
@@ -41,16 +41,21 @@ class DialyseScore:
             return s / 3650
         except:
             return 0
-    @classmethod
+    
     def getWaitingTime(self):
-        if self.isRetransplantation or (self.DateInscription - self.DateStartDialyse) < 360:
-            return self.DateInscription
-        if self.isRetransplantation == False and (self.DateInscription - self.DateStartDialyse) >= 360:
-            return 12 + self.DateStartDialyse
+        DATT = self.CurrentDate - self.DateInscription
+        if self.isDialyse:
+            DDIAL = self.CurrentDate - self.DateStartDialyse
+        else:
+            DDIAL = 0
+        if self.isRetransplantation or (DATT - DDIAL).days < 365:
+            return DATT
+        elif self.isRetransplantation == False and (self.DateInscription - self.DateStartDialyse) >= 365:
+            return 12 + DDIAL
         return -1 #need to check error
-    @classmethod
+    
     def getWaitingScore(self):
-        if self.getWaitingTime() >= 3600:
+        if self.getWaitingTime().days >= 3600:
             return 1
         else:
-            return 1 / 120 * self.getWaitingTime()
+            return (1 / 120) * self.getWaitingTime().days
