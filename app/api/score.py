@@ -47,9 +47,7 @@ def compute_scoring(donor: Person, receiver: Person, receiver_listing: Listing):
     organs_score = organs_priority(receiver_listing.organ)
 
     age = int(receiver.age)
-    print("blood_type: ", blood_type)
-    print("organs_score: ", organs_score)
-    print("age: ", age)
+
     # TODO : Add conditions to check the organ and redirect to correct scoring functions
     score = organs_score * (100 + (blood_type + age)) / 3.5
     return score
@@ -61,8 +59,10 @@ async def calculate_organ(person_id: int):
     # Organ condition needed only if we decide that a donor can have multiple organs to donate
     donor = db.session.query(Listing).filter((Listing.person_id==person_id)).first()
     if (donor is None):
-        return "No listing found for this person_id with this organ"
+        NotFoundError.r('Donor is not found')
     receivers = db.session.query(Listing).filter_by(donor=False).all()
+    if (receivers is None):
+        NotFoundError.r('List of receiver is not found')
     for receiver in receivers:
         score = compute_scoring(donor.person, receiver.person, receiver)
         result_listing.append({"listing": receiver, "score": score})
