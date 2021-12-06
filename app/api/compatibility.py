@@ -2,7 +2,7 @@ from app.models import Person
 
 def compatibility_O(receiver: Person):
     blood_score = 1
-    if (receiver.rhesus == '-'):
+    if (receiver.rhesus == Person.Rhesus.NEGATIVE):
         if (receiver.blood_type == 'O+'):
             blood_score = 9
         if (receiver.blood_type == 'O-'):
@@ -33,7 +33,7 @@ def compatibility_O(receiver: Person):
 
 def compatibility_A(receiver: Person):
     blood_score = 1
-    if (receiver.rhesus == '-'):
+    if (receiver.rhesus == Person.Rhesus.NEGATIVE):
         if (receiver.blood_type == 'AB+'):
             blood_score = 10
         if (receiver.blood_type == 'AB-'):
@@ -53,7 +53,7 @@ def compatibility_A(receiver: Person):
 
 def compatibility_B(receiver: Person):
     blood_score = 1
-    if (receiver.rhesus == '-'):
+    if (receiver.rhesus == Person.Rhesus.NEGATIVE):
         if (receiver.blood_type == 'AB+'):
             blood_score = 10
         if (receiver.blood_type == 'AB-'):
@@ -72,7 +72,7 @@ def compatibility_B(receiver: Person):
 
 def compatibility_AB(receiver: Person):
     blood_score = 1
-    if (receiver.rhesus == '-'):
+    if (receiver.rhesus == Person.Rhesus.NEGATIVE):
         if (receiver.blood_type == 'AB+'):
             blood_score = 10
         if (receiver.blood_type == 'AB-'):
