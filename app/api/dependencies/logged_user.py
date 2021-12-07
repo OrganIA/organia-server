@@ -7,16 +7,15 @@ from app.models import LoginToken
 
 
 async def logged_user(request: Request, authorization: str = Header(None)):
-    if config.FORCE_LOGIN:
+    if authorization is None:
+        if not config.FORCE_LOGIN:
+            raise InvalidAuthToken('Missing Authorization header')
         from app.models import Role, User
         return db.get_or_create(
             User,
             search_keys={'role': Role.get_admin_role()},
             create_keys={'email': 'admin@admin'},
         )
-
-    if authorization is None:
-        raise InvalidAuthToken('Missing Authorization header')
     if hasattr(request.state, 'user'):
         return request.state.user
     PREFIX = 'Bearer '
