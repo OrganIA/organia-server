@@ -3,6 +3,7 @@ from fastapi import APIRouter
 
 from app import db
 from typing import Optional
+from app.errors import NotFoundError
 from app.models import City, Hospital
 from app.api.schemas.hospital import (
     HospitalSchema,
@@ -43,6 +44,7 @@ async def delete_hospital(hospital_id: int):
     hospital = await get_hospital(hospital_id)
     db.delete(hospital)
 
+
 @router.get('/hospital/distance')
-async def get_distance_hospital(first_city= str, second_city = str):
-    return get_distance(first_city, second_city)
+async def get_distance_hospital(first_city = str, second_city = str):
+    return get_distance(first_city, second_city) or NotFoundError.r()
