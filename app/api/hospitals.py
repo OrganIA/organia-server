@@ -46,5 +46,5 @@ async def delete_hospital(hospital_id: int):
 
 
 @router.get('/hospital/distance')
-async def get_distance_hospital(first_city = str, second_city = str):
+async def get_distance_hospital(first_city=str, second_city=str):
     return get_distance(first_city, second_city) or NotFoundError.r()
