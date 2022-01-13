@@ -23,7 +23,6 @@ class User(db.TimedMixin, db.Base):
 
     def __init__(self, *args, **kwargs):
         from .role import Role
-        print("HERE")
         if kwargs.get('role_id'):
             role = db.session.get(Role, kwargs.pop('role_id'))
             if not role:
@@ -34,7 +33,6 @@ class User(db.TimedMixin, db.Base):
                 raise InvalidRequest()
         else:
             role = Role.get_default_role()
-        print(role)
         super().__init__(*args, **kwargs, role=role)
 
     @classmethod
