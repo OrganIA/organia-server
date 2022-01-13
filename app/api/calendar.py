@@ -30,12 +30,12 @@ async def create_event(
         event: CalendarEventCreateSchema, logged_user: User = logged_user
 ):
     db_event = db.add(CalendarEvent, event.dict() | {'author': logged_user})
-    return await get_event(db_event.id)
+    return await get_event(db_event.id, logged_user=logged_user)
 
 
 @router.delete('/{event_id}')
 async def delete_event(event_id: int, logged_user: User = logged_user):
-    event = await get_event(event_id)
+    event = await get_event(event_id, logged_user=logged_user)
     if event.author != logged_user:
         raise Unauthorized
     db.delete(event)
