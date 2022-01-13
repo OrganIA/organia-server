@@ -7,6 +7,7 @@ from app.models import City, Hospital
 from app.api.schemas.hospital import (
     HospitalSchema,
 )
+from app.distance import get_distance
 
 router = APIRouter(prefix='/hospitals')
 
@@ -41,3 +42,7 @@ async def create_hospital(hospital: HospitalSchema):
 async def delete_hospital(hospital_id: int):
     hospital = await get_hospital(hospital_id)
     db.delete(hospital)
+
+@router.get('/hospital/distance')
+async def get_distance_hospital(first_city= str, second_city = str):
+    return get_distance(first_city, second_city)
