@@ -7,7 +7,7 @@ def generate_token() -> str:
     return secrets.token_hex()
 
 
-def get_secret_key():
+def get_secret_key() -> str:
     with open('secret.key') as f:
         key = f.read()
         if key:

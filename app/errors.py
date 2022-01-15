@@ -58,3 +58,8 @@ class NotFoundError(RaisableMixin, HTTPException):
 class PasswordMismatchError(HTTPException):
     def __init__(self, msg=None):
         super().__init__(status_code=401, detail=msg or 'Password mismatch.')
+
+
+class NotAcceptableError(HTTPException):
+    def __init__(self, msg=None):
+        super().__init__(status_code=406, detail=msg or 'Not Acceptable.')

@@ -31,4 +31,14 @@ FORCE_LOGIN = _get_bool('FORCE_LOGIN')
 
 DISCORD_LOGS = os.environ.get('DISCORD_LOGS')
 
-LOG_SQL = _get_bool('LOG_SQL', "yes")
+LOG_SQL = _get_bool('LOG_SQL', 'no')
+
+SENDGRID_API_URL = os.environ.get(
+    'SENDGRID_API_URL', 'https://api.sendgrid.com/v3/mail/send'
+)
+
+SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
+
+SENDGRID_SENDER_EMAIL = os.environ.get(
+    'SENDGRID_SENDER_EMAIL', 'botorgania@gmail.com'
+)
