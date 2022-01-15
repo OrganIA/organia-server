@@ -1,12 +1,12 @@
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.encoders import jsonable_encoder
 from json import loads
 from typing import List
 
 from app import db
 from app.models import Message, ChatGroup
-from app.api.schemas.messages import MessageCreateSchema
-from app.errors import InvalidRequest, NotFoundError
+from app.api.schemas.messages import MessageCreateSchema, MessageSchema
+from app.errors import InvalidRequest, NotFoundError, Unauthorized
 from app.utils import websocket_manager
 
 router = APIRouter(prefix='/chats')
@@ -22,74 +22,79 @@ async def websocket_routek(chat_id: int, websocket: WebSocket):
     while True:
         try:
             data = loads(await websocket.receive_text())
-            if "code" not in data:
+            if "event" not in data:
                 await websocket.send_json({
                     "status": 404,
                     "message": "No protocol found."
                 })
                 continue
-            if (data["code"] == 0):
+            if data["event"] == "login":
                 if "token" not in data:
-                    await websocket.send_json({
-                        "status": 401,
-                        "message": "No Bearer token given."
-                    })
-                    continue
-                manager.get_client(websocket).login(data["token"])
+                    raise Unauthorized("No Bearer token given.")
+                manager.get_client(websocket).login(data["token"], chat_id)
                 if not check_if_user_in_chat(
                     get_all_users_in_chat(chat_id),
                     manager.get_client(websocket).get_id()
                 ):
-                    raise Exception("User is not in chat.")
+                    raise Unauthorized("User is not in chat.")
                 await websocket.send_json({
                     "status": 200,
                     "message": "Login successful."
                 })
                 continue
-            if (data["code"] == 1):
+            if (data["event"] == "send_message"):
                 if not manager.get_client(websocket).get_if_logged():
-                    await websocket.send_json({
-                        "status": 401,
-                        "message": "You are not logged in."
-                    })
-                    continue
+                    raise Unauthorized("You are not logged in.")
                 check_message(
                     data,
                     chat_id,
                     manager.get_client(websocket).get_id()
                 )
-                message = send_message(
+                message = await send_message(
                     chat_id=chat_id,
                     data=data,
                     logged_user=manager.get_client(websocket).logged_user
                 )
-                # print("Message is:")
-                print(message)
-                # print('//////////')
-                # print("Message in json is:")
-                # print(jsonable_encoder(message))
-                # print('//////////')
+                message_json = jsonable_encoder(
+                    MessageSchema.from_orm(message).dict()
+                )
                 await websocket.send_json(
                     {
                         "status": 200,
-                        "message": jsonable_encoder(message)
+                        "event": "message_sent",
+                        "data": message_json
                     })
-                await manager.broadcast_json(jsonable_encoder(message), websocket)
+                await manager.broadcast_json({
+                    "status": 200,
+                    "event": "message_received",
+                    "data": message_json
+                }, websocket)
                 continue
-            await websocket.send_json({"error": "Invalid protocol code."})
+            raise InvalidRequest("Invalid event.")
         except WebSocketDisconnect:
             is_logged = manager.get_client(websocket).get_if_logged()
             if is_logged:
                 client_id = manager.get_client(websocket).get_id()
                 manager.disconnect(websocket)
-                await manager.broadcast_text(f"Client #{client_id} left the chat", websocket)
+                await manager.broadcast_text(
+                    f"Client #{client_id} left the chat", websocket
+                )
             else:
                 manager.disconnect(websocket)
-                await manager.broadcast_text("Unknown client left the chat", websocket)
+                await manager.broadcast_text(
+                    "Unknown client left the chat", websocket
+                )
             break
+        except HTTPException as e:
+            await websocket.send_json({"status": e.status_code,
+                                       "event": "error",
+                                       "error": e.detail
+                                       })
         except Exception as e:
-            await websocket.send_json({"status": 400, "error": e.args})
-    print('Bye..')
+            await websocket.send_json({"status": 400,
+                                       "event": "error",
+                                       "error": e.args
+                                       })
 
 
 def check_message(data: MessageCreateSchema, chat_id: int, user_id: int):
@@ -103,7 +108,7 @@ def check_message(data: MessageCreateSchema, chat_id: int, user_id: int):
             get_all_users_in_chat(chat_id),
             user_id):
         raise Exception("User is not in chat.")
-    del data["code"]
+    del data["event"]
 
 
 def check_if_user_in_chat(chat: List[ChatGroup], user_id: int):
@@ -119,7 +124,7 @@ def get_all_users_in_chat(chat_id: int):
     ).all()
 
 
-def send_message(
+async def send_message(
     chat_id: int,
     data: MessageCreateSchema,
     logged_user=None

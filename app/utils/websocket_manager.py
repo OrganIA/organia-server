@@ -30,7 +30,16 @@ class ConnectionManager:
     async def broadcast_json(self, message: dict, websocket: WebSocket):
         for client in self.active_connections:
             if client.websocket != websocket and client.get_if_logged():
-                print(message)
+                await client.websocket.send_json(message)
+
+    async def broadcast_all_text(self, message: str, websocket: WebSocket):
+        for client in self.active_connections:
+            if client.get_if_logged():
+                await client.websocket.send_text(message)
+
+    async def broadcast_all_json(self, message: dict, websocket: WebSocket):
+        for client in self.active_connections:
+            if client.get_if_logged():
                 await client.websocket.send_json(message)
 
     def get_client(self, websocket: WebSocket):
@@ -43,21 +52,19 @@ class WebSocketClient:
     def __init__(self, websocket):
         self.websocket = websocket
         self.logged_user = None
+        self.chat_id = None
 
-    def login(self, token):
+    def login(self, token, chat_id):
         self.logged_user = websocket_logged_user(authorization=token)
+        self.chat_id = chat_id
 
     def get_id(self):
-        if (self.logged_user):
-            return self.logged_user.id
-        else:
-            return ""
+        if not self.logged_user:
+            return None
+        return self.logged_user.id
 
     def get_if_logged(self):
-        if self.logged_user:
-            return True
-        else:
-            return False
+        return self.logged_user is not None
 
 
 def websocket_logged_user(authorization: str = None):
