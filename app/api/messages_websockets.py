@@ -16,7 +16,7 @@ manager = websocket_manager.ConnectionManager()
 
 
 @router.websocket('/{chat_id}')
-async def websocket_routek(chat_id: int, websocket: WebSocket):
+async def websocket_route(chat_id: int, websocket: WebSocket):
     print('Accepting client connection...')
     await manager.connect(websocket)
     while True:
