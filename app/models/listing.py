@@ -17,6 +17,12 @@ class Listing(db.DurationMixin, db.Base):
     hospital_id = sa.Column(sa.ForeignKey('hospitals.id'))
     donor = sa.Column(sa.Boolean, default=False, nullable=False)
     organ = sa.Column(sa.Enum(Organ))
+    dialyse = sa.Column(sa.Boolean, default=False, nullable=True)
+    retransplantation = sa.Column(sa.Boolean, default=False, nullable=True)
+    start_date_dialyse = sa.Column(sa.Date, nullable=True)
+    end_date_dialyse = sa.Column(sa.Date, nullable=True)
+    arf_date = sa.Column(sa.Date, nullable=True)
+
 
     person = orm.relationship('Person', backref='listings')
     hospital = orm.relationship('Hospital', backref='listings')

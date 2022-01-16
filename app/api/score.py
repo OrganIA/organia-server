@@ -9,9 +9,11 @@ from app.models import Listing
 from app.api.compatibility import (
     compatibility_score,
 )
+from app.score.Kidney.kidney import *
 from app.api.schemas.person import (
     PersonSchema, PersonGetSchema, PersonUpdateSchema,
 )
+from score.Kidney.KidneyScore import getScoreHD
 from .dependencies import logged_user
 
 
@@ -25,13 +27,19 @@ def organs_priority(organs):
     }.get(organs, 3)
 
 
-def compute_scoring(donor: Person, receiver: Person, receiver_listing: Listing):
-    blood_type = compatibility_score(receiver)
-    organs_score = organs_priority(receiver_listing.organ)
+# def compute_scoring(donor: Person, receiver: Person, receiver_listing: Listing):
+#     blood_type = compatibility_score(receiver)
+#     organs_score = organs_priority(receiver_listing.organ)
 
-    age = receiver.age
-    score = organs_score * (100 + (blood_type + age)) / 3.5
-    return score
+#     age = receiver.age
+#     score = organs_score * (100 + (blood_type + age)) / 3.5
+#     return score
+
+
+def compute(donor: Person, receiver: Person, receiver_listing: Listing):
+    if receiver_listing.organ is "KIDNEYS":
+        getScoreHD(receiver, donor, receiver_listing)
+
 
 
 @router.get('/listing/{person_id}')
@@ -46,7 +54,6 @@ async def calculate_organ(person_id: int):
     if (receivers is None):
         NotFoundError.r('List of receiver is not found')
     for receiver in receivers:
-        score = compute_scoring(donor.person, receiver.person, receiver)
+        score = compute(donor.person, receiver.person, receiver)
         result_listing.append({"listing": receiver, "score": score})
-    # return sorted(result_listing, key=lambda x: x["score"], reverse=True)
-    return donor.person
+    return sorted(result_listing, key=lambda x: x["score"], reverse=True)

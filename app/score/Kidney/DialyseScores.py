@@ -1,22 +1,21 @@
 from datetime import date
-from Other import Info
 from app.models import Person, Listing
 
 
 def getDate(receiver_listing: Listing):
-    if receiver_listing.isDialyse is False:
+    if receiver_listing.dialyse is False:
         return 0
-    elif receiver_listing.isRetransplantation is False:
-        if receiver_listing.startDateDialyse is None:
-            return receiver_listing.startDateDialyse
+    elif receiver_listing.retransplantation is False:
+        if receiver_listing.start_date_dialyse is None:
+            return receiver_listing.start_date_dialyse
         else:
             return 0
-    elif receiver_listing.EndDateDialyse is None and receiver_listing.EndDateDialyse > receiver_listing.DateTransplantation:
-        return receiver_listing.EndDateDialyse
-    elif receiver_listing.ARFDate is not None:
-        return receiver_listing.ARFDates
+    elif receiver_listing.end_date_dialyse is None and receiver_listing.end_date_dialyse > receiver_listing.DateTransplantation:
+        return receiver_listing.end_date_dialyse
+    elif receiver_listing.arf_date is not None:
+        return receiver_listing.arf_date
     else:
-        return receiver_listing.startDateDialyse
+        return receiver_listing.start_date_dialyse
 
 
 def getScore(receiver_listing: Listing):
@@ -33,14 +32,14 @@ def getScore(receiver_listing: Listing):
 
 
 def getWaitingTime(receiver_listing: Listing):
-    DATT = date.today() - receiver_listing.DateInscription
-    if receiver_listing.isDialyse:
-        DDIAL = date.today() - receiver_listing.startDateDialyse
+    DATT = date.today() - receiver_listing.start_date
+    if receiver_listing.dialyse:
+        DDIAL = date.today() - receiver_listing.start_date_dialyse
     else:
         DDIAL = 0
-    if receiver_listing.isRetransplantation or (DATT - DDIAL).days < 365:
+    if receiver_listing.retransplantation or (DATT - DDIAL).days < 365:
             return DATT
-    elif receiver_listing.isRetransplantation == False and (receiver_listing.DateInscription - receiver_listing.DateStartDialyse) >= 365:
+    elif receiver_listing.retransplantation == False and (receiver_listing.start_date - receiver_listing.start_date_dialyse) >= 365:
         return 12 + DDIAL
     return -1 #need to check error
 

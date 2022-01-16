@@ -1,4 +1,5 @@
 from datetime import date
+from optparse import Option
 from typing import Optional
 from app import db
 from app.models import Listing
@@ -11,6 +12,11 @@ class ListingSchema(db.Schema):
     notes: Optional[str]
     organ: Listing.Organ
     donor: bool
+    dialyse: bool
+    retransplantation: bool
+    start_date_dialyse: Optional[date]
+    end_date_dialyse: Optional[date]
+    arf_date: Optional[date]
 
     class Config:
         orm_mode = True
