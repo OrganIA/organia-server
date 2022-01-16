@@ -1,5 +1,6 @@
+geopy
+geocoder
 fastapi
 requests
 passlib[bcrypt]
 sqlalchemy
-geopy
