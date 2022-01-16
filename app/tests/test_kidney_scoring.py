@@ -1,4 +1,5 @@
-from app.score.Kidney.DialyseScores import getScore, getWaitingScore
+from app.score.Kidney.HLA_Age import *
+from app.score.Kidney.DialyseScores import *
 
 SAMPLE_LISTING_3 = {
     "start_date": "2021-10-11",
@@ -46,3 +47,18 @@ def test_DD():
 
 def test_DA():
     assert getWaitingScore(SAMPLE_LISTING_3["receiver_listing"]) == 1
+
+def test_ABScore():
+    assert getABScore() == 1
+
+def test_DRScore():
+    assert getDQScore() == 1
+
+def test_getFagScore():
+    assert getFagScore() == 1
+
+def test_getAgeMalus():
+    assert getAgeMalus(SAMPLE_LISTING_3["person"]) == 0.83333333333
+
+def test_getAgeBonus():
+    assert getAgeBonus(SAMPLE_LISTING_3["receiver_listing"]) == 0.90909090909

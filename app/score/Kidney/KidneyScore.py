@@ -6,7 +6,7 @@ from app.score.Kidney.DialyseScores import *
 
 
 def getHAge(receiver: Person, receiver_listing: Listing):
-    return 100 * getScore(receiver_listing) + 200 * getWaitingScore(receiver_listing) + (100 * getABScore() + 400 * getDRScore() + 100 * getDQScore() + 150 * getFagScore( * getAgeMalus(receiver) + 750 * getAgeBonus(receiver)))
+    return 100 * getScore(receiver_listing) + 200 * getWaitingScore(receiver_listing) + (100 * getABScore() + 400 * getDRScore() + 100 * getDQScore() + 150 * getFagScore()) * getAgeMalus(receiver) + 750 * getAgeBonus(receiver)
 
 
 def checkAge(receiver: Person, donor: Person):
