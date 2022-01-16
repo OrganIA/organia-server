@@ -7,8 +7,10 @@ from app.models import City, Hospital
 from app.api.schemas.hospital import (
     HospitalSchema,
 )
+from .dependencies import logged_user
 
-router = APIRouter(prefix='/hospitals')
+
+router = APIRouter(prefix='/hospitals', dependencies=[logged_user])
 
 
 @router.get('/', response_model=List[HospitalSchema])
@@ -41,3 +43,4 @@ async def create_hospital(hospital: HospitalSchema):
 async def delete_hospital(hospital_id: int):
     hospital = await get_hospital(hospital_id)
     db.delete(hospital)
+    db.session.commit()
