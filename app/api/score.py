@@ -9,11 +9,10 @@ from app.models import Listing
 from app.api.compatibility import (
     compatibility_score,
 )
-from app.score.Kidney.kidney import *
+from app.score.Kidney.KidneyScore import *
 from app.api.schemas.person import (
     PersonSchema, PersonGetSchema, PersonUpdateSchema,
 )
-from score.Kidney.KidneyScore import getScoreHD
 from .dependencies import logged_user
 
 
@@ -37,7 +36,7 @@ def organs_priority(organs):
 
 
 def compute(donor: Person, receiver: Person, receiver_listing: Listing):
-    if receiver_listing.organ is "KIDNEYS":
+    if receiver_listing.organ == "KIDNEYS":
         getScoreHD(receiver, donor, receiver_listing)
 
 
