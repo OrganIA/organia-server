@@ -33,19 +33,19 @@ def getScore(receiver_listing: Listing):
 
 def getWaitingTime(receiver_listing: Listing):
     DATT = date.today() - receiver_listing.start_date
-    if receiver_listing.dialyse:
+    if receiver_listing.isDialyse:
         DDIAL = date.today() - receiver_listing.start_date_dialyse
     else:
         DDIAL = 0
-    if receiver_listing.retransplantation or (DATT - DDIAL).days < 365:
+    if receiver_listing.isRetransplantation or (DATT - DDIAL).days < 365:
             return DATT
-    elif receiver_listing.retransplantation == False and (receiver_listing.start_date - receiver_listing.start_date_dialyse) >= 365:
+    elif receiver_listing.isRetransplantation == False and (receiver_listing.start_date - receiver_listing.startDateDialyse) >= 365:
         return 12 + DDIAL
     return -1 #need to check error
 
 
 def getWaitingScore(receiver_listing: Listing):
-        if getWaitingTime().days >= 3600:
+        if getWaitingTime().days >= 3650:
             return 1
         else:
             return (1 / 120) * getWaitingTime().days

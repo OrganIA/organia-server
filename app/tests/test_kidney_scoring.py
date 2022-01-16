@@ -1,4 +1,4 @@
-from app.score.Kidney.DialyseScores import getScore
+from app.score.Kidney.DialyseScores import getScore, getWaitingScore
 
 SAMPLE_LISTING_3 = {
     "start_date": "2021-10-11",
@@ -17,7 +17,10 @@ SAMPLE_LISTING_3 = {
         "EndDateDialyse": "2021-12-01",
         "DateTransplantation": "2021-12-02",
         "ReRegistrationDate": None,
-        "ARFDate": None
+        "ARFDate": None,
+
+        "start_date": "2021-11-01",
+
     },
 
     "person": {
@@ -40,3 +43,6 @@ SAMPLE_LISTING_3 = {
 
 def test_DD():
     assert getScore(SAMPLE_LISTING_3["receiver_listing"]) == SAMPLE_LISTING_3["receiver_listing"].startDateDialyse
+
+def test_DA():
+    assert getWaitingScore(SAMPLE_LISTING_3["receiver_listing"]) == 1
