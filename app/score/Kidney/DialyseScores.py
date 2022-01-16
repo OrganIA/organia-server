@@ -6,16 +6,16 @@ def getDate(receiver_listing: Listing):
     if receiver_listing.dialyse is False:
         return 0
     elif receiver_listing.retransplantation is False:
-        if receiver_listing.start_date_dialyse is None:
+        if receiver_listing.start_date_dialyse is not None:
             return receiver_listing.start_date_dialyse
         else:
             return 0
-    elif receiver_listing.end_date_dialyse is None and receiver_listing.end_date_dialyse > receiver_listing.DateTransplantation:
+    elif receiver_listing.end_date_dialyse is not None and receiver_listing.end_date_dialyse > receiver_listing.DateTransplantation:
         return receiver_listing.end_date_dialyse
     elif receiver_listing.arf_date is not None:
         return receiver_listing.arf_date
     else:
-        return receiver_listing.start_date_dialyse
+        return receiver_listing.ReRegistrationDate
 
 
 def getScore(receiver_listing: Listing):
