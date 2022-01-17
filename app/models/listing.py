@@ -12,6 +12,12 @@ class Listing(db.DurationMixin, db.Base):
         KIDNEY = enum.auto()
         LUNG = enum.auto()
 
+    class HLA(EnumStr):
+        A = enum.auto()
+        B = enum.auto()
+        DQ = enum.auto()
+        DR = enum.auto()
+
     person_id = sa.Column(sa.ForeignKey('persons.id'))
     notes = sa.Column(sa.String)
     hospital_id = sa.Column(sa.ForeignKey('hospitals.id'))
@@ -22,7 +28,9 @@ class Listing(db.DurationMixin, db.Base):
     start_date_dialyse = sa.Column(sa.Date, nullable=True)
     end_date_dialyse = sa.Column(sa.Date, nullable=True)
     arf_date = sa.Column(sa.Date, nullable=True)
-
+    transplantation_date = sa.Column(sa.Date, nullable=True)
+    second_registration_date = sa.Column(sa.Date, nullable=True)
+    hla = sa.Column(sa.Enum(HLA))
 
     person = orm.relationship('Person', backref='listings')
     hospital = orm.relationship('Hospital', backref='listings')

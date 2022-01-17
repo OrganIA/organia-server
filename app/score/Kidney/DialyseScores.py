@@ -10,12 +10,12 @@ def getDate(receiver_listing: Listing):
             return receiver_listing.start_date_dialyse
         else:
             return 0
-    elif receiver_listing.end_date_dialyse is not None and receiver_listing.end_date_dialyse > receiver_listing.DateTransplantation:
+    elif receiver_listing.end_date_dialyse is not None and receiver_listing.end_date_dialyse > receiver_listing.transplantation_date:
         return receiver_listing.end_date_dialyse
     elif receiver_listing.arf_date is not None:
         return receiver_listing.arf_date
     else:
-        return receiver_listing.ReRegistrationDate
+        return receiver_listing.second_registration_date
 
 
 def getScore(receiver_listing: Listing):
@@ -33,13 +33,13 @@ def getScore(receiver_listing: Listing):
 
 def getWaitingTime(receiver_listing: Listing):
     DATT = date.today() - receiver_listing.start_date
-    if receiver_listing.isDialyse:
+    if receiver_listing.dialyse:
         DDIAL = date.today() - receiver_listing.start_date_dialyse
     else:
         DDIAL = 0
-    if receiver_listing.isRetransplantation or (DATT - DDIAL).days < 365:
+    if receiver_listing.retransplantation or (DATT - DDIAL).days < 365:
             return DATT
-    elif receiver_listing.isRetransplantation == False and (receiver_listing.start_date - receiver_listing.startDateDialyse) >= 365:
+    elif receiver_listing.retransplantation == False and (receiver_listing.start_date - receiver_listing.start_date_dialyse) >= 365:
         return 12 + DDIAL
     return -1 #need to check error
 

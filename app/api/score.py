@@ -22,7 +22,7 @@ router = APIRouter(prefix='/score', dependencies=[logged_user])
 def organs_priority(organs):
     return {
         "HEART": 1,
-        "KIDNEYS": 2,
+        "KIDNEY": 2,
     }.get(organs, 3)
 
 
@@ -36,9 +36,9 @@ def organs_priority(organs):
 
 
 def compute(donor: Person, receiver: Person, receiver_listing: Listing):
-    if receiver_listing.organ == "KIDNEYS":
-        getScoreHD(receiver, donor, receiver_listing)
 
+    if receiver_listing.organ == Listing.Organ.KIDNEY:
+        getScoreHD(receiver, donor, receiver_listing)
 
 
 @router.get('/listing/{person_id}')
@@ -55,4 +55,5 @@ async def calculate_organ(person_id: int):
     for receiver in receivers:
         score = compute(donor.person, receiver.person, receiver)
         result_listing.append({"listing": receiver, "score": score})
-    return sorted(result_listing, key=lambda x: x["score"], reverse=True)
+    return result_listing
+    # return sorted(result_listing, key=lambda x: x["score"], reverse=True)
