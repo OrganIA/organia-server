@@ -1,5 +1,3 @@
-from logging import raiseExceptions
-from unittest.case import _AssertRaisesContext
 from app import distance
 
 
