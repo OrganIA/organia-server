@@ -14,6 +14,9 @@ class Listing(db.DurationMixin, db.Base):
     notes = sa.Column(sa.String)
     hospital_id = sa.Column(sa.ForeignKey('hospitals.id'))
     donor = sa.Column(sa.Boolean, default=False, nullable=False)
+    tumors_number = sa.Column(sa.Integer, default=0, nullable=False)
+    biggest_tumor_size = sa.Column(sa.Integer, nullable=True)
+    alpha_fetoprotein = sa.Column(sa.Integer, nullable=True)
     organ = sa.Column(sa.Enum(Organ))
 
     person = orm.relationship('Person', backref='listings')

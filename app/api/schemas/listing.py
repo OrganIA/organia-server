@@ -11,6 +11,9 @@ class ListingSchema(db.Schema):
     notes: Optional[str]
     organ: Listing.Organ
     donor: bool
+    tumors_number: int
+    biggest_tumor_size: Optional[int]
+    alpha_fetoprotein: Optional[int]
 
     class Config:
         orm_mode = True
@@ -19,6 +22,9 @@ class ListingSchema(db.Schema):
 class ListingUpdateSchema(ListingSchema):
     organ: Optional[Listing.Organ]
     donor: Optional[bool]
+    tumors_number: Optional[int]
+    biggest_tumor_size: Optional[int]
+    alpha_fetoprotein: Optional[int]
     person_id: Optional[int]
 
 
