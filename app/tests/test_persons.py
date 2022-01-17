@@ -74,10 +74,8 @@ def test_delete_person():
 
 
 def test_filter_person_name():
-    # assert len(get_person()) == 0
     assert_response(create_person(), include=SAMPLE_PERSON)
     assert_response(create_person(), include=SAMPLE_PERSON_2)
     assert_response(create_person(), include=SAMPLE_PERSON_3)
     person = filter_name("Tes")
-    # assert len(person) == 3
     assert_response(person, status_code=200)
