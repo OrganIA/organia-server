@@ -12,6 +12,7 @@ from app.api.schemas.hospital import (
 
 router = APIRouter(prefix='/hospitals')
 
+
 @router.get('/', response_model=List[HospitalSchema])
 async def get_hospitals(
     name: Optional[str] = None, city_id: Optional[int] = None
