@@ -2,7 +2,7 @@ from typing import List
 from fastapi import APIRouter
 
 from app import db
-from app.errors import NotFoundError
+from app.errors import InvalidRequest, NotFoundError, AlreadyTakenError
 from app.models import User
 from app.api.schemas.user import UserSchema, UserCreateSchema, UserUpdateSchema
 from . import permissions
@@ -29,8 +29,13 @@ async def get_user(user_id: int):
 
 @router.post('/', status_code=201, response_model=UserSchema)
 async def create_user(data: UserCreateSchema):
-    user = User.from_data(data)
-    # permissions.users.can_edit(logged_user, user)
+    user = db.session.query(User).filter_by(email=data.email).first()
+    if user:
+        raise AlreadyTakenError("email", data.email)
+    try:
+        user = User.from_data(data)
+    except Exception as error:
+        raise InvalidRequest
     db.session.add(user)
     db.session.commit()
     return user
@@ -40,8 +45,9 @@ async def create_user(data: UserCreateSchema):
 async def update_user(
     user_id: int, data: UserUpdateSchema, logged_user=logged_user
 ):
+    if (logged_user.id != user_id):
+        permissions.users.can_edit(logged_user)
     user = await get_user(user_id)
-    permissions.users.can_edit(logged_user, user)
     user.update(data)
     db.session.commit()
     return user
@@ -49,7 +55,7 @@ async def update_user(
 
 @router.delete('/{user_id}')
 async def delete_user(user_id: int, logged_user=logged_user):
+    permissions.users.can_edit(logged_user)
     user = await get_user(user_id)
-    permissions.users.can_edit(logged_user, user)
     db.session.delete(user)
     db.session.commit()

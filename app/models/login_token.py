@@ -39,6 +39,8 @@ class LoginToken(db.TimedMixin, db.Base):
         except ValueError as e:
             raise InvalidAuthToken('No valid ID found in token') from e
         result = db.session.get(cls, id)
+        if not result:
+            raise InvalidAuthToken('Missing Authorization header')
         if result.value != token:
             raise InvalidAuthToken('Mismatching token')
         return result
