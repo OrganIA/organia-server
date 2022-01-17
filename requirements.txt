@@ -1,3 +1,5 @@
+geopy
+geocoder
 fastapi
 requests
 passlib[bcrypt]
