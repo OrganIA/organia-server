@@ -7,7 +7,7 @@ from . import client
 
 def create_admin():
     from app.models import LoginToken, User
-    user = User(email='admin')
+    user = User(email='admin', role=1)
     db.session.add(user)
     db.session.commit()
     token = LoginToken.get_valid_for_user(user)
