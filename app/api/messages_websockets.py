@@ -15,7 +15,10 @@ router = APIRouter(prefix='/chats')
 manager = websocket_manager.ConnectionManager()
 
 
-@router.websocket('/{chat_id}')
+# Currently prefix is ignored for websockets
+# Issue https://github.com/tiangolo/fastapi/issues/2639
+# @router.websocket('/ws/{chat_id}')
+@router.websocket('/api/chats/ws/{chat_id}')
 async def websocket_route(chat_id: int, websocket: WebSocket):
     print('Accepting client connection...')
     await manager.connect(websocket)
