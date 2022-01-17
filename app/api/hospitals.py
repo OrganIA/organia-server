@@ -3,15 +3,14 @@ from fastapi import APIRouter
 
 from app import db
 from typing import Optional
+from app.distance import get_distance
 from app.errors import NotFoundError
 from app.models import City, Hospital
 from app.api.schemas.hospital import (
     HospitalSchema,
 )
-from app.distance import get_distance
 
 router = APIRouter(prefix='/hospitals')
-
 
 @router.get('/', response_model=List[HospitalSchema])
 async def get_hospitals(
