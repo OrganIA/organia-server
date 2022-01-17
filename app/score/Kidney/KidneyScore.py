@@ -1,8 +1,7 @@
 import math
-
-from app.models import Person
-from app.score.Kidney.HLA_Age import *
-from app.score.Kidney.DialyseScores import *
+from app.models import Person, Listing
+from app.score.Kidney.HLA_Age import getABScore, getAgeBonus, getAgeMalus, getDQScore, getDRScore, getFagScore
+from app.score.Kidney.DialyseScores import getScore, getWaitingScore
 
 
 def getHAge(receiver: Person, receiver_listing: Listing):

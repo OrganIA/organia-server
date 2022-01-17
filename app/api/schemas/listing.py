@@ -12,14 +12,17 @@ class ListingSchema(db.Schema):
     notes: Optional[str]
     organ: Listing.Organ
     donor: bool
-    dialyse: bool
-    retransplantation: bool
-    start_date_dialyse: Optional[date]
-    end_date_dialyse: Optional[date]
-    arf_date: Optional[date]
-    transplantation_date: Optional[date]
-    second_registration_date: Optional[date]
-    hla: Listing.HLA
+    isDialyse: bool
+    isRetransplantation: bool
+    startDateDialyse: Optional[date]
+    EndDateDialyse: Optional[date]
+    ARFDate: Optional[date]
+    DateTransplantation: Optional[date]
+    ReRegistrationDate: Optional[date]
+    A: Optional[int]
+    B: Optional[int]
+    DR: Optional[int]
+    DQ: Optional[int]
 
     class Config:
         orm_mode = True
@@ -29,7 +32,6 @@ class ListingUpdateSchema(ListingSchema):
     organ: Optional[Listing.Organ]
     donor: Optional[bool]
     person_id: Optional[int]
-    hla: Optional[Listing.HLA]
 
 
 class ListingCreateSchema(ListingSchema):

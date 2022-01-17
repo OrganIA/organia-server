@@ -1,7 +1,8 @@
 from app.models import Person, Listing
 
+
 def getABScore(receiver_listing: Listing):
-    x = receiver_listing.A + receiver_listing.B 
+    x = receiver_listing.A + receiver_listing.B
     if x >= 4:
         return 0
     return (4 - x) / 4
