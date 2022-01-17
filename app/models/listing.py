@@ -9,6 +9,8 @@ from app.helpers.enums import EnumStr
 class Listing(db.DurationMixin, db.Base):
     class Organ(EnumStr):
         HEART = enum.auto()
+        KIDNEY = enum.auto()
+        LUNG = enum.auto()
 
     person_id = sa.Column(sa.ForeignKey('persons.id'))
     notes = sa.Column(sa.String)

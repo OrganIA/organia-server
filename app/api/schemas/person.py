@@ -20,6 +20,7 @@ class PersonSchema(db.Schema):
 
 class PersonGetSchema(PersonSchema, db.TimedMixin.Schema):
     blood_type: Optional[str]
+    age: Optional[int]
 
 
 class PersonUpdateSchema(PersonSchema):

@@ -3,7 +3,7 @@ from .city import CitySchema
 
 
 class HospitalSchema(db.Schema):
-    city: CitySchema
+    city_id: int
     name: str
 
     class Config:
