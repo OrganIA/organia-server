@@ -22,6 +22,10 @@ SAMPLE_LISTING_3 = {
 
         "start_date": "2021-11-01",
 
+        "A": 0,
+        "B": 0,
+        "DR": 0,
+        "DQ": 0
     },
 
     "person": {
@@ -49,13 +53,13 @@ def test_DA():
     assert getWaitingScore(SAMPLE_LISTING_3["receiver_listing"]) == 1
 
 def test_ABScore():
-    assert getABScore() == 1
+    assert getABScore(SAMPLE_LISTING_3["receiver_listing"]) == 1
 
 def test_DRScore():
-    assert getDQScore() == 1
+    assert getDQScore(SAMPLE_LISTING_3["receiver_listing"]) == 1
 
 def test_getFagScore():
-    assert getFagScore() == 1
+    assert getFagScore() == 0
 
 def test_getAgeMalus():
     assert getAgeMalus(SAMPLE_LISTING_3["person"]) == 0.83333333333

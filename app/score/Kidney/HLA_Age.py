@@ -1,45 +1,22 @@
-from typing import List
-from app import db
 from app.models import Person, Listing
 
-
-HLA_SCORE = {
-    "A": 0,
-    "B": 0,
-    "DR": 0,
-    "DQ": 0
-}
-
-
-def HLA_Getter():
-    HLA_SCORE["A"] = db.session.query(Listing)\
-        .filter((Listing.hla == 'A')).count()
-    HLA_SCORE["B"] = db.session.query(Listing)\
-        .filter((Listing.hla == 'B')).count()
-    HLA_SCORE["DR"] = db.session.query(Listing)\
-        .filter((Listing.hla == 'DR')).count()
-    HLA_SCORE["DQ"] = db.session.query(Listing)\
-        .filter((Listing.hla == 'DQ')).count()
-    return HLA_SCORE
-
-
-def getABScore():
-    x = HLA_SCORE["A"] + HLA_SCORE["B"] 
+def getABScore(receiver_listing: Listing):
+    x = receiver_listing.A + receiver_listing.B 
     if x >= 4:
         return 0
     return (4 - x) / 4
 
 
-def getDRScore():
-    if HLA_SCORE["DR"] >= 2:
+def getDRScore(receiver_listing: Listing):
+    if receiver_listing.DR >= 2:
         return 0
-    return (2 - HLA_SCORE["DR"]) / 2
+    return (2 - receiver_listing.DR) / 2
 
 
-def getDQScore():
-    if HLA_SCORE["DQ"] >= 2:
+def getDQScore(receiver_listing: Listing):
+    if receiver_listing.DQ >= 2:
         return 0
-    return (2 - HLA_SCORE["DQ"]) / 2
+    return (2 - receiver_listing.DQ) / 2
 
 
 def getAgeMalus(receiver: Person):
