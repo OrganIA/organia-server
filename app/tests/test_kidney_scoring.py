@@ -1,5 +1,6 @@
-from app.score.Kidney.HLA_Age import *
-from app.score.Kidney.DialyseScores import *
+import datetime
+from app.score.Kidney.HLA_Age import getABScore, getAgeBonus, getAgeMalus, getDQScore, getDRScore, getFagScore
+from app.score.Kidney.DialyseScores import getDate, getScore, getWaitingScore
 
 SAMPLE_LISTING_3 = {
     "start_date": "2021-10-11",
@@ -14,13 +15,13 @@ SAMPLE_LISTING_3 = {
     "receiver_listing": {
         "isDialyse": True,
         "isRetransplantation": False,
-        "startDateDialyse": "2021-11-01",
-        "EndDateDialyse": "2021-12-01",
-        "DateTransplantation": "2021-12-02",
+        "startDateDialyse": datetime.datetime(2021, 11, 1),
+        "EndDateDialyse": datetime.datetime(2021, 12, 1),
+        "DateTransplantation": datetime.datetime(2021, 12, 2),
         "ReRegistrationDate": None,
         "ARFDate": None,
 
-        "start_date": "2021-11-01",
+        "start_date": datetime.datetime(2021, 11, 1),
 
         "A": 0,
         "B": 0,
@@ -45,24 +46,36 @@ SAMPLE_LISTING_3 = {
     }
 }
 
+def test_getDate():
+    assert getDate(SAMPLE_LISTING_3["receiver_listing"]) == SAMPLE_LISTING_3["receiver_listing"]["startDateDialyse"]
 
 def test_DD():
-    assert getScore(SAMPLE_LISTING_3["receiver_listing"]) == SAMPLE_LISTING_3["receiver_listing"].startDateDialyse
+    assert getScore(SAMPLE_LISTING_3["receiver_listing"]) == 0.021369863013698632
+
 
 def test_DA():
-    assert getWaitingScore(SAMPLE_LISTING_3["receiver_listing"]) == 1
+    assert getWaitingScore(SAMPLE_LISTING_3["receiver_listing"]) == 0.65
+
 
 def test_ABScore():
     assert getABScore(SAMPLE_LISTING_3["receiver_listing"]) == 1
 
-def test_DRScore():
+
+def test_DQScore():
     assert getDQScore(SAMPLE_LISTING_3["receiver_listing"]) == 1
+
+
+def test_DRScore():
+    assert getDRScore(SAMPLE_LISTING_3["receiver_listing"]) == 1
+
 
 def test_getFagScore():
     assert getFagScore() == 0
 
+
 def test_getAgeMalus():
-    assert getAgeMalus(SAMPLE_LISTING_3["person"]) == 0.83333333333
+    assert getAgeMalus(SAMPLE_LISTING_3["person"]) == 0.8333333333333334
+
 
 def test_getAgeBonus():
-    assert getAgeBonus(SAMPLE_LISTING_3["receiver_listing"]) == 0.90909090909
+    assert getAgeBonus(SAMPLE_LISTING_3["person"]) == 0.9090909090909091

@@ -28,3 +28,9 @@ def getScoreHD(receiver, donor, receiver_listing):
     else:
         check = 1
     return (HAge * check) / FAge
+
+def getScoreNAP(receiver, donor, receiver_listing):
+    ScoreHD = getScoreHD(receiver, donor, receiver_listing)
+    MGScore = 0
+
+    return ScoreHD * MGScore
