@@ -1,5 +1,4 @@
 from app import db
-from .city import CitySchema
 
 
 class HospitalSchema(db.Schema):
