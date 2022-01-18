@@ -14,6 +14,7 @@ class ListingSchema(db.Schema):
     tumors_number: int
     biggest_tumor_size: Optional[int]
     alpha_fetoprotein: Optional[int]
+    alpha_fetoprotein_score: Optional[int]
 
     class Config:
         orm_mode = True
