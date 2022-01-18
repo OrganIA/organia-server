@@ -56,7 +56,7 @@ class LoginToken(db.TimedMixin, db.Base):
         ).delete()
 
     @classmethod
-    def get_valid_for_user(cls, user, clean=True, reuse=True, refresh=True):
+    def get_valid_for_user(cls, user, clean=False, reuse=True, refresh=True):
         """
         clean: Delete all expired tokens (all users)
         reuse: Return an existing token instead of creating a new one
