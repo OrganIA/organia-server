@@ -33,6 +33,20 @@ async def create_event(
     return await get_event(db_event.id, logged_user=logged_user)
 
 
+@router.post('/{event_id}', status_code=201, response_model=CalendarEventSchema)
+async def update_event(
+    event_id: int,
+    data: CalendarEventCreateSchema,
+    logged_user: User = logged_user
+):
+    event = await get_event(event_id, logged_user=logged_user)
+    if event.author != logged_user:
+        raise Unauthorized
+    event.update(data)
+    db.session.commit()
+    return event
+
+
 @router.delete('/{event_id}')
 async def delete_event(event_id: int, logged_user: User = logged_user):
     event = await get_event(event_id, logged_user=logged_user)

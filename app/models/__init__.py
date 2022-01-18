@@ -8,3 +8,6 @@ from .person import Person
 from .staff import Staff
 from .user import User
 from .role import Role
+from .chats import Chat
+from .chat_group import ChatGroup
+from .messages import Message

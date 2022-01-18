@@ -1,7 +1,7 @@
 import importlib
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket
 from starlette.responses import RedirectResponse
-
+import random
 from .api import api
 
 
@@ -24,12 +24,6 @@ async def index():
 async def test(module):
     module = importlib.import_module(f'app.{module}')
     return module.test()
-
-
-@app.on_event('startup')
-async def create_basic_roles():
-    from app.models import Role
-    Role.setup_roles()
 
 
 """

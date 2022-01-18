@@ -39,6 +39,8 @@ class LoginToken(db.TimedMixin, db.Base):
         except ValueError as e:
             raise InvalidAuthToken('No valid ID found in token') from e
         result = db.session.get(cls, id)
+        if not result:
+            raise InvalidAuthToken('Missing Authorization header')
         if result.value != token:
             raise InvalidAuthToken('Mismatching token')
         return result
@@ -54,7 +56,7 @@ class LoginToken(db.TimedMixin, db.Base):
         ).delete()
 
     @classmethod
-    def get_valid_for_user(cls, user, clean=True, reuse=True, refresh=True):
+    def get_valid_for_user(cls, user, clean=False, reuse=True, refresh=True):
         """
         clean: Delete all expired tokens (all users)
         reuse: Return an existing token instead of creating a new one

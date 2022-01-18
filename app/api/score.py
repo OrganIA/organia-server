@@ -55,5 +55,4 @@ async def calculate_organ(person_id: int):
     for receiver in receivers:
         score = compute(donor.person, receiver.person, receiver)
         result_listing.append({"listing": receiver, "score": score})
-    return result_listing
-    # return sorted(result_listing, key=lambda x: x["score"], reverse=True)
+    return sorted(result_listing, key=lambda x: x["score"], reverse=True)

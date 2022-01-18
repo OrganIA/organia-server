@@ -1,8 +1,7 @@
 import sqlalchemy as sa
 from sqlalchemy import orm
-import enum
-
 from sqlalchemy.sql.expression import null
+import enum
 
 from app import db
 from app.helpers.enums import EnumStr

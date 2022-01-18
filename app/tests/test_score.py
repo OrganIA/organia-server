@@ -71,8 +71,3 @@ def test_organs_priority_kidney():
 def test_organs_priority_other():
     assert organs_priority(" ") == 3
 
-
-# def test_compute_scoring():
-#     assert compute_scoring(SAMPLE_LISTING_1["person"]["blood_type"],
-#         SAMPLE_LISTING_1["organ"],
-#         SAMPLE_LISTING_2["person"]["age"]) == 43.142857142857146
