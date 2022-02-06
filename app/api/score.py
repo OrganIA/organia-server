@@ -26,19 +26,10 @@ def organs_priority(organs):
     }.get(organs, 3)
 
 
-# def compute_scoring(donor: Person, receiver: Person, receiver_listing: Listing):
-#     blood_type = compatibility_score(receiver)
-#     organs_score = organs_priority(receiver_listing.organ)
-
-#     age = receiver.age
-#     score = organs_score * (100 + (blood_type + age)) / 3.5
-#     return score
-
-
 def compute(donor: Person, receiver: Person, receiver_listing: Listing):
 
     if receiver_listing.organ == Listing.Organ.KIDNEY:
-        getScoreHD(receiver, donor, receiver_listing)
+        return getScoreNAP(receiver, donor, receiver_listing)
 
 
 @router.get('/listing/{person_id}')
