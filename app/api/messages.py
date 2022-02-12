@@ -58,9 +58,10 @@ async def create_chat(data: ChatGroupsCreateSchema, logged_user=logged_user):
     else:
         raise InvalidRequest(msg="Cannot create a chat for other users.")
     chat = Chat()
+    chat.chat_name=data.chat_name
     db.session.add(chat)
     db.session.commit()
-    item_list = {"chat_id": chat.id, "users_ids": []}
+    item_list = {"chat_id": chat.id, "users_ids": [], "chat_name": data.chat_name}
     for i in data.users_ids:
         item = ChatGroup.from_data(i)
         item.chat_id = chat.id
