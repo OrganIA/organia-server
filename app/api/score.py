@@ -6,10 +6,8 @@ from app import db
 from app.errors import NotFoundError
 from app.models import Person
 from app.models import Listing
-from app.api.compatibility import (
-    compatibility_score,
-)
 from app.score.Kidney.KidneyScore import *
+from app.score.Liver.LiverScore import final_score
 from app.api.schemas.person import (
     PersonSchema, PersonGetSchema, PersonUpdateSchema,
 )
@@ -27,11 +25,14 @@ def organs_priority(organs):
 
 
 def compute(donor: Person, receiver: Person, receiver_listing: Listing):
-
     if receiver_listing.organ == Listing.Organ.KIDNEY:
         return getScoreNAP(receiver, donor, receiver_listing)
+    elif receiver_listing.organ == Listing.Organ.LUNG:
+        return final_score(receiver, donor, receiver_listing)
+    else:
+        return 0
 
-
+      
 @router.get('/listing/{person_id}')
 async def calculate_organ(person_id: int):
     result_listing = []
