@@ -22,35 +22,43 @@ async def get_chats_of_user(logged_user=logged_user):
         tmp_list = db.session.query(ChatGroup).filter_by(
             chat_id=group.chat_id
         ).all()
+        tmp_list_chats = db.session.query(Chat).filter_by(
+            id=group.chat_id).all()
         user_list = []
         for users in tmp_list:
             user_list.append(users.user_id)
         item_list.append({
             "chat_id": group.chat_id,
-            "users_ids": user_list
+            "users_ids": user_list,
+            "chat_name": tmp_list_chats[0].chat_name,
+            "creator_id": tmp_list_chats[0].creator_id,
         })
     return item_list
 
 
 @router.get('/{chat_id}', response_model=ChatGroupSchema)
 async def get_chat_by_id(chat_id: int, logged_user=logged_user):
-    chat = db.session.query(ChatGroup).filter_by(
+    chat_group = db.session.query(ChatGroup).filter_by(
         chat_id=chat_id, user_id=logged_user.id
     ).all()
-    if not chat:
+    if not chat_group:
         raise NotFoundError("No chat found for the user with this id.")
+    chat = db.session.query(Chat).filter_by(id=chat_id).all()
+    print(chat)
     group = db.session.query(ChatGroup).filter_by(chat_id=chat_id).all()
     user_list = []
     for elem in group:
         user_list.append(elem.user_id)
     result = {
         "chat_id": group[0].chat_id,
-        "users_ids": user_list
+        "users_ids": user_list,
+        "chat_name": chat[0].chat_name,
+        "creator_id": chat[0].creator_id
     }
     return result
 
 
-@router.post('/', status_code=201, response_model=ChatGroupSchema)
+@ router.post('/', status_code=201, response_model=ChatGroupSchema)
 async def create_chat(data: ChatGroupsCreateSchema, logged_user=logged_user):
     for elem in data.users_ids:
         if elem.user_id == logged_user.id:
@@ -58,10 +66,13 @@ async def create_chat(data: ChatGroupsCreateSchema, logged_user=logged_user):
     else:
         raise InvalidRequest(msg="Cannot create a chat for other users.")
     chat = Chat()
-    chat.chat_name=data.chat_name
+    chat.chat_name = data.chat_name
+    # print(logged_user.id)
+    chat.creator_id = logged_user.id
     db.session.add(chat)
     db.session.commit()
-    item_list = {"chat_id": chat.id, "users_ids": [], "chat_name": data.chat_name}
+    item_list = {"chat_id": chat.id, "users_ids": [],
+                 "chat_name": data.chat_name, "creator_id": chat.creator_id}
     for i in data.users_ids:
         item = ChatGroup.from_data(i)
         item.chat_id = chat.id
@@ -71,7 +82,7 @@ async def create_chat(data: ChatGroupsCreateSchema, logged_user=logged_user):
     return item_list
 
 
-@router.get('/messages/{chat_id}', response_model=List[MessageSchema])
+@ router.get('/messages/{chat_id}', response_model=List[MessageSchema])
 async def get_messages_of_chat(chat_id: int, logged_user=logged_user):
     chat = db.session.query(ChatGroup).filter_by(
         chat_id=chat_id,
@@ -82,7 +93,7 @@ async def get_messages_of_chat(chat_id: int, logged_user=logged_user):
     return db.session.query(Message).filter_by(chat_id=chat_id).all()
 
 
-@router.post('/messages/{chat_id}', response_model=MessageSchema)
+@ router.post('/messages/{chat_id}', response_model=MessageSchema)
 async def send_message(
     chat_id: int,
     data: MessageCreateSchema,
