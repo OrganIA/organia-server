@@ -1,4 +1,5 @@
 from datetime import date
+from optparse import Option
 from typing import Optional
 from app import db
 from app.models import Listing
@@ -14,7 +15,17 @@ class ListingSchema(db.Schema):
     tumors_number: int
     biggest_tumor_size: Optional[int]
     alpha_fetoprotein: Optional[int]
-    alpha_fetoprotein_score: Optional[int]
+    isDialyse: bool
+    isRetransplantation: bool
+    startDateDialyse: Optional[date]
+    EndDateDialyse: Optional[date]
+    ARFDate: Optional[date]
+    DateTransplantation: Optional[date]
+    ReRegistrationDate: Optional[date]
+    A: Optional[int]
+    B: Optional[int]
+    DR: Optional[int]
+    DQ: Optional[int]
 
     class Config:
         orm_mode = True

@@ -32,7 +32,7 @@ def compute(donor: Person, receiver: Person, receiver_listing: Listing):
     else:
         return 0
 
-
+      
 @router.get('/listing/{person_id}')
 async def calculate_organ(person_id: int):
     result_listing = []

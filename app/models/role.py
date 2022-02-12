@@ -20,11 +20,17 @@ class Role(db.TimedMixin, db.Base):
     @classmethod
     def get_default_role(cls):
         role = db.session.query(cls).filter_by(name="default").first()
+        if not role:
+            cls.setup_roles()
+            role = db.session.query(cls).filter_by(name="default").first()
         return role
 
     @classmethod
     def get_admin_role(cls):
         role = db.session.query(cls).filter_by(name="admin").first()
+        if not role:
+            cls.setup_roles()
+            role = db.session.query(cls).filter_by(name="admin").first()
         return role
 
     @classmethod

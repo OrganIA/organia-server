@@ -34,8 +34,8 @@ async def create_user(data: UserCreateSchema):
         raise AlreadyTakenError("email", data.email)
     try:
         user = User.from_data(data)
-    except Exception as error:
-        raise InvalidRequest
+    except Exception as e:
+        raise InvalidRequest from e
     db.session.add(user)
     db.session.commit()
     return user
@@ -45,9 +45,8 @@ async def create_user(data: UserCreateSchema):
 async def update_user(
     user_id: int, data: UserUpdateSchema, logged_user=logged_user
 ):
-    if (logged_user.id != user_id):
-        permissions.users.can_edit(logged_user)
     user = await get_user(user_id)
+    permissions.users.can_edit(logged_user, user)
     user.update(data)
     db.session.commit()
     return user
@@ -55,7 +54,7 @@ async def update_user(
 
 @router.delete('/{user_id}')
 async def delete_user(user_id: int, logged_user=logged_user):
-    permissions.users.can_edit(logged_user)
     user = await get_user(user_id)
+    permissions.users.can_edit(logged_user, user)
     db.session.delete(user)
     db.session.commit()
