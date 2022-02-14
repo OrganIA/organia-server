@@ -1,8 +1,10 @@
 from fastapi import APIRouter
 from typing import List
 
+from sqlalchemy import null
+
 from app import db
-from app.api.schemas.chat import ChatGroupsCreateSchema, ChatGroupSchema
+from app.api.schemas.chat import ChatGroupsCreateSchema, ChatGroupSchema, ChatGroupUpdateSchema
 from app.api.schemas.messages import MessageSchema, MessageCreateSchema
 from app.errors import NotFoundError, InvalidRequest
 from app.models import Chat, Message, ChatGroup
@@ -44,7 +46,6 @@ async def get_chat_by_id(chat_id: int, logged_user=logged_user):
     if not chat_group:
         raise NotFoundError("No chat found for the user with this id.")
     chat = db.session.query(Chat).filter_by(id=chat_id).all()
-    print(chat)
     group = db.session.query(ChatGroup).filter_by(chat_id=chat_id).all()
     user_list = []
     for elem in group:
@@ -67,7 +68,6 @@ async def create_chat(data: ChatGroupsCreateSchema, logged_user=logged_user):
         raise InvalidRequest(msg="Cannot create a chat for other users.")
     chat = Chat()
     chat.chat_name = data.chat_name
-    # print(logged_user.id)
     chat.creator_id = logged_user.id
     db.session.add(chat)
     db.session.commit()
@@ -79,6 +79,52 @@ async def create_chat(data: ChatGroupsCreateSchema, logged_user=logged_user):
         item_list["users_ids"].append(item.user_id)
         db.session.add(item)
     db.session.commit()
+    return item_list
+
+
+@ router.post('/update/{chat_id}', status_code=201, response_model=ChatGroupSchema)
+async def update_chat(data: ChatGroupUpdateSchema, chat_id: int, logged_user=logged_user):
+    chat = db.session.query(Chat).filter_by(id=chat_id).all()
+    if not chat:
+        raise NotFoundError("No chat found for the user with this id.")
+    if chat[0].creator_id != logged_user.id:
+        raise InvalidRequest(msg="You are not the creator of this chat")
+    item_list = {"chat_id": chat_id, "users_ids": [],
+                 "chat_name": chat[0].chat_name, "creator_id": chat[0].creator_id}
+    if data.users_ids:
+        for elem in data.users_ids:
+            if elem.user_id == logged_user.id:
+                break
+        else:
+            raise InvalidRequest(msg="Cannot remove the creator from the chat.")
+
+        chat_group = db.session.query(ChatGroup).filter_by(
+            chat_id=chat_id).all()
+        new_users_list = []
+        for user_id in data.users_ids:
+            new_users_list.append(user_id.user_id)
+
+        former_users_list = []
+        for former_user in chat_group:
+            former_users_list.append(former_user.user_id)
+
+        for i in former_users_list:
+            if i not in new_users_list:
+                db.session.query(ChatGroup).filter_by(
+                    chat_id=chat_id, user_id=i).delete()
+        db.session.commit()
+        for i in data.users_ids:
+            if i.user_id not in former_users_list:
+                item = ChatGroup.from_data(i)
+                item.chat_id = chat_id
+                item_list["users_ids"].append(item.user_id)
+                db.session.add(item)
+
+    if data.chat_name:
+        setattr(chat[0], 'chat_name', data.chat_name)
+        item_list["chat_name"] = data.chat_name
+    db.session.commit()
+
     return item_list
 
 

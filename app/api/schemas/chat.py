@@ -21,3 +21,7 @@ class ChatGroupsCreateSchema(db.Schema):
     users_ids: List[ChatGroupCreateSchema]
     chat_name : str
     creator_id: Optional[int]
+
+class ChatGroupUpdateSchema(db.Schema):
+    users_ids: Optional[List[ChatGroupCreateSchema]]
+    chat_name: Optional[str]
