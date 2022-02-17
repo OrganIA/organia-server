@@ -82,7 +82,7 @@ async def create_chat(data: ChatGroupsCreateSchema, logged_user=logged_user):
     return item_list
 
 
-@ router.post('/update/{chat_id}', status_code=201, response_model=ChatGroupSchema)
+@ router.post('/{chat_id}', status_code=201, response_model=ChatGroupSchema)
 async def update_chat(data: ChatGroupUpdateSchema, chat_id: int, logged_user=logged_user):
     chat = db.session.query(Chat).filter_by(id=chat_id).all()
     if not chat:
