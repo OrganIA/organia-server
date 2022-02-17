@@ -91,6 +91,7 @@ async def update_chat(data: ChatGroupUpdateSchema, chat_id: int, logged_user=log
         raise InvalidRequest(msg="You are not the creator of this chat")
     item_list = {"chat_id": chat_id, "users_ids": [],
                  "chat_name": chat[0].chat_name, "creator_id": chat[0].creator_id}
+
     if data.users_ids:
         for elem in data.users_ids:
             if elem.user_id == logged_user.id:
@@ -100,6 +101,7 @@ async def update_chat(data: ChatGroupUpdateSchema, chat_id: int, logged_user=log
 
         chat_group = db.session.query(ChatGroup).filter_by(
             chat_id=chat_id).all()
+
         new_users_list = []
         for user_id in data.users_ids:
             new_users_list.append(user_id.user_id)
@@ -117,13 +119,17 @@ async def update_chat(data: ChatGroupUpdateSchema, chat_id: int, logged_user=log
             if i.user_id not in former_users_list:
                 item = ChatGroup.from_data(i)
                 item.chat_id = chat_id
-                item_list["users_ids"].append(item.user_id)
                 db.session.add(item)
 
     if data.chat_name:
         setattr(chat[0], 'chat_name', data.chat_name)
         item_list["chat_name"] = data.chat_name
     db.session.commit()
+
+    chat_group = db.session.query(ChatGroup).filter_by(
+        chat_id=chat_id).all()
+    for chat in chat_group:
+        item_list["users_ids"].append(chat.user_id)
 
     return item_list
 
