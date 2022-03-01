@@ -1,3 +1,4 @@
+# Fonction d’appariement en âge entre donneur et receveur
 def getDifAge(ageR, ageD):
     ageRD = ageR - ageD
     difAge = 0
