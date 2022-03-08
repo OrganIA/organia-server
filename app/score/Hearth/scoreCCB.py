@@ -1,9 +1,4 @@
-ageR = None
-ICAR = None
-urgence = None
-XPC = None
-fICAR = 1000*ICAR/40
-
+from numpy import log as ln
 
 #Composant Adulte Standard -> CAS
 def getCAS(ageR, urgence, fICAR):
