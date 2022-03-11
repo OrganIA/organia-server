@@ -83,14 +83,16 @@ async def create_chat(data: ChatGroupsCreateSchema, logged_user=logged_user):
 
 
 @ router.post('/{chat_id}', status_code=201, response_model=ChatGroupSchema)
-async def update_chat(data: ChatGroupUpdateSchema, chat_id: int, logged_user=logged_user):
+async def update_chat(data: ChatGroupUpdateSchema, chat_id: int,
+                      logged_user=logged_user):
     chat = db.session.query(Chat).filter_by(id=chat_id).all()
     if not chat:
         raise NotFoundError("No chat found for the user with this id.")
     if chat[0].creator_id != logged_user.id:
         raise InvalidRequest(msg="You are not the creator of this chat")
     item_list = {"chat_id": chat_id, "users_ids": [],
-                 "chat_name": chat[0].chat_name, "creator_id": chat[0].creator_id}
+                 "chat_name": chat[0].chat_name,
+                 "creator_id": chat[0].creator_id}
 
     if data.users_ids:
         for elem in data.users_ids:
