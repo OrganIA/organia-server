@@ -39,9 +39,9 @@ def convert(string):
             hospital = ' '.join(remove_space[start_hospital: next_department]).strip()
             for var in [city, hospital]:
                 if IS_DEPARTMENT.match(var) or var.startswith("TCA : "):
+                    print("department: %s, city: %s, hospital: %s", department_code, city, hospital)
                     # logging.warning("department: %s, city: %s, hospital: %s", department_code, city, hospital)
                     raise Exception
-            # print(department_code, city, hospital, sep='/')
             store_hospital(department_code, city, hospital)
         except Exception:
             print("Skipped")
