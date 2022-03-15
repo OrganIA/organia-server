@@ -20,6 +20,12 @@ def getXPCA(ageR, urgence, XPC, fICAR, KXPC, DAURG):
     else:
         return 0
 
+def checkXPCA(XPCA):
+    if XPCA > 900:
+        raise Exception ("La composante XPCA ne peut depasser 900 points")
+    else:
+        return 0
+        
 #Composante Pédiatrique Standard -> CPS
 def getCPS(ageR, urgence, DA):
     return

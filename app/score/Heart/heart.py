@@ -147,6 +147,12 @@ def getICAR(CEC2, DRG2, ICARj, ICARi):
     else:
         return max(ICARj, ICARi)
 
+
+def checkICAR(ICAR):
+    if ICAR > 40 or ICAR < 0:
+        raise Exception ("Le score ICAR doit etre compris entre 0 et 40")
+    else:
+        return 0
 #-----------------------------------------------------------------------------------------------------------------------
 
 
