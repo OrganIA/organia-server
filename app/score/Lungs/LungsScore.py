@@ -1,6 +1,10 @@
-import math
+import json
 
-# from app.score.Kidney.KidneyScore import getScoreHD, getScoreMG
+
+def fetch_baseline_values():
+    with open('./BaselineWaitingListSurvival.json', 'r') as f:
+        data = json.load(f)
+    return data["data"]
 
 
 def calculate_exponent(receiver, receiver_listing):
@@ -47,4 +51,4 @@ def calculate_exponent(receiver, receiver_listing):
 
 def next_year_survival_chance(receiver, donor, receiver_listing):
     exponent = calculate_exponent(receiver, receiver_listing)
-    return 42
+    return exponent

@@ -40,10 +40,10 @@ class Listing(db.DurationMixin, db.Base):
     PA_systolic = sa.Column(sa.Float, default=0, nullable=True)
     oxygen_requirement = sa.Column(sa.Float, default=0, nullable=True)
     six_minute_walk_distance_over_150_feet = sa.Column(
-        sa.Boolean, default=False, nullable=True)
+        sa.Boolean, default=True, nullable=True)
     continuous_mechanical_ventilation = sa.Column(
         sa.Boolean, default=False, nullable=True)
-    PC02 = sa.Column(sa.Float, default=0, nullable=True)
+    PC02 = sa.Column(sa.Float, default=40, nullable=True)
     PCO2_increase_superior_to_15_percent = sa.Column(
         sa.Boolean, default=False, nullable=True)
     diagnosis_group = sa.Column(sa.String, default="A", nullable=True)
