@@ -45,6 +45,20 @@ def calculate_exponent(receiver, receiver_listing):
         e += 0.943377
     elif (receiver_listing.diagnosis_group == "D"):
         e += 0.996936
+    if receiver_listing.detailled_diagnosis == "Bronchiectasis":
+        e += 0.157212
+    elif receiver_listing.detailled_diagnosis == "Eisenmenger":
+        e += -0.627866
+    elif receiver_listing.detailled_diagnosis == "Lymphangioleiomyomatosis":
+        e += -0.197434
+    elif receiver_listing.detailled_diagnosis == "Bronchiolitis":
+        e += -0.256480
+    elif receiver_listing.detailled_diagnosis == "Bronchiolitis":
+        e += -0.265233
+    if receiver_listing.detailled_diagnosis == "Sarcoidosis" and receiver_listing.PA_systolic > 30:
+        e += -0.707346
+    elif receiver_listing.detailled_diagnosis == "Sarcoidosis" and receiver_listing.PA_systolic <= 30:
+        e += 0.455348
     return e
 
 
