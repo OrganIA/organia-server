@@ -10,6 +10,7 @@ class Listing(db.DurationMixin, db.Base):
     class Organ(EnumStr):
         HEART = enum.auto()
         KIDNEY = enum.auto()
+        LIVER = enum.auto()
         LUNG = enum.auto()
 
     person_id = sa.Column(sa.ForeignKey('persons.id'))

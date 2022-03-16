@@ -45,10 +45,19 @@ def calculate_exponent(receiver, receiver_listing):
         e += 0.943377
     elif (receiver_listing.diagnosis_group == "D"):
         e += 0.996936
-
     return e
 
 
-def next_year_survival_chance(receiver, donor, receiver_listing):
+def next_year_survival_chance(receiver, receiver_listing):
+    score = []
+
     exponent = calculate_exponent(receiver, receiver_listing)
-    return exponent
+    baseline_values = fetch_baseline_values()
+    for baseline_value in baseline_values:
+        score.append(baseline_value ** exponent)
+    return score
+
+
+def lungs_final_score(receiver, donor, receiver_listing):
+    next_year_survival_chance(receiver, receiver_listing)
+    return 42
