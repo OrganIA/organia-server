@@ -26,8 +26,7 @@ router = APIRouter(prefix='/invitations')
 
 @router.post('/', status_code=201)
 async def create_invitation(logged_user: User = logged_user):
-    invitation = Invitation(author_id=logged_user.id)
-    db.session.add(invitation)
+    invitation = db.add(Invitation, {'author_id': logged_user.id})
     db.session.commit()
     return str(invitation)
 
