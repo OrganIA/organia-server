@@ -25,16 +25,14 @@ def getAgeMalus(receiver: Person):
         return 1
     elif receiver.age > 75:
         return 0
-    return (75 - receiver.age) / 30
+    return 1 - ((receiver.age - 45) / 30)
 
 
 def getAgeBonus(receiver: Person):
-    if receiver.age < 45:
-        return 0
-    elif receiver.age >= 100:
+    if receiver.age <= 45:
         return 1
-    return (100 - receiver.age) / 55
-
+    else:
+        return (receiver.age - 45) / 55
 
 def getFagScore():
     return 0
