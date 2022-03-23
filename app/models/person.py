@@ -1,9 +1,11 @@
 import sqlalchemy as sa
 from sqlalchemy import orm
+from sqlalchemy.sql.expression import null
 import enum
 
 from app import db
 from app.helpers.enums import EnumStr
+from datetime import datetime
 
 
 class Person(db.TimedMixin, db.Base):
@@ -39,3 +41,10 @@ class Person(db.TimedMixin, db.Base):
         if not self.abo or not self.rhesus:
             return None
         return f'{self.abo.name}{self.rhesus.value}'
+
+    @property
+    def age(self):
+        now = datetime.utcnow().date()
+        age = now.year - self.birthday.year - \
+            ((now.month, now.day) < (self.birthday.month, self.birthday.day))
+        return age
