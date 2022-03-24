@@ -59,7 +59,19 @@ async def get_chat_by_id(chat_id: int, logged_user=logged_user):
     return result
 
 
-@ router.post('/', status_code=201, response_model=ChatGroupSchema)
+@router.get('/latest/{chat_id}', response_model=MessageSchema)
+async def get_chat_by_id(chat_id: int, logged_user=logged_user):
+    chat_group = db.session.query(ChatGroup).filter_by(
+        chat_id=chat_id, user_id=logged_user.id
+    ).all()
+    if not chat_group:
+        raise NotFoundError("No chat found for the user with this id.")
+    latest_message = db.session.query(Message).order_by(
+        Message.created_at.desc()).first()
+    return latest_message
+
+
+@router.post('/', status_code=201, response_model=ChatGroupSchema)
 async def create_chat(data: ChatGroupsCreateSchema, logged_user=logged_user):
     for elem in data.users_ids:
         if elem.user_id == logged_user.id:
@@ -82,7 +94,7 @@ async def create_chat(data: ChatGroupsCreateSchema, logged_user=logged_user):
     return item_list
 
 
-@ router.post('/{chat_id}', status_code=201, response_model=ChatGroupSchema)
+@router.post('/{chat_id}', status_code=201, response_model=ChatGroupSchema)
 async def update_chat(data: ChatGroupUpdateSchema, chat_id: int,
                       logged_user=logged_user):
     chat = db.session.query(Chat).filter_by(id=chat_id).all()
@@ -136,7 +148,7 @@ async def update_chat(data: ChatGroupUpdateSchema, chat_id: int,
     return item_list
 
 
-@ router.get('/messages/{chat_id}', response_model=List[MessageSchema])
+@router.get('/messages/{chat_id}', response_model=List[MessageSchema])
 async def get_messages_of_chat(chat_id: int, logged_user=logged_user):
     chat = db.session.query(ChatGroup).filter_by(
         chat_id=chat_id,
@@ -147,7 +159,7 @@ async def get_messages_of_chat(chat_id: int, logged_user=logged_user):
     return db.session.query(Message).filter_by(chat_id=chat_id).all()
 
 
-@ router.post('/messages/{chat_id}', response_model=MessageSchema)
+@router.post('/messages/{chat_id}', response_model=MessageSchema)
 async def send_message(
     chat_id: int,
     data: MessageCreateSchema,
