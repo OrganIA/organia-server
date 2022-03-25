@@ -59,7 +59,7 @@ async def get_chat_by_id(chat_id: int, logged_user=logged_user):
     return result
 
 
-@router.get('/latest/{chat_id}', response_model=MessageSchema)
+@router.get('/{chat_id}/messages/latest', response_model=MessageSchema)
 async def get_latest_message_chat(chat_id: int, logged_user=logged_user):
     chat_group = db.session.query(ChatGroup).filter_by(
         chat_id=chat_id, user_id=logged_user.id
@@ -71,7 +71,7 @@ async def get_latest_message_chat(chat_id: int, logged_user=logged_user):
     return latest_message
 
 
-@router.get('/messages/{chat_id}', response_model=List[MessageSchema])
+@router.get('/{chat_id}/messages', response_model=List[MessageSchema])
 async def get_messages_of_chat(chat_id: int, logged_user=logged_user):
     chat = db.session.query(ChatGroup).filter_by(
         chat_id=chat_id,
@@ -159,7 +159,7 @@ async def update_chat(data: ChatGroupUpdateSchema, chat_id: int,
     return item_list
 
 
-@router.post('/messages/{chat_id}', response_model=MessageSchema)
+@router.post('/{chat_id}/messages', response_model=MessageSchema)
 async def send_message(
     chat_id: int,
     data: MessageCreateSchema,
