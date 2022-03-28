@@ -73,8 +73,7 @@ async def get_latest_message_chat(logged_user=logged_user):
             db.session.query(Message)
             .filter_by(chat_id=chat_group.chat_id)
             .order_by(Message.created_at.desc())
-            .first()
-        )
+        ).first()
         if message:
             latest_messages.append(message)
     return latest_messages
@@ -93,18 +92,19 @@ async def get_messages_of_chat(chat_id: int, logged_user=logged_user):
 
 @router.post('/', status_code=201, response_model=ChatGroupSchema)
 async def create_chat(data: ChatGroupsCreateSchema, logged_user=logged_user):
-    for elem in data.users_ids:
-        if elem.user_id == logged_user.id:
-            break
-    else:
+    if not logged_user.id in data.users_ids:
         raise InvalidRequest(msg="Cannot create a chat for other users.")
     chat = Chat()
     chat.chat_name = data.chat_name
     chat.creator_id = logged_user.id
     db.session.add(chat)
     db.session.commit()
-    item_list = {"chat_id": chat.id, "users_ids": [],
-                 "chat_name": data.chat_name, "creator_id": chat.creator_id}
+    item_list = {
+        "chat_id": chat.id,
+        "users_ids": [],
+        "chat_name": data.chat_name,
+        "creator_id": chat.creator_id,
+    }
     for i in data.users_ids:
         item = ChatGroup.from_data(i)
         item.chat_id = chat.id
@@ -175,7 +175,7 @@ async def update_chat(
 async def send_message(
     chat_id: int,
     data: MessageCreateSchema,
-    logged_user=logged_user
+    logged_user=logged_user,
 ):
     chat = db.session.query(ChatGroup).filter_by(
         chat_id=chat_id,
