@@ -1,7 +1,7 @@
 touch app.db
 py -m venv venv
 .\venv\Scripts\Activate.ps1
-pip install -U pip
+.\venv\Scripts\python.exe -m pip install --upgrade pip
 pip install -r requirements.txt
 pip install alembic uvicorn[standard]
 
