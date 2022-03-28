@@ -61,15 +61,21 @@ async def get_chat_by_id(chat_id: int, logged_user=logged_user):
 
 @router.get('/messages/latest', response_model=List[MessageSchema])
 async def get_latest_message_chat(logged_user=logged_user):
-    chat_groups = db.session.query(ChatGroup).filter_by(user_id=logged_user.id
-                                                        ).all()
+    chat_groups = (
+        db.session.query(ChatGroup)
+        .filter_by(user_id=logged_user.id)
+    ).all()
     if not chat_groups:
         raise NotFoundError("No chat found for the user with this id.")
     latest_messages = []
     for chat_group in chat_groups:
-        message = db.session.query(Message).filter_by(
-            chat_id=chat_group.chat_id).order_by(Message.created_at.desc()).first()
-        if (message):
+        message = (
+            db.session.query(Message)
+            .filter_by(chat_id=chat_group.chat_id)
+            .order_by(Message.created_at.desc())
+            .first()
+        )
+        if message:
             latest_messages.append(message)
     return latest_messages
 
@@ -109,8 +115,11 @@ async def create_chat(data: ChatGroupsCreateSchema, logged_user=logged_user):
 
 
 @router.post('/{chat_id}', status_code=201, response_model=ChatGroupSchema)
-async def update_chat(data: ChatGroupUpdateSchema, chat_id: int,
-                      logged_user=logged_user):
+async def update_chat(
+        data: ChatGroupUpdateSchema,
+        chat_id: int,
+        logged_user=logged_user
+):
     chat = db.session.query(Chat).filter_by(id=chat_id).all()
     if not chat:
         raise NotFoundError("No chat found for the user with this id.")
