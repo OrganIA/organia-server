@@ -1,4 +1,7 @@
+from http.client import NON_AUTHORITATIVE_INFORMATION
 import json
+
+from attr import NOTHING
 
 
 def fetch_baseline_values():
@@ -71,7 +74,9 @@ def next_year_survival_chance(receiver, receiver_listing):
         score.append(baseline_value ** exponent)
     return score
 
-
 def lungs_final_score(receiver, donor, receiver_listing):
-    next_year_survival_chance(receiver, receiver_listing)
+    Swl = next_year_survival_chance(receiver, receiver_listing)
+    WL = sum(Swl)
+    PT = NOTHING
+    RawScore = PT - 2 * WL
     return 42
