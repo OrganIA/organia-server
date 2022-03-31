@@ -92,7 +92,7 @@ async def get_messages_of_chat(chat_id: int, logged_user=logged_user):
 
 @router.post('/', status_code=201, response_model=ChatGroupSchema)
 async def create_chat(data: ChatGroupsCreateSchema, logged_user=logged_user):
-    if not logged_user.id in data.users_ids:
+    if any(x.user_id == logged_user for x in data.users_ids):
         raise InvalidRequest(msg="Cannot create a chat for other users.")
     chat = Chat()
     chat.chat_name = data.chat_name
