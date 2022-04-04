@@ -28,10 +28,16 @@ def checkXPCA(XPCA):
         
 #Composante Pédiatrique Standard -> CPS
 def getCPS(ageR, urgence, DA):
-    return
+    if ageR < 18 and urgence not in  ['XPCA', 'XPCP1', 'XPCP2']:
+        return (775 + 50 * max(0, min(1, DA / 24)))
+    else:
+        return 0
 #Composante Expert Pédiatrique -> XPCP
 def getXPCP(urgence, KXPC, DAURG):
-    return
+    if urgence == 'XPCP1' or urgence == 'XPCP2':
+        return (KXPC + 50 * max(0, min(DAURG / 24)))
+    else:
+        return 0
 
-def getCCB(CAS, XPCA, CPS, SCXP):
-    return
+def getCCB(CAS, XPCA, CPS, XPCP):
+    return (CAS + XPCA + CPS + XPCP)
