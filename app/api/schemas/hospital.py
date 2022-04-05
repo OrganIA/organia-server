@@ -8,6 +8,7 @@ class HospitalSchema(db.Schema):
     name: str
     latitude: Optional[float]
     longitude: Optional[float]
+    patient_number: Optional[int]
 
     class Config:
         orm_mode = True
@@ -16,3 +17,7 @@ class HospitalSchema(db.Schema):
 class HospitalGetSchema(HospitalSchema, db.TimedMixin.Schema):
     latitude: Optional[float]
     longitude: Optional[float]
+
+class HospitalUpdateSchema(HospitalSchema):
+    name: Optional[str]
+    patient_number: Optional[int]

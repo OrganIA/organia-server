@@ -8,6 +8,7 @@ from app.errors import NotFoundError
 from app.models import City, Hospital
 from app.api.schemas.hospital import (
     HospitalSchema,
+    HospitalUpdateSchema,
 )
 from .dependencies import logged_user
 
@@ -40,8 +41,15 @@ async def create_hospital(hospital: HospitalSchema):
     hospital = db.add(Hospital, data)
     return await get_hospital(hospital.id)
 
+@router.post('/{hospital_id}', response_model=HospitalSchema)
+async def update_hospital(
+    hospital_id: int, data: HospitalUpdateSchema,
+    logged_user=logged_user):
+    hospital = await get_hospital(hospital_id)
+    hospital.update(data)
+    db.session.commit()
+    return hospital
 
-@router.delete('/{hospital_id}')
 async def delete_hospital(hospital_id: int):
     hospital = await get_hospital(hospital_id)
     db.delete(hospital)
