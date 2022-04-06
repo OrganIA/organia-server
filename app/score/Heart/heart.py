@@ -1,53 +1,53 @@
 import numpy as np
-from score.Heart.scoreICAR import getICAR
-from score.Heart.scoreCCP import getScoreCCP
-from score.Heart.scoreCCB import getScoreCCB
+from scoreICAR import getICAR
+from scoreCCP import getScoreCCP
+from scoreCCB import getScoreCCB
 
 class Model:
     def __init__(self):
-        self.ageR = None
-        self.ageD = None
-        self.sexD = None
-        self.sexR = None
-        self.tailleD = None
-        self.tailleR = None
-        self.poidsD = None
-        self.poidsR = None
+        self.ageR = 0
+        self.ageD = 0
+        self.sexD = 0
+        self.sexR = 0
+        self.tailleD = 0
+        self.tailleR = 0
+        self.poidsD = 0
+        self.poidsR = 0
 
-        self.DRG2 =  None
-        self.CEC2 = None
-        self.CAT2 = None
-        self.SIAV2 = None
-        self.DBNB2 = None
-        self.DIA2 = None
-        self.CREAT2 = None
-        self.DCREAT2 = None
-        self.BILI2 = None
-        self.DBILI2 = None
-        self.BILI_AVI = None
-        self.DIA_AVI = None
-        self.CRE_AVI = None
-        self.BNP_AVI = None
-        self.PBN_AVI = None
-        self.PROBNP = None
-        self.BNP = None
+        self.DRG2 =  0
+        self.CEC2 = 0
+        self.CAT2 = 0
+        self.SIAV2 = 0
+        self.DBNB2 = 0
+        self.DIA2 = 0
+        self.CREAT2 = 0
+        self.DCREAT2 = 0
+        self.BILI2 = 0
+        self.DBILI2 = 0
+        self.BILI_AVI = 0
+        self.DIA_AVI = 0
+        self.CRE_AVI = 0
+        self.BNP_AVI = 0
+        self.PBN_AVI = 0
+        self.PROBNP = 0
+        self.BNP = 0
 
-        self.urgence = None
-        self.XPC = None
-        self.KXPC = None
-        self.DAURG = None
-        self.DA = None
+        self.urgence = 0
+        self.XPC = 0
+        self.KXPC = 0
+        self.DAURG = 0
+        self.DA = 0
 
-        self.MAL = None
-        self.MAL2 = None
-        self.MAL3 = None
-        self.BILI = None
-        self.dateDBILI = None
-        self.dVarBio = None
-        self.DFG = None
-        self.ABOD = None
-        self.ABOR= None
-        self.TTLGP= None
+        self.MAL = 0
+        self.MAL2 = 0
+        self.MAL3 = 0
+        self.BILI = 0
+        self.dateDBILI = 0
+        self.dVarBio = 0
+        self.DFG = 0
+        self.ABOD = 0
+        self.ABOR= 0
+        self.TTLGP= 0
 
 # ************************Score NACG*************************
 

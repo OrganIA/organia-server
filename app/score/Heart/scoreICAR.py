@@ -1,11 +1,7 @@
-from asyncio.windows_events import NULL
 from math import ceil as round
-from attr import NOTHING
 from matplotlib.pyplot import get
 from numpy import log as ln
 import numpy as np
-from score.Heart.scoreCCP import getScoreCCP
-from score.Heart.scoreCCB import getScoreCCB
 
 #------------------------------------Index de risque Cardiaque du jour (ICARj)------------------------------------------
 
@@ -13,9 +9,9 @@ from score.Heart.scoreCCB import getScoreCCB
 def getF_Decile_PNj(CEC2, CAT2, SIAV2, DBNB2, BNP2, PROBNP2, Date_Courante, DPROBNB2, Delai_Var_Bio_LA, PROBNP, BNP):
    if CEC2 == 'O'or CAT2 == 'O' or SIAV2 == 'B':
        return 10
-   elif BNP2 == NULL and PROBNP2 == NULL:
+   elif BNP2 == None and PROBNP2 == None:
        return 1
-   elif PROBNP2 != NULL and Date_Courante - DPROBNB2 <= Delai_Var_Bio_LA:
+   elif PROBNP2 != None and Date_Courante - DPROBNB2 <= Delai_Var_Bio_LA:
         conditions = [928, 1478, 2044, 2661, 3416, 4406, 5645, 8000, 11332]
         res = [1,2,3,4,5,6,7,8,9]
         if PROBNP >= 11332:
@@ -23,7 +19,7 @@ def getF_Decile_PNj(CEC2, CAT2, SIAV2, DBNB2, BNP2, PROBNP2, Date_Courante, DPRO
         for index, condition in enumerate(conditions):
             if PROBNP < condition:
                 return res[index]
-   elif BNP2 != NULL and Date_Courante - DBNB2 <= Delai_Var_Bio_LA:
+   elif BNP2 != None and Date_Courante - DBNB2 <= Delai_Var_Bio_LA:
         conditions = [189, 314, 481, 622, 818, 1074, 1317, 1702, 2696]
         res = [1,2,3,4,5,6,7,8,9]
         if BNP >= 2696:
@@ -45,14 +41,14 @@ def getF_Ln_DFG_LAj(DIA2, CREAT2, DCREAT2, SEXR, AGER, Date_Courante, Delai_Var_
     F_DFGj = getF_DFGj(CREAT2, AGER, SEXR)
     if DIA2 == 'O':
         return ln(15)
-    elif CREAT2 == NULL or (Date_Courante - DCREAT2) > Delai_Var_Bio_LA:
+    elif CREAT2 == None or (Date_Courante - DCREAT2) > Delai_Var_Bio_LA:
         return ln(150)
     else:
         return ln(min(150, max(1, F_DFGj)))
 
 #Fonction Bilirubine en Liste d’attente du jour
 def getF_Ln_BILI_LAj(BILI2, DBILI2, Date_Courante, Delai_Var_Bio_LA):
-    if BILI2 == NULL or (Date_Courante - DBILI2) > Delai_Var_Bio_LA:
+    if BILI2 == None or (Date_Courante - DBILI2) > Delai_Var_Bio_LA:
         return ln(5)
     else:
         ln(min(230, max(5, BILI2)))
@@ -87,9 +83,9 @@ def getF_ASCD(CEC2):
 def getF_Decile_PNi(BNP_AVI, PBN_AVI,PROBNP, BNP, CEC2, CAT2, SIAV2):
     if CEC2 == 'O' or CAT2 == 'O' or SIAV2 == 'B':
         return 10
-    elif BNP_AVI == NULL and PBN_AVI == NULL:
+    elif BNP_AVI == None and PBN_AVI == None:
         return 1
-    elif PBN_AVI != NULL:
+    elif PBN_AVI != None:
         conditions = [928, 1478, 2044, 2661, 3416, 4406, 5645, 8000, 11332]
         res = [1,2,3,4,5,6,7,8,9]
         if PROBNP >= 11332:
@@ -97,7 +93,7 @@ def getF_Decile_PNi(BNP_AVI, PBN_AVI,PROBNP, BNP, CEC2, CAT2, SIAV2):
         for index, condition in enumerate(conditions):
             if PROBNP < condition:
                 return res[index]
-    elif BNP_AVI != NULL:
+    elif BNP_AVI != None:
         conditions = [189, 314, 481, 622, 818, 1074, 1317, 1702, 2696]
         res = [1,2,3,4,5,6,7,8,9]
         if BNP >= 2696:
@@ -119,14 +115,14 @@ def getF_Ln_DFG_LAi(DIA_AVI, CRE_AVI, SEXR, AGER):
     F_DFGi = getF_DFGi(SEXR, CRE_AVI, AGER)
     if DIA_AVI == 'O':
         return ln(15)
-    elif CRE_AVI == NULL:
+    elif CRE_AVI == None:
         return ln(150)
     else:
         ln(min(150, max(1, F_DFGi)))
 
 #Fonction Bilirubine en Liste d’attente initiale
 def getF_Ln_BILI_LAi(BILI_AVI):
-    if BILI_AVI == NULL:
+    if BILI_AVI == None:
         return ln(5)
     else:
         ln(min(230, max(5, BILI_AVI)))

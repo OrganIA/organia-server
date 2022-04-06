@@ -88,28 +88,28 @@ def getScoreCCP(CCB, ABO, SC, survPostGRF):
     return CCB * difAge * ABO * SC * survPostGRF
 
 # ***********************************************
-ageR = None
-ageD = None
-MAL = None
-MAL2 = None
-MAL3 = None
-BILI = None
-dateDBILI = None
-dVarBio = None
-LnDFG = None
-sexD = None
-sexR = None
-DFG = None
-ABOD = None
-ABOR= None
-tailleD = None
-tailleR = None
-poidsD = None
-poidsR = None
+ageR = 0
+ageD = 0
+MAL = 0
+MAL2 = 0
+MAL3 = 0
+BILI = 0
+dateDBILI = 0
+dVarBio = 0
+LnDFG = 0
+sexD = 0
+sexR = 0
+DFG = 0
+ABOD = 0
+ABOR= 0
+tailleD = 0
+tailleR = 0
+poidsD = 0
+poidsR = 0
 
 # *********
-CCB = None
-TTLGP= None #durée du trajet entre les lieux de prélèvement et de greffe
+CCB = 0
+TTLGP= 0 #durée du trajet entre les lieux de prélèvement et de greffe
 
 ABO = getABO(ABOD, ABOR)
 difAge = getDifAge(ageR, ageD)
