@@ -39,5 +39,9 @@ def getXPCP(urgence, KXPC, DAURG):
     else:
         return 0
 
-def getScoreCCB(CAS, XPCA, CPS, XPCP):
+def getScoreCCB(model, F_ICAR):
+    CAS = getCAS(model.ageR, model.urgence, F_ICAR)
+    XPCA = getXPCA(model.ageR, model.urgence, model.XPC, F_ICAR, model.KXPC, model.DAURG)
+    CPS = getCPS(model.ageR, model.urgence, model.DA)
+    XPCP = getXPCP(model.urgence, model.KXPC, model.DAURG)
     return (CAS + XPCA + CPS + XPCP)

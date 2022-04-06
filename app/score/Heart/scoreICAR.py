@@ -143,13 +143,25 @@ def getICARi(F_RisquePreGRFi, C_ICAR):
 
 #------------------------------------Calcul de l’Index de Risque Cardiaque (ICAR)---------------------------------------
 
-#La function de calcul de l’Index de Risque Cardiaque (ICAR)
-def getICAR(CEC2, DRG2, ICARj, ICARi):
-    if CEC2 != 'O' and DRG2 != 'O':
+def getICAR(model):
+    C_ICAR = 1.301335 * 0 + 0.157691 * 1 - 0.510058 * ln(150) + 0.615711 * ln(5)
+    F_Decile_PNj = getF_Decile_PNj(model.CEC2, model.CAT2, model.SIAV2, model.DBNB2)
+    F_Ln_DFG_LAj = getF_Ln_DFG_LAj(model.DIA2, model.CREAT2, model.DCREAT2, model.sexR, model.ageR)
+    F_Ln_BILI_LAj = getF_Ln_BILI_LAj(model.BILI2, model.DBILI2)
+    F_ASCD = getF_ASCD(model.CEC2)
+    F_RisquePreGRFj = getF_RisquePreGRFj(F_ASCD, F_Decile_PNj, F_Ln_DFG_LAj, F_Ln_BILI_LAj)
+    ICARj = getICARj(F_RisquePreGRFj, C_ICAR)
+
+    F_Ln_BILI_LAi = getF_Ln_BILI_LAi(model.BILI_AVI)
+    F_Ln_DFG_LAi = getF_Ln_DFG_LAi(model.DIA_AVI, model.CRE_AVI, model.sexR, model.ageR)
+    F_Decile_PNi = getF_Decile_PNi(model.BNP_AVI, model.PBN_AVI, model.PROBNP, model.BNP, model.CEC2, model.CAT2, model.SIAV2)
+    F_RisquePreGRFi = getF_RisquePreGRFi(F_ASCD, F_Decile_PNi, F_Ln_DFG_LAi, F_Ln_BILI_LAi)
+    ICARi = getICARi(F_RisquePreGRFi, C_ICAR)
+
+    if model.CEC2 != 'O' and model.DRG2 != 'O':
         return ICARj
     else:
         return max(ICARj, ICARi)
-
 
 def checkICAR(ICAR):
     if ICAR > 40 or ICAR < 0:
@@ -157,18 +169,3 @@ def checkICAR(ICAR):
     else:
         return 0
 #-----------------------------------------------------------------------------------------------------------------------
-
-C_ICAR = 1.301335 * 0 + 0.157691 * 1 - 0.510058 * ln(150) + 0.615711 * ln(5)
-F_Decile_PNj = getF_Decile_PNj(CEC2, CAT2, SIAV2, DBNB2)
-F_Ln_DFG_LAj = getF_Ln_DFG_LAj(DIA2, CREAT2, DCREAT2, sexR, ageR)
-F_Ln_BILI_LAj = getF_Ln_BILI_LAj(BILI2, DBILI2)
-F_ASCD = getF_ASCD(CEC2)
-F_RisquePreGRFj = getF_RisquePreGRFj(F_ASCD, F_Decile_PNj, F_Ln_DFG_LAj, F_Ln_BILI_LAj)
-ICARj = getICARj(F_RisquePreGRFj, C_ICAR)
-
-F_Ln_BILI_LAi = getF_Ln_BILI_LAi(BILI_AVI)
-F_Ln_DFG_LAi = getF_Ln_DFG_LAi(DIA_AVI, CRE_AVI, sexR, ageR)
-F_Decile_PNi = getF_Decile_PNi(BNP_AVI, PBN_AVI,PROBNP, BNP, CEC2, CAT2, SIAV2)
-F_RisquePreGRFi = getF_RisquePreGRFi(F_ASCD, F_Decile_PNi, F_Ln_DFG_LAi, F_Ln_BILI_LAi)
-ICARi = getICARi(F_RisquePreGRFi, C_ICAR)
-ICAR = getICAR(CEC2, DRG2, ICARj, ICARi)
