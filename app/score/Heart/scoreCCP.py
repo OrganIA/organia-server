@@ -25,8 +25,8 @@ def getABO(ABOD, ABOR):
 
 def getSC(tailleD, tailleR, poidsD, poidsR, ageR, sexD):
 
-    fscD = 0.007184 * tailleD^0.725 * poidsD^0.725
-    fscR = 0.007184 * tailleR^0.725 * poidsR^0.725
+    fscD = 0.007184 * pow(tailleD,0.725) * pow(poidsD,0.725)
+    fscR = 0.007184 * pow(tailleR,0.725) * pow(poidsR,0.725)
 
     if ageR >= 18:
         if 0.8 * fscR < fscD or (sexD == 'H' and poidsD >= 70):
@@ -40,7 +40,7 @@ def getSC(tailleD, tailleR, poidsD, poidsR, ageR, sexD):
             return 0
 
 def getSurvPostGRF(riskPostGRF):
-    return 0.6785748856^np.exp(riskPostGRF)
+    return pow(0.6785748856,np.exp(riskPostGRF))
 
 def getRiskPostGRF(fageR, fageD, fMAL, LnBili, LnDFG, sexRD):
     return (0.50608 * fageR + 0.50754 * fMAL + 0.40268 * LnBili - 0.54443 * LnDFG + 0.36262 * sexRD + 0.41714 * fageD)

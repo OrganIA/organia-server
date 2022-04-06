@@ -29,8 +29,13 @@ class Model:
         self.CRE_AVI = 0
         self.BNP_AVI = 0
         self.PBN_AVI = 0
+        self.PROBNP2 = 0
         self.PROBNP = 0
+        self.Date_Courante = 0
+        self.DPROBNB2 = 0
+        self.Delai_Var_Bio_LA = 0
         self.BNP = 0
+        self.BNP2 = 0
 
         self.urgence = 0
         self.XPC = 0
@@ -63,5 +68,5 @@ model = Model()
 scoreICAR = getICAR(model)
 F_ICAR = 1000 * scoreICAR / 40
 scoreCCB = getScoreCCB(model, F_ICAR)
-scoreCCP = getScoreCCP(model)
-NAGC = getScoreNACG(scoreCCP, model.TTLGP)
+#scoreCCP = getScoreCCP(model)
+#NAGC = getScoreNACG(scoreCCP, model.TTLGP)
