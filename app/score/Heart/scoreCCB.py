@@ -39,5 +39,5 @@ def getXPCP(urgence, KXPC, DAURG):
     else:
         return 0
 
-def getCCB(CAS, XPCA, CPS, XPCP):
+def getScoreCCB(CAS, XPCA, CPS, XPCP):
     return (CAS + XPCA + CPS + XPCP)

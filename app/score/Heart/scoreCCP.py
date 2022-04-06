@@ -121,11 +121,3 @@ riskPostGRF = getRiskPostGRF(ageR, ageD, MAL, LnBili, LnDFG, sexRD)
 SC = getSC(tailleD, tailleR, poidsD, poidsR, ageR, sexD)
 survPostGRF = getSurvPostGRF(riskPostGRF)
 ScoreCCP = getScoreCCP(CCB, ABO, SC, survPostGRF)
-
-# ************************Score NACG*************************
-
-def getScoreNACG(scoreCCP, TTLGP):
-    MG = 1 / np.exp(0.00000002 * TTLGP^2.9)
-    return ScoreCCP * MG
-
-# ***********************************************************
