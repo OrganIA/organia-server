@@ -22,6 +22,7 @@ class Model:
         self.DIA2 = 0
         self.CREAT2 = 0
         self.DCREAT2 = 0
+        self.dateDCREAT2 = 0
         self.BILI2 = 0
         self.DBILI2 = 0
         self.BILI_AVI = 0
@@ -53,12 +54,13 @@ class Model:
         self.ABOD = 0
         self.ABOR= 0
         self.TTLGP= 0
+        self.DIAL=0
 
 # ************************Score NACG*************************
 
 
-def getScoreNACG(scoreCCP, TTLGP):
-    MG = 1 / np.exp(0.00000002 * TTLGP^2.9)
+def getScoreNACG(scoreCCP, TTLGP): 
+    MG = 1 / np.exp(0.00000002 * pow(TTLGP, 2.9))
     return scoreCCP * MG
 
 # ***********************************************************
@@ -68,5 +70,5 @@ model = Model()
 scoreICAR = getICAR(model)
 F_ICAR = 1000 * scoreICAR / 40
 scoreCCB = getScoreCCB(model, F_ICAR)
-#scoreCCP = getScoreCCP(model)
-#NAGC = getScoreNACG(scoreCCP, model.TTLGP)
+scoreCCP = getScoreCCP(model, scoreCCB)
+NAGC = getScoreNACG(scoreCCP, model.TTLGP)

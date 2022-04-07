@@ -15,6 +15,7 @@ def getDifAge(ageR, ageD):
         difAge = 1
     return (difAge)
 
+# Filtre ABO entre donneur et receveur
 def getABO(ABOD, ABOR):
     if (ABOD == ABOR) or (ABOD == 'A' and ABOR == 'AB') or (ABOD == 'O' and ABOR == 'B'):
         return 1
@@ -23,6 +24,7 @@ def getABO(ABOD, ABOR):
     else:
         return 0
 
+# Appariement morphologique entre donneur et receveur
 def getSC(tailleD, tailleR, poidsD, poidsR, ageR, sexD):
 
     fscD = 0.007184 * pow(tailleD,0.725) * pow(poidsD,0.725)
@@ -38,45 +40,51 @@ def getSC(tailleD, tailleR, poidsD, poidsR, ageR, sexD):
             return 1
         else:
             return 0
-
+# Survie post-greffe à 1 an
 def getSurvPostGRF(riskPostGRF):
     return pow(0.6785748856,np.exp(riskPostGRF))
 
+# Fonction de risque post-greffe
 def getRiskPostGRF(fageR, fageD, fMAL, LnBili, LnDFG, sexRD):
     return (0.50608 * fageR + 0.50754 * fMAL + 0.40268 * LnBili - 0.54443 * LnDFG + 0.36262 * sexRD + 0.41714 * fageD)
 
+# Fonction sur l’âge du receveur
 def getFager(ageR):
     if ageR > 50:
         return 1
     else:
         return 0
 
+# Fonction sur la maladie initiale du receveur
 def getfMAL(MAL, MAL2, MAL3):
     if MAL in ['Maladie valvulaire', 'Maladie congenitale', 'Maladie congenitale non Eisenmenger'] or MAL2 in ['Maladie valvulaire', 'Maladie congenitale', 'Maladie congenitale non Eisenmenger'] or MAL3 in ['Maladie valvulaire', 'Maladie congenitale', 'Maladie congenitale non Eisenmenger']:
         return 1
     else:
         return 0
 
+# Fonction bilirubine pour le post-greffe
 def getLnBili(BILI, dateDBILI, dVarBio):
     if BILI == None or dateDBILI > dVarBio:
         return np.log(230)
     else:
         return np.log(min(230, max(5, BILI)))
 
-def getLnDFG(DYAL, CREAT, dateDCREAT, dVarBio, DFG):
-    if DYAL == 'O':
-        np.log(15)
-    elif CREAT == None or dateDCREAT > dVarBio:
-        np.log(1)
+# Fonction du Débit de Filtration Glomérulaire pour le post-greffe
+def getLnDFG(DIAL, CREAT2, dateDCREAT2, dVarBio, DFG):
+    if DIAL == 'O':
+        return np.log(15)
+    elif CREAT2 == None or dateDCREAT2 > dVarBio:
+        return np.log(1)
     else:
-        np.log(min(150, max(1, DFG)))
+        return np.log(min(150, max(1, DFG)))
 
+# Fonction sur l’appariement du sexe entre donneur et receveur
 def getsexRD(sexD, sexR):
     if sexD == 'M' and sexR == 'F':
         return 1
     else:
         return 0
-
+# Fonction sur l’âge du donneur
 def getfageD(ageD):
     if ageD > 55:
         return 1
@@ -84,41 +92,18 @@ def getfageD(ageD):
         return 0
 # ********************Score CCP******************
 
-def getScoreCCP(CCB, ABO, SC, survPostGRF):
+def getScoreCCP(model, CCB):
+    LnDFG = getLnDFG(model.DIAL, model.CREAT2, model.dateDCREAT2, model.dVarBio, model.DFG)
+    fageD = getfageD(model.ageD)
+    sexRD = getsexRD(model.sexD, model.sexR)
+    LnBili = getLnBili(model.BILI, model.dateDBILI, model.dVarBio)
+    fMAL = getfMAL(model.MAL, model.MAL2, model.MAL3)
+    fageR = getFager(model.ageR)
+    riskPostGRF = getRiskPostGRF(model.ageR, model.ageD, model.MAL, LnBili, LnDFG, sexRD)
+    difAge = getDifAge(model.ageR, model.ageD)
+    ABO = getABO(model.ABOD, model.ABOR)
+    SC = getSC(model.tailleD, model.tailleR, model.poidsD, model.poidsR, model.ageR, model.sexD)
+    survPostGRF = getSurvPostGRF(riskPostGRF)
     return CCB * difAge * ABO * SC * survPostGRF
 
 # ***********************************************
-ageR = 0
-ageD = 0
-MAL = 0
-MAL2 = 0
-MAL3 = 0
-BILI = 0
-dateDBILI = 0
-dVarBio = 0
-LnDFG = 0
-sexD = 0
-sexR = 0
-DFG = 0
-ABOD = 0
-ABOR= 0
-tailleD = 0
-tailleR = 0
-poidsD = 0
-poidsR = 0
-
-# *********
-CCB = 0
-TTLGP= 0 #durée du trajet entre les lieux de prélèvement et de greffe
-
-ABO = getABO(ABOD, ABOR)
-difAge = getDifAge(ageR, ageD)
-fageD = getfageD(ageD)
-sexRD = getsexRD(sexD, sexR)
-LnBili = getLnBili(BILI, dateDBILI, dVarBio)
-fMAL = getfMAL(MAL, MAL2, MAL3)
-fageR = getFager(ageR)
-riskPostGRF = getRiskPostGRF(ageR, ageD, MAL, LnBili, LnDFG, sexRD)
-SC = getSC(tailleD, tailleR, poidsD, poidsR, ageR, sexD)
-survPostGRF = getSurvPostGRF(riskPostGRF)
-ScoreCCP = getScoreCCP(CCB, ABO, SC, survPostGRF)
