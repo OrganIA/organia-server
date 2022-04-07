@@ -70,10 +70,10 @@ def getLnBili(BILI, dateDBILI, dVarBio):
         return np.log(min(230, max(5, BILI)))
 
 # Fonction du Débit de Filtration Glomérulaire pour le post-greffe
-def getLnDFG(DIA2, CREAT2, dateDCREAT2, dVarBio, DFG):
+def getLnDFG(DIA2, CREAT2, DCREAT2, dVarBio, DFG):
     if DIA2 == 'O':
         return np.log(15)
-    elif CREAT2 == None or dateDCREAT2 > dVarBio:
+    elif CREAT2 == None or DCREAT2 > dVarBio:
         return np.log(1)
     else:
         return np.log(min(150, max(1, DFG)))
@@ -93,7 +93,7 @@ def getfageD(ageD):
 # ********************Score CCP******************
 
 def getScoreCCP(model, CCB):
-    LnDFG = getLnDFG(model.DIA2, model.CREAT2, model.dateDCREAT2, model.dVarBio, model.DFG)
+    LnDFG = getLnDFG(model.DIA2, model.CREAT2, model.DCREAT2, model.dVarBio, model.DFG)
     fageD = getfageD(model.ageD)
     sexRD = getsexRD(model.sexD, model.sexR)
     LnBili = getLnBili(model.BILI, model.dateDBILI, model.dVarBio)
