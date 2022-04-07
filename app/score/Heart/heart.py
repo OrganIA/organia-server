@@ -54,7 +54,6 @@ class Model:
         self.ABOD = 0
         self.ABOR= 0
         self.TTLGP= 0
-        self.DIAL=0
 
 # ************************Score NACG*************************
 
