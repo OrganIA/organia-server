@@ -3,6 +3,8 @@ from scoreICAR import getICAR
 from scoreCCP import getScoreCCP
 from scoreCCB import getScoreCCB
 from datetime import datetime
+from test import 
+
 
 class Model:
     def __init__(self, data):
@@ -15,28 +17,28 @@ class Model:
         self.poidsD = data['poidD']
         self.poidsR = data['poidR']
 
-        self.DRG2 =  data['DRG']
-        self.CEC2 = data['CEC']
-        self.CAT2 = 0
-        self.SIAV2 = data['SIAV']
-        self.DBNB2 = 0
+        self.DRG =  data['DRG']
+        self.CEC = data['CEC']
+        # self.CAT2 = 0
+        self.SIAV = data['SIAV']
+        self.DBNB = 0
         self.DIA2 = data['DIA']
-        self.CREAT2 = data['CREAT']
-        self.DCREAT2 = data['DCREAT']
-        self.BILI2 = 0
-        self.DBILI2 = data['DBILI']
+        self.CREAT = data['CREAT']
+        self.DCREAT = data['DCREAT']
+        # self.BILI2 = 0
+        self.DBILI = data['DBILI']
         self.BILI_AVI = data['BILI_AVI']
         self.DIA_AVI = data['CAT']
         self.CRE_AVI = data['CRE_AVI']
         self.BNP_AVI = data['BNP_AVI']
         self.PBN_AVI = data['PBN_AVI']
-        self.PROBNP2 = 0
+        # self.PROBNP2 = 0
         self.PROBNP = data['PROBNP']
         self.Date_Courante = 0
-        self.DPROBNB2 = data['DPROBNP']
+        self.DPROBNB = data['DPROBNP']
         self.Delai_Var_Bio_LA = 0
         self.BNP = data['BNP']
-        self.BNP2 = 0
+        # self.BNP2 = 0
 
         self.urgence = data['URGENCE']
         self.XPC = 0
@@ -58,16 +60,17 @@ class Model:
 # ************************Score NACG*************************
 
 
-def getScoreNACG(scoreCCP, TTLGP):
-    MG = 1 / np.exp(0.00000002 * TTLGP^2.9)
+def getScoreNACG(scoreCCP, TTLGP): 
+    MG = 1 / np.exp(0.00000002 * pow(TTLGP, 2.9))
     return scoreCCP * MG
 
 # ***********************************************************
+
 
 model = Model()
 
 scoreICAR = getICAR(model)
 F_ICAR = 1000 * scoreICAR / 40
 scoreCCB = getScoreCCB(model, F_ICAR)
-#scoreCCP = getScoreCCP(model)
-#NAGC = getScoreNACG(scoreCCP, model.TTLGP)
+scoreCCP = getScoreCCP(model, scoreCCB)
+NAGC = getScoreNACG(scoreCCP, model.TTLGP)
