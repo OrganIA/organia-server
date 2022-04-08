@@ -1,18 +1,18 @@
 from random import sample
 from sqlite3 import Timestamp
+from xml.dom.domreg import well_known_implementations
 import numpy as np
-from pandas import Timedelta
 from scoreICAR import getICAR
 from scoreCCP import getScoreCCP
 from scoreCCB import getScoreCCB
-from datetime import datetime
+from datetime import datetime, timedelta
 from test import sample1
 
 
 class Model:
     def __init__(self, data):
-        self.ageR = data['R_D_NAI'] - Timedelta
-        self.ageD = data['D_D_NAI'] - Timedelta
+        self.ageR = data['R_D_NAI'] - datetime.now()
+        self.ageD = data['D_D_NAI'] - datetime.now()
         self.sexD = data['sexD']
         self.sexR = data['SexR']
         self.tailleD = data['tailleD']
@@ -28,20 +28,17 @@ class Model:
         self.DIA = data['DIA']
         self.CREAT = data['CREAT']
         self.DCREAT = data['DCREAT']
-        # self.BILI2 = 0
         self.DBILI = data['DBILI']
         self.BILI_AVI = data['BILI_AVI']
         self.DIA_AVI = data['DIA_AVI']
         self.CRE_AVI = data['CRE_AVI']
         self.BNP_AVI = data['BNP_AVI']
         self.PBN_AVI = data['PBN_AVI']
-        # self.PROBNP2 = 0
         self.PROBNP = data['PROBNP']
-        self.Date_Courante = Timedelta
+        self.Date_Courante = datetime.now()
         self.DPROBNB = data['DPROBNP']
-        self.Delai_Var_Bio_LA = Timedelta
+        self.Delai_Var_Bio_LA = timedelta(weeks=12)
         self.BNP = data['BNP']
-        # self.BNP2 = 0
 
         self.urgence = data['URGENCE']
         self.XPC = 0
@@ -62,7 +59,6 @@ class Model:
 
 # ************************Score NACG*************************
 
-print(type(sample1['DPROBNP']), )
 def getScoreNACG(scoreCCP, TTLGP): 
     MG = 1 / np.exp(0.00000002 * pow(TTLGP, 2.9))
     return scoreCCP * MG
