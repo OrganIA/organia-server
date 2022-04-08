@@ -1,4 +1,4 @@
-touch app.db
+New-Item app.db
 py -m venv venv
 .\venv\Scripts\Activate.ps1
 .\venv\Scripts\python.exe -m pip install --upgrade pip
