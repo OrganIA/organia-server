@@ -5,9 +5,10 @@ from app import db
 from typing import Optional
 from app.distance import get_distance
 from app.errors import NotFoundError
-from app.models import City, Hospital
+from app.models import City, Hospital, Listing
 from app.api.schemas.hospital import (
     HospitalSchema,
+    HospitalGetSchema,
     HospitalUpdateSchema,
 )
 from .dependencies import logged_user
@@ -16,7 +17,7 @@ from .dependencies import logged_user
 router = APIRouter(prefix='/hospitals', dependencies=[logged_user])
 
 
-@router.get('/', response_model=List[HospitalSchema])
+@router.get('/', response_model=List[HospitalGetSchema])
 async def get_hospitals(
     name: Optional[str] = None, city_id: Optional[int] = None
 ):
@@ -28,7 +29,7 @@ async def get_hospitals(
     return query.all()
 
 
-@router.get('/{hospital_id}', response_model=HospitalSchema)
+@router.get('/{hospital_id}', response_model=HospitalGetSchema)
 async def get_hospital(hospital_id: int):
     return db.get(Hospital, hospital_id, error_on_unfound=True)
 
@@ -36,12 +37,12 @@ async def get_hospital(hospital_id: int):
 @router.post('/', status_code=201, response_model=HospitalSchema)
 async def create_hospital(hospital: HospitalSchema):
     data = hospital.dict()
-    city = db.get_or_create(City, data.pop('city'))
-    data['city'] = city
+    # city = db.get_or_create(City, data['city_id'])
+    # data['city_id'] = city
     hospital = db.add(Hospital, data)
     return await get_hospital(hospital.id)
 
-@router.post('/{hospital_id}', response_model=HospitalSchema)
+@router.post('/{hospital_id}', response_model=HospitalGetSchema)
 async def update_hospital(
     hospital_id: int, data: HospitalUpdateSchema,
     logged_user=logged_user):
