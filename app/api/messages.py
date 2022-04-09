@@ -66,7 +66,7 @@ async def get_latest_message_chat(logged_user=logged_user):
         .filter_by(user_id=logged_user.id)
     ).all()
     if not chat_groups:
-        raise NotFoundError("No chat found for the user with this id.")
+        return []
     latest_messages = []
     for chat_group in chat_groups:
         message = (
