@@ -1,9 +1,11 @@
-from app import db
 from typing import Optional
+
+from app import db
+from .city import CitySchema
 
 
 class HospitalSchema(db.Schema):
-    city_id: int
+    city: CitySchema
     name: str
     phone_number: Optional[str]
 
@@ -14,9 +16,9 @@ class HospitalSchema(db.Schema):
 class HospitalGetSchema(HospitalSchema, db.TimedMixin.Schema):
     latitude: Optional[float]
     longitude: Optional[float]
-    patient_number: Optional[int]
+    patients_count: Optional[int]
 
 class HospitalUpdateSchema(HospitalSchema):
+    city: Optional[CitySchema]
     name: Optional[str]
     phone_number: Optional[str]
-    patient_number: Optional[int]

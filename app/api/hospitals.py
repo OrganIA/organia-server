@@ -37,19 +37,26 @@ async def get_hospital(hospital_id: int):
 @router.post('/', status_code=201, response_model=HospitalSchema)
 async def create_hospital(hospital: HospitalSchema):
     data = hospital.dict()
-    # city = db.get_or_create(City, data['city_id'])
-    # data['city_id'] = city
+    city_data = data.pop('city')
+    city = db.get_or_create(
+        City,
+        {'department_code': city_data['department_code']},
+        {'name': city_data['name']},
+    )
+    data['city'] = city
     hospital = db.add(Hospital, data)
     return await get_hospital(hospital.id)
 
+
 @router.post('/{hospital_id}', response_model=HospitalGetSchema)
 async def update_hospital(
-    hospital_id: int, data: HospitalUpdateSchema,
-    logged_user=logged_user):
+    hospital_id: int, data: HospitalUpdateSchema, logged_user=logged_user
+):
     hospital = await get_hospital(hospital_id)
     hospital.update(data)
     db.session.commit()
     return hospital
+
 
 async def delete_hospital(hospital_id: int):
     hospital = await get_hospital(hospital_id)
