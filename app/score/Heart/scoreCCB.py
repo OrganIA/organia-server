@@ -1,4 +1,3 @@
-from logging import exception
 from numpy import log as ln
 
 #Composant Adulte Standard -> CAS
