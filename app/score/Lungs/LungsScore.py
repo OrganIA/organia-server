@@ -80,3 +80,15 @@ def lungs_final_score(receiver, donor, receiver_listing):
     PT = NOTHING
     RawScore = PT - 2 * WL
     return 42
+
+def normalized_lung_allocation_score(RawScore):
+    LASi = 100 * ((RawScore + 730) / 1095)
+    return LASi
+
+def check_NLAS(RawScore):
+    if RawScore == -730 and normalized_lung_allocation_score(RawScore) == 0:
+        return 0
+    if RawScore == 365 and normalized_lung_allocation_score(RawScore) == 100:
+        return 0
+    else:
+        return 1
