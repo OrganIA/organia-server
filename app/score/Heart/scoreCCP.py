@@ -64,7 +64,7 @@ def getfMAL(MAL, MAL2, MAL3):
 
 # Fonction bilirubine pour le post-greffe
 def getLnBili(BILI, dateDBILI, dVarBio):
-    if isnan(BILI) == True or dateDBILI > dVarBio:
+    if np.isnan(BILI) == True or dateDBILI > dVarBio:
         return np.log(230)
     else:
         return np.log(min(230, max(5, BILI)))
@@ -73,7 +73,7 @@ def getLnBili(BILI, dateDBILI, dVarBio):
 def getLnDFG(DIA, CREAT, DCREAT, dVarBio, DFG):
     if DIA == 'O':
         return np.log(15)
-    elif isnan(CREAT) == True or DCREAT > dVarBio:
+    elif np.isnan(CREAT) == True or DCREAT > dVarBio:
         return np.log(1)
     else:
         return np.log(min(150, max(1, DFG)))
