@@ -40,10 +40,25 @@ def getCPS(ageR, urgence, DA):
         return (775 + 50 * max(0, min(1, DA / 24)))
     else:
         return 0
+
+def checkCPS(CPS):
+    if CPS < 776 or CPS > 825:
+        raise Exception ("La composante pediatrique standard doit se situer entre 776 et 825 points")
+    else:
+        return 0
+
 #Composante Expert Pédiatrique -> XPCP
 def getXPCP(urgence, KXPC, DAURG):
     if urgence == 'XPCP1' or urgence == 'XPCP2':
         return (KXPC + 50 * max(0, min(DAURG / 24)))
+    else:
+        return 0
+
+def checkXPCP(urgence, XPCP):
+    if urgence == 'XPCP1' and XPCP < 1102 or XPCP > 1151:
+        raise Exception ("Le score XPCP pour une urgence de niveau 1 doit se situer entre 1102 et 1151 points")
+    elif urgence == 'XPCP2' and XPCP < 1051 or XPCP > 1101:
+        raise Exception ("Le score XPCP pour une urgence de niveau 2 doit se situer entre 1051 et 1101 points")
     else:
         return 0
 
