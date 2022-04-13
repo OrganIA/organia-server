@@ -50,14 +50,16 @@ async def create_hospital(hospital: HospitalSchema):
 
 @router.post('/{hospital_id}', response_model=HospitalGetSchema)
 async def update_hospital(
-    hospital_id: int, data: HospitalUpdateSchema, logged_user=logged_user
+    hospital_id: int, data: HospitalUpdateSchema,
 ):
+    data = data.dict()
+    data_test = data.pop('city')
     hospital = await get_hospital(hospital_id)
     hospital.update(data)
     db.session.commit()
     return hospital
 
-
+@router.delete('/{hospital_id}')
 async def delete_hospital(hospital_id: int):
     hospital = await get_hospital(hospital_id)
     db.delete(hospital)

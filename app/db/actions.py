@@ -53,10 +53,13 @@ def get_or_create(
     author=None,
 ) -> object:
     result = session.query(table).filter_by(**search_keys).first()
+    print("CREATE KEYS: ", create_keys)
+    print("SEARCH KEYS: ", search_keys)
     if not result:
         create_keys = create_keys or {}
         if include_search_in_create:
-            create_keys = search_keys | create_keys
+            # create_keys = search_keys | create_keys
+            create_keys.update(search_keys)
         result = add(table, create_keys, message=message, author=author)
     return result
 

@@ -19,6 +19,5 @@ class HospitalGetSchema(HospitalSchema, db.TimedMixin.Schema):
     patients_count: Optional[int]
 
 class HospitalUpdateSchema(HospitalSchema):
-    city: Optional[CitySchema]
     name: Optional[str]
     phone_number: Optional[str]
