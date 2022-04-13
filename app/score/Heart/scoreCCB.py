@@ -1,3 +1,4 @@
+from logging import exception
 from numpy import log as ln
 
 #Composant Adulte Standard -> CAS
@@ -7,6 +8,12 @@ def getCAS(ageR, urgence, fICAR):
             return fICAR
         else:
             return fICAR + 51
+    else:
+        return 0
+#verification de la CAS
+def checkCAS(CAS):
+    if CAS < 0 or (CAS > 775 and CAS < 826) or CAS > 1051:
+        raise Exception ("La composante adulte standard doit se situer entre 0 et 775 points ou 826 et 1051 points")
     else:
         return 0
 
@@ -20,9 +27,10 @@ def getXPCA(ageR, urgence, XPC, fICAR, KXPC, DAURG):
     else:
         return 0
 
+# Verification de la XPCA
 def checkXPCA(XPCA):
-    if XPCA > 900:
-        raise Exception ("La composante XPCA ne peut depasser 900 points")
+    if XPCA != 900:
+        raise Exception ("La composante XPCA ne peut etre differente de 900 points")
     else:
         return 0
         
