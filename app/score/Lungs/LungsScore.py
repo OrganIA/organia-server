@@ -82,7 +82,7 @@ def lungs_final_score(receiver, donor, receiver_listing):
     return 42
 
 def normalized_lung_allocation_score(RawScore):
-    LASi = 100 * ((RawScore + 730) / 1095)
+    LASi = (100* (RawScore + 730)) / 1095
     return LASi
 
 def check_NLAS(RawScore):
