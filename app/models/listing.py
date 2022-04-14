@@ -4,6 +4,7 @@ from sqlalchemy import orm
 
 from app import db
 from app.helpers.enums import EnumStr
+from datetime import datetime
 
 
 class Listing(db.DurationMixin, db.Base):
@@ -49,6 +50,11 @@ class Listing(db.DurationMixin, db.Base):
         sa.Boolean, default=False, nullable=True)
     diagnosis_group = sa.Column(sa.String, default="A", nullable=True)
     detailled_diagnosis = sa.Column(sa.String, nullable=True)
+
+    age_at_transplant = sa.Column(sa.Date, default=0)
+    creatinine_at_transplant = sa.Column(sa.Float, default=0)
+    ADL_required = sa.Column(sa.Boolean, default=True)
+    PCW_over_20_mmHg = sa.Column(sa.Boolean, default=False)
 
     person = orm.relationship('Person', backref='listings')
     hospital = orm.relationship('Hospital', backref='listings')

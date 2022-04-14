@@ -40,6 +40,11 @@ class ListingSchema(db.Schema):
     diagnosis_group: Optional[str]
     detailled_diagnosis: Optional[str]
 
+    age_at_transplant: Optional[int]
+    creatinine_at_transplant: Optional[float]
+    ADL_required: Optional[bool]
+    PCW_over_20_mmHg: Optional[bool]
+
     class Config:
         orm_mode = True
 
