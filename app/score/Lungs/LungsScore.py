@@ -4,13 +4,13 @@ import json
 from attr import NOTHING
 
 
-def fetch_baseline_values():
-    with open('./BaselineWaitingListSurvival.json', 'r') as f:
+def fetch_baseline_values(file):
+    with open(file, 'r') as f:
         data = json.load(f)
     return data["data"]
 
 
-def calculate_exponent(receiver, receiver_listing):
+def calculate_next_year_survival_chance_exponent(receiver, receiver_listing):
     e = 0
 
     if (receiver_listing.diagnosis_group == "A" or receiver_listing.diagnosis_group == "B"
@@ -68,11 +68,63 @@ def calculate_exponent(receiver, receiver_listing):
 def next_year_survival_chance(receiver, receiver_listing):
     score = []
 
-    exponent = calculate_exponent(receiver, receiver_listing)
-    baseline_values = fetch_baseline_values()
+    exponent = calculate_next_year_survival_chance_exponent(
+        receiver, receiver_listing)
+    baseline_values = fetch_baseline_values(
+        './data/BaselineWaitingListSurvival.json')
     for baseline_value in baseline_values:
         score.append(baseline_value ** exponent)
     return score
+
+
+def calculate_post_transplant_survival_chance_exponent(receiver, receiver_listing):
+    e = 0
+
+    if receiver_listing.diagnosis_group == 'B':
+        e += 0.623207
+        e += receiver_listing.FVC_percentage
+    elif receiver_listing.diagnosis_group == 'C':
+        e += 0.008514
+    elif receiver_listing.diagnosis_group == 'D':
+        e += 0.413173
+        e += receiver_listing.FVC_percentage
+        if receiver_listing.PCW_over_20_mmHg:
+            e += 0.033046
+
+    e += receiver_listing.age_at_transplant * 0.003510
+    e += receiver_listing.creatinine_at_transplant * 0.061986
+    if receiver_listing.ADL_required:
+        e += -0.488525
+    if receiver_listing.continuous_mechanical_ventilation:
+        e += 0.312846
+
+    if (receiver_listing.detailled_diagnosis == "Bronchiectasis"):
+        e += 0.056116
+    elif (receiver_listing.detailled_diagnosis == "Eisenmenger"):
+        e += 0.393526
+    elif (receiver_listing.detailled_diagnosis == "Lymphangioleiomyomatosis"):
+        e += -0.624209
+    elif (receiver_listing.detailled_diagnosis == "Bronchiolitis"):
+        e += -0.443786
+    if receiver_listing.detailled_diagnosis == "Sarcoidosis" and receiver_listing.PA_systolic > 30:
+        e += -0.122351
+    elif receiver_listing.detailled_diagnosis == "Sarcoidosis" and receiver_listing.PA_systolic <= 30:
+        e += -0.016505
+
+    return e
+
+
+def post_transplant_survival_chance(receiver, receiver_listing):
+    score = []
+
+    exponent = calculate_post_transplant_survival_chance_exponent(
+        receiver, receiver_listing)
+    baseline_values = fetch_baseline_values(
+        '.data\BaselinePostTransplantSurvival.json')
+    for baseline_value in baseline_values:
+        score.append(baseline_value ** exponent)
+    return score
+
 
 def lungs_final_score(receiver, donor, receiver_listing):
     Swl = next_year_survival_chance(receiver, receiver_listing)
@@ -81,9 +133,11 @@ def lungs_final_score(receiver, donor, receiver_listing):
     RawScore = PT - 2 * WL
     return 42
 
+
 def normalized_lung_allocation_score(RawScore):
-    LASi = (100* (RawScore + 730)) / 1095
+    LASi = (100 * (RawScore + 730)) / 1095
     return LASi
+
 
 def check_NLAS(RawScore):
     if RawScore == -730 and normalized_lung_allocation_score(RawScore) == 0:
