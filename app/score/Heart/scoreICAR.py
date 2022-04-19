@@ -10,11 +10,11 @@ import numpy as np
 
 #Fonction Décile des peptides natriurétiques (BNP ou NT-ProBNP) du jour
 def getF_Decile_PNj(CEC, CAT, SIAV, DBNP, BNP, PROBNP, Date_Courante, DPROBNB, Delai_Var_Bio_LA):
-   if CEC == 'O'or CAT == 'O' or SIAV == 'B':
+    if CEC == 'O'or CAT == 'O' or SIAV == 'B':
        return 10
-   elif isnan(BNP) == True and isnan(PROBNP) == True:
+    elif isnan(BNP) == True and isnan(PROBNP) == True:
        return 1
-   elif isnan(PROBNP) != True and Date_Courante - DPROBNB <= Delai_Var_Bio_LA:
+    elif isnan(PROBNP) != True and (Date_Courante - DPROBNB).days <= Delai_Var_Bio_LA:
         conditions = [928, 1478, 2044, 2661, 3416, 4406, 5645, 8000, 11332]
         res = [1,2,3,4,5,6,7,8,9]
         if PROBNP >= 11332:
@@ -22,7 +22,7 @@ def getF_Decile_PNj(CEC, CAT, SIAV, DBNP, BNP, PROBNP, Date_Courante, DPROBNB, D
         for index, condition in enumerate(conditions):
             if PROBNP < condition:
                 return res[index]
-   elif isnan(BNP) != True and Date_Courante - DBNP <= Delai_Var_Bio_LA:
+    elif isnan(BNP) != True and Date_Courante - DBNP <= Delai_Var_Bio_LA:
         conditions = [189, 314, 481, 622, 818, 1074, 1317, 1702, 2696]
         res = [1,2,3,4,5,6,7,8,9]
         if BNP >= 2696:
@@ -30,7 +30,7 @@ def getF_Decile_PNj(CEC, CAT, SIAV, DBNP, BNP, PROBNP, Date_Courante, DPROBNB, D
         for index, condition in enumerate(conditions):
             if BNP < condition:
                 return res[index]
-   else:
+    else:
        return 1
 
 #Fonction Débit de Filtration Glomérulaire en Liste d’attente (méthode MDRD) du jour

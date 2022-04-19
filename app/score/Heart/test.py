@@ -13,4 +13,3 @@ df = pd.read_excel("Cas-tests-V1.xlsx", sheet_name='Cas_Coeur', dtype={
     })
 data = df.to_dict(orient='index')
 sample1 = data[0]
-print(sample1)
