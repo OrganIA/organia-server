@@ -93,13 +93,13 @@ def getfageD(ageD):
 # ********************Score CCP******************
 
 def getScoreCCP(model, CCB):
-    LnDFG = getLnDFG(model.DIA, model.CREAT, model.DCREAT, model.dVarBio, model.DFG)
+    LnDFG = getLnDFG(model.DIA, model.CREAT, model.DCREAT, model.Delai_Var_Bio_GRF, model.DFG)
     fageD = getfageD(model.ageD)
     sexRD = getsexRD(model.sexD, model.sexR)
-    LnBili = getLnBili(model.BILI, model.dateDBILI, model.dVarBio)
+    LnBili = getLnBili(model.BILI, model.dateDBILI, model.Delai_Var_Bio_GRF)
     fMAL = getfMAL(model.MAL, model.MAL2, model.MAL3)
     fageR = getFager(model.ageR)
-    riskPostGRF = getRiskPostGRF(model.ageR, model.ageD, model.MAL, LnBili, LnDFG, sexRD)
+    riskPostGRF = getRiskPostGRF(fageR, fageD, fMAL, LnBili, LnDFG, sexRD)
     difAge = getDifAge(model.ageR, model.ageD)
     ABO = getABO(model.ABOD, model.ABOR)
     SC = getSC(model.tailleD, model.tailleR, model.poidsD, model.poidsR, model.ageR, model.sexD)

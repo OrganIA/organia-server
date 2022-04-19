@@ -8,23 +8,21 @@ from scoreCCB import getScoreCCB
 from datetime import datetime, timedelta
 from test import sample1
 
-
 class Model:
     def __init__(self, data):
         self.ageR = data['R_D_NAI'] - datetime.now()
         self.ageD = data['D_D_NAI'] - datetime.now()
-        self.sexD = data['sexD']
-        self.sexR = data['SexR']
-        self.tailleD = data['tailleD']
-        self.tailleR = data['tailleR']
-        self.poidsD = data['poidD']
-        self.poidsR = data['poidR']
+        self.sexD = data['SEXD']
+        self.sexR = data['SEXR']
+        self.tailleD = data['TAILLED']
+        self.tailleR = data['TAILLER']
+        self.poidsD = data['POIDSD']
+        self.poidsR = data['POIDSR']
 
         self.DRG =  data['DRG']
         self.CEC = data['CEC']
         self.CAT = data['CAT']
         self.SIAV = data['SIAV']
-        self.DBNB = 0
         self.DIA = data['DIA']
         self.CREAT = data['CREAT']
         self.DCREAT = data['DCREAT']
@@ -36,26 +34,49 @@ class Model:
         self.PBN_AVI = data['PBN_AVI']
         self.PROBNP = data['PROBNP']
         self.Date_Courante = datetime.now()
+        self.DelaiVarBioGRF = getDelaiVarBioGRF(self.CEC, self.DRG)
         self.DPROBNB = data['DPROBNP']
-        self.Delai_Var_Bio_LA = timedelta(weeks=12)
         self.BNP = data['BNP']
 
         self.urgence = data['URGENCE']
-        self.XPC = 0
-        self.KXPC = 0
-        self.DAURG = 0
-        self.DA = 0
+        self.XPC = data['XPC']
+        self.KXPC = data['KXPC']
+        self.DAURG = data['D_PREL'] - data['D_URGENCE']
+        self.DA = data['D_PREL'] - data['D_INSC']
 
-        self.MAL = data['MALADIE 1']
-        self.MAL2 = data['MALADIE 2']
-        self.MAL3 = data['MALADIE 3']
+        self.MAL = data['MAL']
+        self.MAL2 = data['MAL2']
+        self.MAL3 = data['MAL3']
         self.BILI = data['BILI']
         self.dateDBILI = data['DBILI']
-        self.dVarBio = datetime.now()
-        self.DFG = 0
-        self.ABOD = 0
-        self.ABOR= 0
-        self.TTLGP= 0
+        self.ABOD = data['ABOD']
+        self.ABOR = data['ABOR']
+        self.TTLGP = data['TTLGP']
+        self.DBNP = data['DBNP']
+#----------------------------------------------------------------------
+        #self.D_INSC
+        #self.D_URGENCE
+        #self.Delai_URGENCE
+        #self.D_CEC
+        #self.D_BNP
+        #self.DISTANCE
+        #self.Kequipe
+#-----------------------------------------------------------------------
+        # self.F_DFG
+        # self.ABOD
+        # self.ABOR
+        # self.TTLGP
+        # self.XPC
+        # self.KXPC
+        # self.DAURG
+        # self.DA
+
+
+def getDelaiVarBioGRF(CEC, DRG):
+    if CEC != 'O' and DRG != 'O':
+        return 105
+    else:
+        return 4
 
 # ************************Score NACG*************************
 

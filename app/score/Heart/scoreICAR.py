@@ -9,7 +9,7 @@ import numpy as np
 #------------------------------------Index de risque Cardiaque du jour (ICARj)------------------------------------------
 
 #Fonction Décile des peptides natriurétiques (BNP ou NT-ProBNP) du jour
-def getF_Decile_PNj(CEC, CAT, SIAV, DBNB, BNP, PROBNP, Date_Courante, DPROBNB, Delai_Var_Bio_LA):
+def getF_Decile_PNj(CEC, CAT, SIAV, DBNP, BNP, PROBNP, Date_Courante, DPROBNB, Delai_Var_Bio_LA):
    if CEC == 'O'or CAT == 'O' or SIAV == 'B':
        return 10
    elif isnan(BNP) == True and isnan(PROBNP) == True:
@@ -22,7 +22,7 @@ def getF_Decile_PNj(CEC, CAT, SIAV, DBNB, BNP, PROBNP, Date_Courante, DPROBNB, D
         for index, condition in enumerate(conditions):
             if PROBNP < condition:
                 return res[index]
-   elif isnan(BNP) != True and Date_Courante - DBNB <= Delai_Var_Bio_LA:
+   elif isnan(BNP) != True and Date_Courante - DBNP <= Delai_Var_Bio_LA:
         conditions = [189, 314, 481, 622, 818, 1074, 1317, 1702, 2696]
         res = [1,2,3,4,5,6,7,8,9]
         if BNP >= 2696:
@@ -144,9 +144,9 @@ def getICARi(F_RisquePreGRFi, C_ICAR):
 
 def getICAR(model):
     C_ICAR = 1.301335 * 0 + 0.157691 * 1 - 0.510058 * ln(150) + 0.615711 * ln(5)
-    F_Decile_PNj = getF_Decile_PNj(model.CEC, model.CAT, model.SIAV, model.DBNB, model.BNP, model.PROBNP, model.Date_Courante, model.DPROBNB, model.Delai_Var_Bio_LA)
-    F_Ln_DFG_LAj = getF_Ln_DFG_LAj(model.DIA, model.CREAT, model.DCREAT, model.sexR, model.ageR, model.Date_Courante, model.Delai_Var_Bio_LA)
-    F_Ln_BILI_LAj = getF_Ln_BILI_LAj(model.BILI, model.DBILI, model.Date_Courante, model.Delai_Var_Bio_LA)
+    F_Decile_PNj = getF_Decile_PNj(model.CEC, model.CAT, model.SIAV, model.DBNP, model.BNP, model.PROBNP, model.Date_Courante, model.DPROBNB, model.DelaiVarBioGRF)
+    F_Ln_DFG_LAj = getF_Ln_DFG_LAj(model.DIA, model.CREAT, model.DCREAT, model.sexR, model.ageR, model.Date_Courante, model.DelaiVarBioGRF)
+    F_Ln_BILI_LAj = getF_Ln_BILI_LAj(model.BILI, model.DBILI, model.Date_Courante, model.DelaiVarBioGRF)
     F_ASCD = getF_ASCD(model.CEC)
     F_RisquePreGRFj = getF_RisquePreGRFj(F_ASCD, F_Decile_PNj, F_Ln_DFG_LAj, F_Ln_BILI_LAj)
     ICARj = getICARj(F_RisquePreGRFj, C_ICAR)
