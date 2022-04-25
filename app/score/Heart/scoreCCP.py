@@ -2,6 +2,13 @@ import numpy as np
 
 # Fonction d’appariement en âge entre donneur et receveur
 def getDifAge(ageR, ageD):
+    x= np.timedelta64(ageR, 'ns')
+    day = x.astype('timedelta64[D]')
+    ageR = day.astype(int)
+    xd= np.timedelta64(ageD, 'ns')
+    dayd = xd.astype('timedelta64[D]')
+    ageD = dayd.astype(int)
+
     ageRD = ageR - ageD
     difAge = 0
 
@@ -26,6 +33,9 @@ def getABO(ABOD, ABOR):
 
 # Appariement morphologique entre donneur et receveur
 def getSC(tailleD, tailleR, poidsD, poidsR, ageR, sexD):
+    x= np.timedelta64(ageR, 'ns')
+    day = x.astype('timedelta64[D]')
+    ageR = day.astype(int)
 
     fscD = 0.007184 * pow(tailleD,0.725) * pow(poidsD,0.725)
     fscR = 0.007184 * pow(tailleR,0.725) * pow(poidsR,0.725)
@@ -50,6 +60,10 @@ def getRiskPostGRF(fageR, fageD, fMAL, LnBili, LnDFG, sexRD):
 
 # Fonction sur l’âge du receveur
 def getFager(ageR):
+    x= np.timedelta64(ageR, 'ns')
+    day = x.astype('timedelta64[D]')
+    ageR = day.astype(int)
+
     if ageR > 50:
         return 1
     else:
@@ -64,6 +78,11 @@ def getfMAL(MAL, MAL2, MAL3):
 
 # Fonction bilirubine pour le post-greffe
 def getLnBili(BILI, dateDBILI, dVarBio):
+    dateDBILI = dateDBILI.timestamp()
+    xd= np.timedelta64(dVarBio, 'ns')
+    dayd = xd.astype('timedelta64[D]')
+    dVarBio = dayd.astype(int)
+
     if np.isnan(BILI) == True or dateDBILI > dVarBio:
         return np.log(230)
     else:
@@ -71,6 +90,7 @@ def getLnBili(BILI, dateDBILI, dVarBio):
 
 # Fonction du Débit de Filtration Glomérulaire pour le post-greffe
 def getLnDFG(DIA, CREAT, DCREAT, dVarBio, DFG):
+    DCREAT = DCREAT.timestamp()
     if DIA == 'O':
         return np.log(15)
     elif np.isnan(CREAT) == True or DCREAT > dVarBio:
@@ -86,6 +106,10 @@ def getsexRD(sexD, sexR):
         return 0
 # Fonction sur l’âge du donneur
 def getfageD(ageD):
+    x= np.timedelta64(ageD, 'ns')
+    day = x.astype('timedelta64[D]')
+    ageD = day.astype(int)
+
     if ageD > 55:
         return 1
     else:
@@ -93,10 +117,10 @@ def getfageD(ageD):
 # ********************Score CCP******************
 
 def getScoreCCP(model, CCB):
-    LnDFG = getLnDFG(model.DIA, model.CREAT, model.DCREAT, model.Delai_Var_Bio_GRF, model.DFG)
+    LnDFG = getLnDFG(model.DIA, model.CREAT, model.DCREAT, model.DelaiVarBioGRF, model.F_DFG)
     fageD = getfageD(model.ageD)
     sexRD = getsexRD(model.sexD, model.sexR)
-    LnBili = getLnBili(model.BILI, model.dateDBILI, model.Delai_Var_Bio_GRF)
+    LnBili = getLnBili(model.BILI, model.dateDBILI, model.DelaiVarBioGRF)
     fMAL = getfMAL(model.MAL, model.MAL2, model.MAL3)
     fageR = getFager(model.ageR)
     riskPostGRF = getRiskPostGRF(fageR, fageD, fMAL, LnBili, LnDFG, sexRD)

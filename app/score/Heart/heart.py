@@ -62,7 +62,7 @@ class Model:
         #self.DISTANCE
         #self.Kequipe
 #-----------------------------------------------------------------------
-        # self.F_DFG
+        self.F_DFG = 0
         # self.ABOD
         # self.ABOR
         # self.TTLGP
