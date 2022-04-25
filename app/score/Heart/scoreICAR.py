@@ -1,9 +1,5 @@
 from cmath import isnan
-from pandas import to_datetime
-import pandas as pd
 from math import ceil as round
-from tkinter.tix import Tree
-from matplotlib.pyplot import get
 from numpy import log as ln
 import numpy as np
 
@@ -62,13 +58,6 @@ def getF_Ln_BILI_LAj(BILI, DBILI, Date_Courante, Delai_Var_Bio_LA):
         return ln(5)
     else:
         return ln(min(230, max(5, BILI)))
-
-#Fonction Assistance de Courte Durée
-def getF_ASCD(CEC):
-    if CEC == 'O':
-        return 1
-    else:
-        return 0
 
 # La fonction de risque pré-greffe en liste d’attente du jour
 def getF_RisquePreGRFj(F_ASCD, F_Decile_PNj, F_Ln_DFG_LAj, F_Ln_BILI_LAj):

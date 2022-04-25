@@ -1,12 +1,10 @@
-from random import sample
-from sqlite3 import Timestamp
-from xml.dom.domreg import well_known_implementations
 import numpy as np
 from scoreICAR import getICAR
 from scoreCCP import getScoreCCP
 from scoreCCB import getScoreCCB
-from datetime import datetime, timedelta
+from datetime import datetime
 from test import sample1
+
 
 class Model:
     def __init__(self, data):
@@ -19,7 +17,7 @@ class Model:
         self.poidsD = data['POIDSD']
         self.poidsR = data['POIDSR']
 
-        self.DRG =  data['DRG']
+        self.DRG = data['DRG']
         self.CEC = data['CEC']
         self.CAT = data['CAT']
         self.SIAV = data['SIAV']
@@ -53,15 +51,15 @@ class Model:
         self.ABOR = data['ABOR']
         self.TTLGP = data['TTLGP']
         self.DBNP = data['DBNP']
-#----------------------------------------------------------------------
-        #self.D_INSC
-        #self.D_URGENCE
-        #self.Delai_URGENCE
-        #self.D_CEC
-        #self.D_BNP
-        #self.DISTANCE
-        #self.Kequipe
-#-----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
+        # self.D_INSC
+        # self.D_URGENCE
+        # self.Delai_URGENCE
+        # self.D_CEC
+        # self.D_BNP
+        # self.DISTANCE
+        # self.Kequipe
+        # -----------------------------------------------------------------------
         self.F_DFG = 0
         # self.ABOD
         # self.ABOR
@@ -78,11 +76,13 @@ def getDelaiVarBioGRF(CEC, DRG):
     else:
         return 4
 
+
 # ************************Score NACG*************************
 
-def getScoreNACG(scoreCCP, TTLGP): 
+def getScoreNACG(scoreCCP, TTLGP):
     MG = 1 / np.exp(0.00000002 * pow(TTLGP, 2.9))
     return scoreCCP * MG
+
 
 # ***********************************************************
 model = Model(sample1)
