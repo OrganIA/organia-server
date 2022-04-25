@@ -3,9 +3,6 @@ import numpy as np
 
 #Composant Adulte Standard -> CAS
 def getCAS(ageR, urgence, fICAR):
-    x= np.timedelta64(ageR, 'ns')
-    day = x.astype('timedelta64[Y]')
-    ageR = day.astype(int)
     if ageR >= 18 and urgence not in ['XPCA', 'XPCP1', 'XPCP2']:
         if fICAR < 775:
             return fICAR
@@ -22,9 +19,6 @@ def checkCAS(CAS):
 
 #Composante Expert Adulte -> XPCA
 def getXPCA(ageR, urgence, XPC, fICAR, KXPC, DAURG):
-    x= np.timedelta64(ageR, 'ns')
-    day = x.astype('timedelta64[Y]')
-    ageR = day.astype(int)
     if ageR >= 18 and urgence == 'XPCA':
         if XPC == 0:
             return max(fICAR, KXPC)
@@ -42,9 +36,6 @@ def checkXPCA(XPCA):
         
 #Composante Pédiatrique Standard -> CPS
 def getCPS(ageR, urgence, DA):
-    x= np.timedelta64(ageR, 'ns')
-    day = x.astype('timedelta64[Y]')
-    ageR = day.astype(int)
     if ageR < 18 and urgence not in  ['XPCA', 'XPCP1', 'XPCP2']:
         return (775 + 50 * max(0, min(1, DA / 24)))
     else:

@@ -36,9 +36,6 @@ def getF_Decile_PNj(CEC, CAT, SIAV, DBNP, BNP, PROBNP, Date_Courante, DPROBNB, D
 
 #Fonction Débit de Filtration Glomérulaire en Liste d’attente (méthode MDRD) du jour
 def getF_DFGj(SEXR, AGER, CREAT):
-    x= np.timedelta64(AGER, 'ns')
-    day = x.astype('timedelta64[Y]')
-    AGER = day.astype(int)
     if SEXR == 'F':
         return 186.3 * (pow((CREAT/88.4),-1.154)) * (AGER*-0.203) * 0.742
     else:

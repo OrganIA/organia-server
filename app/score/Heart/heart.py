@@ -10,8 +10,8 @@ from test import sample1
 
 class Model:
     def __init__(self, data):
-        self.ageR = data['R_D_NAI'] - datetime.now()
-        self.ageD = data['D_D_NAI'] - datetime.now()
+        self.ageR = round((data['D_INSC'] - data['R_D_NAI']).days / 365)
+        self.ageD = round((data['D_INSC'] - data['R_D_NAI']).days / 365)
         self.sexD = data['SEXD']
         self.sexR = data['SEXR']
         self.tailleD = data['TAILLED']
