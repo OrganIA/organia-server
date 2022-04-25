@@ -3,10 +3,10 @@ import numpy as np
 # Fonction d’appariement en âge entre donneur et receveur
 def getDifAge(ageR, ageD):
     x= np.timedelta64(ageR, 'ns')
-    day = x.astype('timedelta64[D]')
+    day = x.astype('timedelta64[Y]')
     ageR = day.astype(int)
     xd= np.timedelta64(ageD, 'ns')
-    dayd = xd.astype('timedelta64[D]')
+    dayd = xd.astype('timedelta64[Y]')
     ageD = dayd.astype(int)
 
     ageRD = ageR - ageD
@@ -34,7 +34,7 @@ def getABO(ABOD, ABOR):
 # Appariement morphologique entre donneur et receveur
 def getSC(tailleD, tailleR, poidsD, poidsR, ageR, sexD):
     x= np.timedelta64(ageR, 'ns')
-    day = x.astype('timedelta64[D]')
+    day = x.astype('timedelta64[Y]')
     ageR = day.astype(int)
 
     fscD = 0.007184 * pow(tailleD,0.725) * pow(poidsD,0.725)
@@ -61,7 +61,7 @@ def getRiskPostGRF(fageR, fageD, fMAL, LnBili, LnDFG, sexRD):
 # Fonction sur l’âge du receveur
 def getFager(ageR):
     x= np.timedelta64(ageR, 'ns')
-    day = x.astype('timedelta64[D]')
+    day = x.astype('timedelta64[Y]')
     ageR = day.astype(int)
 
     if ageR > 50:
@@ -107,7 +107,7 @@ def getsexRD(sexD, sexR):
 # Fonction sur l’âge du donneur
 def getfageD(ageD):
     x= np.timedelta64(ageD, 'ns')
-    day = x.astype('timedelta64[D]')
+    day = x.astype('timedelta64[Y]')
     ageD = day.astype(int)
 
     if ageD > 55:
