@@ -1,4 +1,5 @@
 from numpy import log as ln
+import numpy as np
 
 #Composant Adulte Standard -> CAS
 def getCAS(ageR, urgence, fICAR):

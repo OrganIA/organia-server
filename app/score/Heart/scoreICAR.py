@@ -1,5 +1,6 @@
 from cmath import isnan
 from pandas import to_datetime
+import pandas as pd
 from math import ceil as round
 from tkinter.tix import Tree
 from matplotlib.pyplot import get
@@ -42,16 +43,22 @@ def getF_DFGj(SEXR, AGER, CREAT):
 
 def getF_Ln_DFG_LAj(DIA, CREAT, DCREAT, SEXR, AGER, Date_Courante, Delai_Var_Bio_LA):
     F_DFGj = getF_DFGj(SEXR, AGER, CREAT)
+    x= np.timedelta64((Date_Courante - DCREAT), 'ns')
+    day = x.astype('timedelta64[D]')
+    DCDCRSub = day.astype(int)
     if DIA == 'O':
         return ln(15)
-    elif isnan(CREAT) == True or (Date_Courante - DCREAT) > Delai_Var_Bio_LA:
+    elif isnan(CREAT) == True or DCDCRSub > Delai_Var_Bio_LA:
         return ln(150)
     else:
         return ln(min(150, max(1, F_DFGj)))
 
 #Fonction Bilirubine en Liste d’attente du jour
 def getF_Ln_BILI_LAj(BILI, DBILI, Date_Courante, Delai_Var_Bio_LA):
-    if isnan(BILI) == True or (Date_Courante - DBILI) > Delai_Var_Bio_LA:
+    x= np.timedelta64((Date_Courante - DBILI), 'ns')
+    day = x.astype('timedelta64[D]')
+    DCDBLSub = day.astype(int)
+    if isnan(BILI) == True or DCDBLSub > Delai_Var_Bio_LA:
         return ln(5)
     else:
         return ln(min(230, max(5, BILI)))
@@ -158,7 +165,7 @@ def getICAR(model):
     F_RisquePreGRFi = getF_RisquePreGRFi(F_ASCD, F_Decile_PNi, F_Ln_DFG_LAi, F_Ln_BILI_LAi)
     ICARi = getICARi(F_RisquePreGRFi, C_ICAR)
 
-    if model.CEC != 'O' and model.DRG2 != 'O':
+    if model.CEC != 'O' and model.DRG != 'O':
         return ICARj
     else:
         return max(ICARj, ICARi)
