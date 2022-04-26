@@ -98,10 +98,19 @@ def getfageD(ageD):
         return 1
     else:
         return 0
+
+#Fonction Débit de Filtration Glomérulaire en Liste d’attente (méthode MDRD) du jour
+def getF_DFGj(SEXR, AGER, CREAT):
+    if SEXR == 'F':
+        return 186.3 * (pow((CREAT/88.4),-1.154)) * (AGER*-0.203) * 0.742
+    else:
+        return 186.3 * (pow((CREAT/88.4),-1.154)) * (AGER*-0.203) * 1
+
 # ********************Score CCP******************
 
 def getScoreCCP(model, CCB):
-    LnDFG = getLnDFG(model.DIA, model.CREAT, model.DCREAT, model.DelaiVarBioGRF, model.F_DFG)
+    F_DFGj = getF_DFGj(model.sexR, model.ageR, model.CREAT)
+    LnDFG = getLnDFG(model.DIA, model.CREAT, model.DCREAT, model.DelaiVarBioGRF, F_DFGj)
     fageD = getfageD(model.ageD)
     sexRD = getsexRD(model.sexD, model.sexR)
     LnBili = getLnBili(model.BILI, model.dateDBILI, model.DelaiVarBioGRF)
