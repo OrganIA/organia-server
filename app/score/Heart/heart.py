@@ -51,24 +51,6 @@ class Model:
         self.ABOR = data['ABOR']
         self.TTLGP = data['TTLGP']
         self.DBNP = data['DBNP']
-        # ----------------------------------------------------------------------
-        # self.D_INSC
-        # self.D_URGENCE
-        # self.Delai_URGENCE
-        # self.D_CEC
-        # self.D_BNP
-        # self.DISTANCE
-        # self.Kequipe
-        # -----------------------------------------------------------------------
-        # self.F_DFG = 0
-        # self.ABOD
-        # self.ABOR
-        # self.TTLGP
-        # self.XPC
-        # self.KXPC
-        # self.DAURG
-        # self.DA
-
 
 def getDelaiVarBioGRF(CEC, DRG):
     if CEC != 'O' and DRG != 'O':
