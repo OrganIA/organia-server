@@ -8,8 +8,8 @@ from test import sample1
 
 class Model:
     def __init__(self, data):
-        self.ageR = round((data['D_INSC'] - data['R_D_NAI']).days / 365)
-        self.ageD = round((data['D_INSC'] - data['R_D_NAI']).days / 365)
+        self.ageR = data['D_INSC'].year - data['R_D_NAI'].year
+        self.ageD = data['D_INSC'].year - data['R_D_NAI'].year
         self.sexD = data['SEXD']
         self.sexR = data['SEXR']
         self.tailleD = data['TAILLED']
@@ -39,8 +39,8 @@ class Model:
         self.urgence = data['URGENCE']
         self.XPC = data['XPC']
         self.KXPC = data['KXPC']
-        self.DAURG = data['D_PREL'] - data['D_URGENCE']
-        self.DA = data['D_PREL'] - data['D_INSC']
+        self.DAURG = (data['D_PREL'].year - data['D_URGENCE'].year) * 12 + (data['D_PREL'].month - data['D_URGENCE'].month)
+        self.DA = (data['D_PREL'].year - data['D_INSC'].year) * 12 + (data['D_PREL'].month - data['D_INSC'].month)
 
         self.MAL = data['MAL']
         self.MAL2 = data['MAL2']
