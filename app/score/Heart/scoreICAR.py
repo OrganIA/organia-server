@@ -150,7 +150,6 @@ def getICAR(model):
     F_Ln_BILI_LAi = getF_Ln_BILI_LAi(model.BILI_AVI)
     F_Ln_DFG_LAi = getF_Ln_DFG_LAi(model.DIA_AVI, model.CRE_AVI, model.sexR, model.ageR)
     F_Decile_PNi = getF_Decile_PNi(model.BNP_AVI, model.PBN_AVI, model.PROBNP, model.BNP, model.CEC, model.CAT, model.SIAV)
-    print(F_Decile_PNi)
     F_RisquePreGRFi = getF_RisquePreGRFi(F_ASCD, F_Decile_PNi, F_Ln_DFG_LAi, F_Ln_BILI_LAi)
     ICARi = getICARi(F_RisquePreGRFi, C_ICAR)
 
