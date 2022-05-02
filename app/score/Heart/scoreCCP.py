@@ -40,9 +40,17 @@ def getSC(tailleD, tailleR, poidsD, poidsR, ageR, sexD):
             return 1
         else:
             return 0
+            
 # Survie post-greffe à 1 an
 def getSurvPostGRF(riskPostGRF):
     return pow(0.6785748856,np.exp(riskPostGRF))
+
+# Fonction du tri des patients par age ou chances de survie
+def triSurvPostGRF(survPostGRF, ageR):
+    if survPostGRF > 0.5 or ageR < 18:
+        return 1
+    else:
+        return 0
 
 # Fonction de risque post-greffe
 def getRiskPostGRF(fageR, fageD, fMAL, LnBili, LnDFG, sexRD):
@@ -121,6 +129,7 @@ def getScoreCCP(model, CCB):
     ABO = getABO(model.ABOD, model.ABOR)
     SC = getSC(model.tailleD, model.tailleR, model.poidsD, model.poidsR, model.ageR, model.sexD)
     survPostGRF = getSurvPostGRF(riskPostGRF)
-    return CCB * difAge * ABO * SC * survPostGRF
+    trisurvpostgrf = triSurvPostGRF(survPostGRF, model.ageR)
+    return CCB * difAge * ABO * SC * survPostGRF * trisurvpostgrf
 
 # ***********************************************
