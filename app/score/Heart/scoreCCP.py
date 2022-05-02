@@ -27,8 +27,8 @@ def getABO(ABOD, ABOR):
 
 # Appariement morphologique entre donneur et receveur
 def getSC(tailleD, tailleR, poidsD, poidsR, ageR, sexD):
-    fscD = 0.007184 * pow(tailleD,0.725) * pow(poidsD,0.725)
-    fscR = 0.007184 * pow(tailleR,0.725) * pow(poidsR,0.725)
+    fscD = 0.007184 * (pow(tailleD, 0.725)) * (pow(poidsD, 0.425))
+    fscR = 0.007184 * (pow(tailleR, 0.725)) * (pow(poidsR, 0.425))
 
     if ageR >= 18:
         if 0.8 * fscR < fscD or (sexD == 'H' and poidsD >= 70):
@@ -130,6 +130,7 @@ def getScoreCCP(model, CCB):
     SC = getSC(model.tailleD, model.tailleR, model.poidsD, model.poidsR, model.ageR, model.sexD)
     survPostGRF = getSurvPostGRF(riskPostGRF)
     trisurvpostgrf = triSurvPostGRF(survPostGRF, model.ageR)
+    print("ccb", CCB,"difa", difAge,"abo", ABO,"sc", SC,"spg", survPostGRF,"tspg", trisurvpostgrf)
     return CCB * difAge * ABO * SC * survPostGRF * trisurvpostgrf
 
 # ***********************************************
