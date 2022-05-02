@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ "$container" == "" ]; then
     python -m venv .venv

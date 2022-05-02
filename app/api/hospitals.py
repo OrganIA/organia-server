@@ -1,11 +1,11 @@
 from typing import List
 from fastapi import APIRouter
 
-from app import db
+from app import db, distance
 from typing import Optional
 from app.distance import get_distance
 from app.errors import NotFoundError
-from app.models import City, Hospital, Listing
+from app.models import City, Hospital
 from app.api.schemas.hospital import (
     HospitalSchema,
     HospitalGetSchema,
@@ -44,6 +44,10 @@ async def create_hospital(hospital: HospitalSchema):
         {'name': city_data['name']},
     )
     data['city'] = city
+    position = distance.get_coordinates(data['name'])
+    if position:
+        data['latitude'] = position[0]
+        data['longitude'] = position[1]
     hospital = db.add(Hospital, data)
     return await get_hospital(hospital.id)
 
@@ -53,7 +57,7 @@ async def update_hospital(
     hospital_id: int, data: HospitalUpdateSchema,
 ):
     data = data.dict()
-    data_test = data.pop('city')
+    data_pop = data.pop('city')
     hospital = await get_hospital(hospital_id)
     hospital.update(data)
     db.session.commit()

@@ -1,25 +1,16 @@
 import sqlalchemy as sa
 from sqlalchemy import orm
 
-from app import db, distance
+from app import db
 
 class Hospital(db.IdMixin, db.Base):
     city_id = sa.Column(sa.ForeignKey('cities.id'), nullable=False)
     name = sa.Column(sa.String, nullable=False)
-    phone_number = sa.Column(sa.String, nullable=True)
+    phone_number = sa.Column(sa.String)
+    latitude = sa.Column(sa.String)
+    longitude = sa.Column(sa.String)
+
     city = orm.relationship('City', backref='hospitals')
-
-    @property
-    def latitude(self):
-        position = distance.get_coordinates(self.name)
-        latitude = position[0]
-        return latitude
-
-    @property
-    def longitude(self):
-        position = distance.get_coordinates(self.name)
-        longitude = position[1]
-        return longitude
 
     @property
     def patients_count(self):
