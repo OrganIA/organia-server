@@ -102,9 +102,9 @@ def getfageD(ageD):
 #Fonction Débit de Filtration Glomérulaire en Liste d’attente (méthode MDRD) du jour
 def getF_DFGj(SEXR, AGER, CREAT):
     if SEXR == 'F':
-        return 186.3 * (pow((CREAT/88.4),-1.154)) * (AGER*-0.203) * 0.742
+        return 186.3 * (pow((CREAT/88.4), -1.154)) * (pow(AGER, -0.203)) * 0.742
     else:
-        return 186.3 * (pow((CREAT/88.4),-1.154)) * (AGER*-0.203) * 1
+        return 186.3 * (pow((CREAT/88.4), -1.154)) * (pow(AGER, -0.203)) * 1
 
 # ********************Score CCP******************
 
