@@ -54,7 +54,7 @@ def checkCPS(CPS):
 # Composante Expert Pédiatrique -> XPCP
 def getXPCP(urgence, KXPC, DAURG):
     if urgence == 'XPCP1' or urgence == 'XPCP2':
-        return (KXPC + 50 * max(0, min(DAURG / 24)))
+        return (KXPC + 50 * max(0, min(1, DAURG / 24)))
     else:
         return 0
 
