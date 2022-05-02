@@ -163,6 +163,7 @@ def getICAR(model):
     F_RisquePreGRFi = getF_RisquePreGRFi(F_ASCD, F_Decile_PNi, F_Ln_DFG_LAi, F_Ln_BILI_LAi)
     ICARi = getICARi(F_RisquePreGRFi, C_ICAR)
 
+    print(C_ICAR, F_Decile_PNj, F_Ln_DFG_LAj, F_Ln_BILI_LAj, F_ASCD, F_RisquePreGRFj, ICARj)
     if model.CEC != 'O' and model.DRG != 'O':
         return ICARj
     else:

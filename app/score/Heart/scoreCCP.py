@@ -1,6 +1,7 @@
 from datetime import datetime
 import numpy as np
 
+
 # Fonction d’appariement en âge entre donneur et receveur
 def getDifAge(ageR, ageD):
     ageRD = ageR - ageD
@@ -16,14 +17,16 @@ def getDifAge(ageR, ageD):
         difAge = 1
     return (difAge)
 
+
 # Filtre ABO entre donneur et receveur
 def getABO(ABOD, ABOR):
     if (ABOD == ABOR) or (ABOD == 'A' and ABOR == 'AB') or (ABOD == 'O' and ABOR == 'B'):
         return 1
-    elif ABOD == 'O'and ABOR=='AB':
+    elif ABOD == 'O' and ABOR == 'AB':
         return 0.1
     else:
         return 0
+
 
 # Appariement morphologique entre donneur et receveur
 def getSC(tailleD, tailleR, poidsD, poidsR, ageR, sexD):
@@ -40,10 +43,12 @@ def getSC(tailleD, tailleR, poidsD, poidsR, ageR, sexD):
             return 1
         else:
             return 0
-            
+
+
 # Survie post-greffe à 1 an
 def getSurvPostGRF(riskPostGRF):
-    return pow(0.6785748856,np.exp(riskPostGRF))
+    return pow(0.6785748856, np.exp(riskPostGRF))
+
 
 # Fonction du tri des patients par age ou chances de survie
 def triSurvPostGRF(survPostGRF, ageR):
@@ -52,9 +57,11 @@ def triSurvPostGRF(survPostGRF, ageR):
     else:
         return 0
 
+
 # Fonction de risque post-greffe
 def getRiskPostGRF(fageR, fageD, fMAL, LnBili, LnDFG, sexRD):
     return (0.50608 * fageR + 0.50754 * fMAL + 0.40268 * LnBili - 0.54443 * LnDFG + 0.36262 * sexRD + 0.41714 * fageD)
+
 
 # Fonction sur l’âge du receveur
 def getFager(ageR):
@@ -63,16 +70,19 @@ def getFager(ageR):
     else:
         return 0
 
+
 # Fonction sur la maladie initiale du receveur
 def getfMAL(MAL, MAL2, MAL3):
-    if MAL in ['Maladie valvulaire', 'Maladie congenitale', 'Maladie congenitale non Eisenmenger'] or MAL2 in ['Maladie valvulaire', 'Maladie congenitale', 'Maladie congenitale non Eisenmenger'] or MAL3 in ['Maladie valvulaire', 'Maladie congenitale', 'Maladie congenitale non Eisenmenger']:
+    mal = ['Maladie valvulaire', 'Maladie congenitale', 'Maladie congenitale non Eisenmenger']
+    if MAL in mal or MAL2 in mal or MAL3 in mal:
         return 1
     else:
         return 0
 
+
 # Fonction bilirubine pour le post-greffe
 def getLnBili(BILI, dateDBILI, dVarBio):
-    x= np.timedelta64((datetime.now() - dateDBILI), 'ns')
+    x = np.timedelta64((datetime.now() - dateDBILI), 'ns')
     day = x.astype('timedelta64[D]')
     dateDBILI = day.astype(int)
 
@@ -81,9 +91,10 @@ def getLnBili(BILI, dateDBILI, dVarBio):
     else:
         return np.log(min(230, max(5, BILI)))
 
+
 # Fonction du Débit de Filtration Glomérulaire pour le post-greffe
 def getLnDFG(DIA, CREAT, DCREAT, dVarBio, DFG):
-    x= np.timedelta64((datetime.now() - DCREAT), 'ns')
+    x = np.timedelta64((datetime.now() - DCREAT), 'ns')
     day = x.astype('timedelta64[D]')
     DCREAT = day.astype(int)
 
@@ -94,12 +105,15 @@ def getLnDFG(DIA, CREAT, DCREAT, dVarBio, DFG):
     else:
         return np.log(min(150, max(1, DFG)))
 
+
 # Fonction sur l’appariement du sexe entre donneur et receveur
 def getsexRD(sexD, sexR):
     if sexD == 'M' and sexR == 'F':
         return 1
     else:
         return 0
+
+
 # Fonction sur l’âge du donneur
 def getfageD(ageD):
     if ageD > 55:
@@ -107,12 +121,14 @@ def getfageD(ageD):
     else:
         return 0
 
-#Fonction Débit de Filtration Glomérulaire en Liste d’attente (méthode MDRD) du jour
+
+# Fonction Débit de Filtration Glomérulaire en Liste d’attente (méthode MDRD) du jour
 def getF_DFGj(SEXR, AGER, CREAT):
     if SEXR == 'F':
-        return 186.3 * (pow((CREAT/88.4), -1.154)) * (pow(AGER, -0.203)) * 0.742
+        return 186.3 * (pow((CREAT / 88.4), -1.154)) * (pow(AGER, -0.203)) * 0.742
     else:
-        return 186.3 * (pow((CREAT/88.4), -1.154)) * (pow(AGER, -0.203)) * 1
+        return 186.3 * (pow((CREAT / 88.4), -1.154)) * (pow(AGER, -0.203)) * 1
+
 
 # ********************Score CCP******************
 
@@ -130,7 +146,6 @@ def getScoreCCP(model, CCB):
     SC = getSC(model.tailleD, model.tailleR, model.poidsD, model.poidsR, model.ageR, model.sexD)
     survPostGRF = getSurvPostGRF(riskPostGRF)
     trisurvpostgrf = triSurvPostGRF(survPostGRF, model.ageR)
-    print("ccb", CCB,"difa", difAge,"abo", ABO,"sc", SC,"spg", survPostGRF,"tspg", trisurvpostgrf)
     return CCB * difAge * ABO * SC * survPostGRF * trisurvpostgrf
 
 # ***********************************************
