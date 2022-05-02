@@ -8,6 +8,9 @@ services:
       context: .
     volumes:
       - ./app:/app/app:z
+      - ./alembic:/app/alembic:z
       - ./app.db:/app/app.db:z
       - ./scripts:/app/scripts:z
     command: ./scripts/run.sh 80
+    environment:
+      FORCE_LOGIN: ${FORCE_LOGIN}

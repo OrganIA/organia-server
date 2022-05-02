@@ -5,7 +5,6 @@ if [ "$container" == "" ]; then
     source .venv/bin/activate
     pip install -U pip
     pip install -r requirements.txt
-    pip install alembic uvicorn[standard]
 fi
 
 if [ "$NO_RELOAD" != "" ]; then
