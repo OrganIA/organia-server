@@ -33,7 +33,6 @@ def getF_Decile_PNj(CEC, CAT, SIAV, DBNP, BNP, PROBNP, Date_Courante, DPROBNB, D
 
 # Fonction Débit de Filtration Glomérulaire en Liste d’attente (méthode MDRD) du jour
 def getF_DFGj(SEXR, AGER, CREAT):
-    print(SEXR, AGER, CREAT)
     if SEXR == 'F':
         return 186.3 * (pow((CREAT / 88.4), -1.154)) * (pow(AGER, -0.203)) * 0.742
     else:
@@ -42,7 +41,6 @@ def getF_DFGj(SEXR, AGER, CREAT):
 
 def getF_Ln_DFG_LAj(DIA, CREAT, DCREAT, SEXR, AGER, Date_Courante, Delai_Var_Bio_LA):
     F_DFGj = getF_DFGj(SEXR, AGER, CREAT)
-    print(F_DFGj)
     if DIA == 'O':
         return ln(15)
     elif isnan(CREAT) is True or (Date_Courante - DCREAT).days > Delai_Var_Bio_LA:
@@ -164,12 +162,6 @@ def getICAR(model):
                                    model.SIAV)
     F_RisquePreGRFi = getF_RisquePreGRFi(F_ASCD, F_Decile_PNi, F_Ln_DFG_LAi, F_Ln_BILI_LAi)
     ICARi = getICARi(F_RisquePreGRFi, C_ICAR)
-
-    #print('C_ICAR', C_ICAR)
-    #print('F_Decile_PNj', F_Decile_PNj)
-    #print( 'F_Ln_DFG_LAj',  F_Ln_DFG_LAj)
-    #print('F_Ln_BILI_LAj', F_Ln_BILI_LAj)
-    #print('F_ASCD', F_ASCD)
 
     if model.CEC != 'O' and model.DRG != 'O':
         return ICARj
