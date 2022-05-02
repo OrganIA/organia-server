@@ -108,9 +108,9 @@ def getF_Decile_PNi(BNP_AVI, PBN_AVI, PROBNP, BNP, CEC, CAT, SIAV):
 # Fonction Débit de Filtration Glomérulaire en Liste d’attente (méthode MDRD) initiale
 def getF_DFGi(SEXR, CRE_AVI, AGER):
     if SEXR == 'F':
-        return 186.3 * ((CRE_AVI / 88.4) * -1.154) * (AGER * (-0.203)) * 0.742
+        return 186.3 * ((CRE_AVI / 88.4) * -1.154) * (pow(AGER, -0.203)) * 0.742
     else:
-        return 186.3 * ((CRE_AVI / 88.4) * -1.154) * (AGER * (-0.203)) * 1
+        return 186.3 * ((CRE_AVI / 88.4) * -1.154) * (pow(AGER, -0.203)) * 1
 
 
 def getF_Ln_DFG_LAi(DIA_AVI, CRE_AVI, SEXR, AGER):
