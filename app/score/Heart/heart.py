@@ -32,7 +32,8 @@ class Model:
         self.BNP_AVI = data['BNP_AVI']
         self.PBN_AVI = data['PBN_AVI']
         self.PROBNP = data['PROBNP']
-        self.Date_Courante = datetime.now()
+#        self.Date_Courante = datetime.now()
+        self.Date_Courante = data['D_PREL']
         self.DelaiVarBioGRF = getDelaiVarBioGRF(self.CEC, self.DRG)
         self.DPROBNB = data['DPROBNP']
         self.BNP = data['BNP']
