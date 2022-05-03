@@ -76,5 +76,3 @@ F_ICAR = 1000 * scoreICAR / 40
 scoreCCB = getScoreCCB(model, F_ICAR)
 scoreCCP = getScoreCCP(model, scoreCCB)
 NAGC = getScoreNACG(scoreCCP, model.TTLGP)
-
-print(NAGC)
