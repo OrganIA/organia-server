@@ -64,7 +64,7 @@ def getDelaiVarBioGRF(CEC, DRG):
 # ************************Score NACG*************************
 
 def getScoreNACG(scoreCCP, TTLGP):
-    MG = 1 / np.exp(0.00000002 * pow(TTLGP, 2.9))
+    MG = 1 / np.exp(0.0000002 * pow(TTLGP, 2.9))
     return scoreCCP * MG
 
 
