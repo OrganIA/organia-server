@@ -146,6 +146,6 @@ def getScoreCCP(model, CCB):
     SC = getSC(model.tailleD, model.tailleR, model.poidsD, model.poidsR, model.ageR, model.sexD)
     survPostGRF = getSurvPostGRF(riskPostGRF)
     trisurvpostgrf = triSurvPostGRF(survPostGRF, model.ageR)
-    return CCB * difAge * ABO * SC * survPostGRF * trisurvpostgrf
+    return CCB * difAge * ABO * SC  * trisurvpostgrf
 
 # ***********************************************
