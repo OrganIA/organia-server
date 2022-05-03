@@ -81,8 +81,8 @@ def getfMAL(MAL, MAL2, MAL3):
 
 
 # Fonction bilirubine pour le post-greffe
-def getLnBili(BILI, dateDBILI, dVarBio):
-    x = np.timedelta64((datetime.now() - dateDBILI), 'ns')
+def getLnBili(BILI, dateDBILI, dVarBio, date_courante):
+    x = np.timedelta64((date_courante - dateDBILI), 'ns')
     day = x.astype('timedelta64[D]')
     dateDBILI = day.astype(int)
 
@@ -93,8 +93,8 @@ def getLnBili(BILI, dateDBILI, dVarBio):
 
 
 # Fonction du Débit de Filtration Glomérulaire pour le post-greffe
-def getLnDFG(DIA, CREAT, DCREAT, dVarBio, DFG):
-    x = np.timedelta64((datetime.now() - DCREAT), 'ns')
+def getLnDFG(DIA, CREAT, DCREAT, dVarBio, DFG, date_courante):
+    x = np.timedelta64((date_courante - DCREAT), 'ns')
     day = x.astype('timedelta64[D]')
     DCREAT = day.astype(int)
 
@@ -134,10 +134,10 @@ def getF_DFGj(SEXR, AGER, CREAT):
 
 def getScoreCCP(model, CCB):
     F_DFGj = getF_DFGj(model.sexR, model.ageR, model.CREAT)
-    LnDFG = getLnDFG(model.DIA, model.CREAT, model.DCREAT, model.DelaiVarBioGRF, F_DFGj)
+    LnDFG = getLnDFG(model.DIA, model.CREAT, model.DCREAT, model.DelaiVarBioGRF, F_DFGj, model.Date_Courante)
     fageD = getfageD(model.ageD)
     sexRD = getsexRD(model.sexD, model.sexR)
-    LnBili = getLnBili(model.BILI, model.dateDBILI, model.DelaiVarBioGRF)
+    LnBili = getLnBili(model.BILI, model.dateDBILI, model.DelaiVarBioGRF, model.Date_Courante)
     fMAL = getfMAL(model.MAL, model.MAL2, model.MAL3)
     fageR = getFager(model.ageR)
     riskPostGRF = getRiskPostGRF(fageR, fageD, fMAL, LnBili, LnDFG, sexRD)
