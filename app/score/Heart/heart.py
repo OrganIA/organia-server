@@ -32,7 +32,7 @@ class Model:
         self.BNP_AVI = data['BNP_AVI']
         self.PBN_AVI = data['PBN_AVI']
         self.PROBNP = data['PROBNP']
-#        self.Date_Courante = datetime.now()
+        #self.Date_Courante = datetime.now()
         self.Date_Courante = data['D_PREL']
         self.DelaiVarBioGRF = getDelaiVarBioGRF(self.CEC, self.DRG)
         self.DPROBNB = data['DPROBNP']
@@ -41,8 +41,8 @@ class Model:
         self.urgence = data['URGENCE']
         self.XPC = data['XPC']
         self.KXPC = data['KXPC']
-        self.DAURG = (data['D_PREL'] - data['D_URGENCE']).days / 12
-        self.DA = (data['D_PREL'] - data['D_INSC']).days / 12
+        self.DAURG = (data['D_PREL'] - data['D_URGENCE']).days / 30.5
+        self.DA = (data['D_PREL'] - data['D_INSC']).days / 30.5
 
         self.MAL = data['MAL']
         self.MAL2 = data['MAL2']
