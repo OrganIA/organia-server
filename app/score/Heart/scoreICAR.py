@@ -72,7 +72,7 @@ def getF_RisquePreGRFj(F_ASCD, F_Decile_PNj, F_Ln_DFG_LAj, F_Ln_BILI_LAj):
 
 # La function Index de risque Cardiaque du jour (ICARj)
 def getICARj(F_RisquePreGRFj, C_ICAR):
-    return min(40, max(0, int((F_RisquePreGRFj - C_ICAR) * 10)))
+    return min(40, max(0, round((F_RisquePreGRFj - C_ICAR) * 10)))
 
 
 # -----------------------------------------------------------------------------------------------------------------------
@@ -163,6 +163,7 @@ def getICAR(model):
     F_RisquePreGRFi = getF_RisquePreGRFi(F_ASCD, F_Decile_PNi, F_Ln_DFG_LAi, F_Ln_BILI_LAi)
     ICARi = getICARi(F_RisquePreGRFi, C_ICAR)
 
+    print(F_Decile_PNj, F_Ln_DFG_LAj, F_Ln_BILI_LAj, F_ASCD, F_RisquePreGRFj, ICARj)
     if model.CEC != 'O' and model.DRG != 'O':
         return ICARj
     else:
