@@ -126,10 +126,21 @@ def post_transplant_survival_chance(receiver, receiver_listing):
     return score
 
 
+def compute_under_curb_area(values):
+    res = 0; k = 2; i = 0
+    
+    while (i < len(values)):
+        res += values[i] * (k - 1) * 1
+        i += 1; k += 1
+    return res
+
+
 def lungs_final_score(receiver, donor, receiver_listing):
     Swl = next_year_survival_chance(receiver, receiver_listing)
-    WL = sum(Swl)
-    PT = NOTHING
+    Stx = post_transplant_survival_chance(receiver, receiver_listing)
+    # WL = sum(Swl)
+    WL = compute_under_curb_area(Swl)
+    PT = compute_under_curb_area(Stx)
     RawScore = PT - 2 * WL
     return 42
 
