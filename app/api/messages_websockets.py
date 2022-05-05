@@ -14,6 +14,7 @@ router = APIRouter(prefix='/chats/ws')
 
 manager = websocket_manager.ConnectionManager()
 
+
 @router.websocket('/{chat_id}')
 async def websocket_route(chat_id: int, websocket: WebSocket):
     print('Accepting client connection...')
