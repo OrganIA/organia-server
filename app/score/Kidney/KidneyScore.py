@@ -53,7 +53,6 @@ class MG:
 
 
 def getHAge(receiver, receiver_listing):
-    print(getWaitingScore(receiver_listing))
     return 100 * getScore(receiver_listing) \
            + 200 * getWaitingScore(receiver_listing) \
            + (100 * getABScore(receiver_listing) \
@@ -72,7 +71,6 @@ def checkAge(receiver, donor):
 def getScoreHD(receiver, donor, receiver_listing):
     HAge = getHAge(receiver, receiver_listing)
     FAge = checkAge(receiver, donor)
-    print(HAge, FAge)
     if receiver.age > donor.age + 20:
         check = 0
     else:
@@ -105,7 +103,6 @@ def getScoreNAP(receiver, donor, receiver_listing, mg):
     ScoreHD = getScoreHD(receiver, donor, receiver_listing)
     MGScore = getScoreMG(mg)
     #MGScore = getScoreMG("MARSEILLE", "PARIS")
-    print(ScoreHD, MGScore)
     return ScoreHD * MGScore
 
 
@@ -115,4 +112,3 @@ receiver_listing = ReceiverListing(sample1)
 mg = MG(sample1)
 
 NAP = getScoreNAP(receiver, donor, receiver_listing, mg)
-print(NAP)
