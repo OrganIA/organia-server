@@ -1,53 +1,47 @@
 import datetime
-from app.models import Listing
 
 
-def getDate(receiver_listing: Listing):
+def getDate(receiver_listing):
     if receiver_listing.isDialyse is False:
         return 0
     elif receiver_listing.isRetransplantation is False:
         if receiver_listing.startDateDialyse is not None:
-            return receiver_listing.startDateDialyse
+            return (receiver_listing.prelDate - receiver_listing.startDateDialyse).days / 365.25
         else:
             return 0
-    elif receiver_listing.EndDateDialyse is not None and receiver_listing\
-        .end_date_dialyse > receiver_listing.transplantation_date:
-        return receiver_listing.EndDateDialyse
+    elif receiver_listing.DialyseReturnDate is not None and receiver_listing \
+            .DialyseReturnDate > receiver_listing.transplantationDate:
+        return (receiver_listing.prelDate - receiver_listing.DialyseReturnDate).days / 365.25
     elif receiver_listing.ARFDate is not None:
         return receiver_listing.ARFDate
     else:
-        return receiver_listing.ReRegistrationDate
+        return receiver_listing.InscriptionDate
 
 
-def getScore(receiver_listing: Listing):
-    try:
-        s = (datetime.datetime.today() - getDate(receiver_listing)).days
-        if s > 3650:
-            return 1
-        elif s < 0:
-            print("Error: Date invalid")
-            return 0
-        return s / 3650
-    except:
-        return 0
+def getScore(receiver_listing):
+    date = getDate(receiver_listing)
+    if date >= 10:
+        return 1
+    else:
+        return date / 10
 
-
-def getWaitingTime(receiver_listing: Listing):
-    DATT = datetime.date.today() - receiver_listing.startDateDialyse
+def getWaitingTime(receiver_listing):
+    inscription_date = receiver_listing.ResumptionDateSeniority if receiver_listing.ResumptionSeniority == 'O' else receiver_listing.InscriptionDate
+    DATT = (receiver_listing.prelDate - inscription_date).days / 365
     if receiver_listing.isDialyse:
-        DDIAL = datetime.date.today() - receiver_listing.startDateDialyse
+        DDIAL = (receiver_listing.prelDate - receiver_listing.startDateDialyse).days / 365
     else:
         DDIAL = 0
-    if receiver_listing.isRetransplantation or (DATT - DDIAL).days < 365:
+    if receiver_listing.isRetransplantation is True or (DATT - DDIAL) < 1:
         return DATT
-    elif receiver_listing.isRetransplantation is False and (receiver_listing.\
-        startDateDialyse - receiver_listing.startDateDialyse) >= 365:
-        return 12 + DDIAL
+    elif receiver_listing.isRetransplantation is False and (DATT - DDIAL) >= 1:
+        return 1 + DDIAL
     return -1  # need to check error
 
 
-def getWaitingScore(receiver_listing: Listing):
-    if getWaitingTime(receiver_listing).days >= 3650:
+def getWaitingScore(receiver_listing):
+    res = getWaitingTime(receiver_listing)
+    if res >= 10:
         return 1
     else:
-        return (1 / 120) * getWaitingTime(receiver_listing).days
+        return res / 10
