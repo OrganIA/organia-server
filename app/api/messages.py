@@ -6,7 +6,7 @@ from sqlalchemy import null
 from app import db
 from app.api.schemas.chat import ChatGroupsCreateSchema, ChatGroupSchema, ChatGroupUpdateSchema
 from app.api.schemas.messages import MessageSchema, MessageCreateSchema
-from app.errors import NotFoundError, InvalidRequest
+from app.errors import NotFoundError, InvalidRequest, Unauthorized
 from app.models import Chat, Message, ChatGroup
 from .dependencies import logged_user
 
@@ -169,6 +169,23 @@ async def update_chat(
         item_list["users_ids"].append(chat.user_id)
 
     return item_list
+
+
+@router.delete('/{chat_id}')
+async def delete_chat(
+        chat_id: int,
+        logged_user=logged_user
+):
+    chats = db.session.query(Chat).filter_by(id=chat_id).first()
+    chat_groups = db.session.query(ChatGroup).filter_by(chat_id=chat_id).all()
+    if chats and chat_groups:
+        if logged_user.id  != chats.creator_id:
+            raise Unauthorized("You do not have permissions on this chat")
+        for i in chat_groups:
+            db.delete(i)
+        db.delete(chats)
+    else:
+        raise NotFoundError("No chat found with this id.")
 
 
 @router.post('/{chat_id}/messages', response_model=MessageSchema)
