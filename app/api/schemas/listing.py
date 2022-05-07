@@ -12,7 +12,7 @@ class ListingSchema(db.Schema):
     notes: Optional[str]
     organ: Listing.Organ
     donor: bool
-    tumors_number: int
+    tumors_number: Optional[int]
     biggest_tumor_size: Optional[int]
     alpha_fetoprotein: Optional[int]
     isDialyse: bool
