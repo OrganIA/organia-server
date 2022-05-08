@@ -1,6 +1,6 @@
-#! /bin/sh
+#!/bin/sh
 
-[ -d .venv ] && source .venv/bin/activate
+[ -d .venv ] && . .venv/bin/activate
 
 cmd="alembic merge" && \
 echo "$(alembic heads)" > merging_cache && \
