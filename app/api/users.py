@@ -3,7 +3,7 @@ from fastapi import APIRouter
 
 from app import db
 from app.errors import InvalidRequest, NotFoundError, AlreadyTakenError
-from app.models import User
+from app.models import User, Role
 from app.api.schemas.user import UserSchema, UserCreateSchema, UserUpdateSchema
 from . import permissions
 from .dependencies import logged_user
@@ -29,6 +29,10 @@ async def get_user(user_id: int):
 
 @router.post('/', status_code=201, response_model=UserSchema)
 async def create_user(data: UserCreateSchema):
+    try:
+        role = db.get(Role, data.role_id)
+    except Exception as e:
+        Role.setup_roles()
     user = db.session.query(User).filter_by(email=data.email).first()
     if user:
         raise AlreadyTakenError("email", data.email)
