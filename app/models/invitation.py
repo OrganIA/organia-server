@@ -20,9 +20,9 @@ class Invitation(db.TimedMixin, db.Base):
     def __str__(self):
         return self.value
 
-    def __init__(self, *args, value=None, **kwargs):
+    def __init__(self, *, value=None, **kwargs):
         value = value or security.generate_token()
-        super().__init__(self, *args, **kwargs, invite_token=value)
+        super().__init__(**kwargs, invite_token=value)
 
     def refresh(self):
         self.created_at = datetime.now()

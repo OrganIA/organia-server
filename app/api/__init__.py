@@ -8,6 +8,7 @@ PREFIX = '/api'
 ROUTERS = [
     'action_logs', 'auth', 'calendar', 'hospitals', 'info', 'listings',
     'messages', 'messages_websockets', 'persons', 'roles', 'score', 'users',
+    'invitation',
 ]
 
 api = APIRouter(prefix=PREFIX)
