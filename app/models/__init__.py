@@ -1,5 +1,4 @@
 from .action_log import ActionLog
-from .invitation import Invitation
 from .calendar import CalendarEvent
 from .city import City
 from .hospital import Hospital
