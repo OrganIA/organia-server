@@ -5,7 +5,9 @@ from app import errors
 from . import session
 
 
-def log(action, obj, message=None, author=None, properties=None):
+def log(
+    action, obj, message=None, author=None, properties=None, session=session
+):
     from app.models.action_log import ActionLog
     log = ActionLog(
         action=action,
@@ -20,11 +22,11 @@ def log(action, obj, message=None, author=None, properties=None):
     logging.info(str(log))
 
 
-def commit():
+def commit(session=session):
     session.commit()
 
 
-def add(table, keys, message=None, author=None):
+def add(table, keys, message=None, author=None, session=session):
     obj = table(**keys)
     session.add(obj)
     session.flush()
@@ -38,7 +40,7 @@ def add(table, keys, message=None, author=None):
     return obj
 
 
-def delete(obj, message=None, author=None):
+def delete(obj, message=None, author=None, session=session):
     session.delete(obj)
     log(action='delete', obj=obj, message=message, author=author)
     session.commit()
@@ -51,6 +53,7 @@ def get_or_create(
     include_search_in_create=True,
     message=None,
     author=None,
+    session=session,
 ) -> object:
     result = session.query(table).filter_by(**search_keys).first()
     print("CREATE KEYS: ", create_keys)
@@ -60,7 +63,9 @@ def get_or_create(
         if include_search_in_create:
             # create_keys = search_keys | create_keys
             create_keys.update(search_keys)
-        result = add(table, create_keys, message=message, author=author)
+        result = add(
+            table, create_keys, message=message, author=author, session=session
+        )
     return result
 
 
@@ -68,7 +73,8 @@ def get(
     table,
     filter_keys: Union[int, dict],
     error_on_unfound=None,
-    unfound_error_type=errors.NotFoundError
+    unfound_error_type=errors.NotFoundError,
+    session=session,
 ):
     if error_on_unfound is None:
         error_on_unfound = isinstance(filter_keys, int)

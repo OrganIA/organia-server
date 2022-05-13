@@ -6,7 +6,7 @@ from app.errors import InvalidAuthToken
 from app.models import LoginToken
 
 
-async def logged_user(request: Request, authorization: str = Header(None)):
+async def get_user(request: Request, authorization: str = Header(None)):
     if authorization is None:
         if not config.FORCE_LOGIN:
             raise InvalidAuthToken('Missing Authorization header')

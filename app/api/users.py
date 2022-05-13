@@ -13,22 +13,22 @@ router = APIRouter(prefix='/users')
 
 
 @router.get('/', response_model=List[UserSchema])
-async def get_users():
+def get_users():
     return db.session.query(User).all()
 
 
 @router.get('/me', response_model=UserSchema)
-async def get_me(logged_user=logged_user):
+def get_me(logged_user=logged_user):
     return logged_user
 
 
 @router.get('/{user_id}', response_model=UserSchema)
-async def get_user(user_id: int):
+def get_user(user_id: int):
     return db.session.get(User, user_id) or NotFoundError.r()
 
 
 @router.post('/', status_code=201, response_model=UserSchema)
-async def create_user(data: UserCreateSchema):
+def create_user(data: UserCreateSchema):
     try:
         role = db.get(Role, data.role_id)
     except Exception as e:
@@ -46,10 +46,10 @@ async def create_user(data: UserCreateSchema):
 
 
 @router.post('/{user_id}', response_model=UserSchema)
-async def update_user(
+def update_user(
     user_id: int, data: UserUpdateSchema, logged_user=logged_user
 ):
-    user = await get_user(user_id)
+    user = get_user(user_id)
     permissions.users.can_edit(logged_user, user)
     user.update(data)
     db.session.commit()
@@ -57,8 +57,8 @@ async def update_user(
 
 
 @router.delete('/{user_id}')
-async def delete_user(user_id: int, logged_user=logged_user):
-    user = await get_user(user_id)
+def delete_user(user_id: int, logged_user=logged_user):
+    user = get_user(user_id)
     permissions.users.can_edit(logged_user, user)
     db.session.delete(user)
     db.session.commit()

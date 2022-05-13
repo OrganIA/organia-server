@@ -1,4 +1,2 @@
-from fastapi import Depends
-from .logged_user import logged_user
-
-logged_user = Depends(logged_user)
+from .db import get_db
+from .logged_user import get_user

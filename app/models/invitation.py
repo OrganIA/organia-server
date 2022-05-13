@@ -22,7 +22,7 @@ class Invitation(db.TimedMixin, db.Base):
 
     def __init__(self, *args, value=None, **kwargs):
         value = value or security.generate_token()
-        super().__init__(self, *args, **kwargs, invite_token=value)
+        super().__init__(*args, **kwargs, invite_token=value)
 
     def refresh(self):
         self.created_at = datetime.now()
@@ -37,13 +37,14 @@ class Invitation(db.TimedMixin, db.Base):
         return f'{self.id}-{self.invite_token}'
 
     @classmethod
-    def get_from_token(cls, token: str):
+    def get_from_token(cls, token: str, session=None):
+        session = session or db.session
         id = token.split('-')[0]
         try:
             id = int(id)
         except ValueError as e:
             raise Exception('No valid ID found in invitation token') from e
-        result = db.session.get(cls, id)
+        result = session.get(cls, id)
         if result.value != token:
             raise Exception('Mismatching invitation token')
         return result

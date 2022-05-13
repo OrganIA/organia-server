@@ -16,6 +16,7 @@ Base: Base_ = orm.declarative_base(cls=Base_, metadata=meta)
 
 session = None
 engine = None
+Session = None
 
 
 def setup_db(url=None, force=False):
@@ -23,7 +24,7 @@ def setup_db(url=None, force=False):
     if not force and session is not None:
         return
     url = url or config.DB_URL
-    engine = sa.create_engine(url, echo=config.LOG_SQL)
+    engine = sa.create_engine(url, echo=config.LOG_SQL, connect_args={'check_same_thread': False})
     Session = orm.sessionmaker(bind=engine, autoflush=False)
     session = Session()
 
