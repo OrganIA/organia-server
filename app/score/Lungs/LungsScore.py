@@ -1,8 +1,6 @@
 from http.client import NON_AUTHORITATIVE_INFORMATION
 import json
 
-from attr import NOTHING
-
 
 def fetch_baseline_values(file):
     with open(file, 'r') as f:
@@ -127,11 +125,14 @@ def post_transplant_survival_chance(receiver, receiver_listing):
 
 
 def compute_under_curb_area(values):
-    res = 0; k = 2; i = 0
-    
+    res = 0
+    k = 2
+    i = 0
+
     while (i < len(values)):
         res += values[i] * (k - 1) * 1
-        i += 1; k += 1
+        i += 1
+        k += 1
     return res
 
 
