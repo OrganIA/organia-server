@@ -9,16 +9,13 @@ from app.api.schemas.messages import MessageCreateSchema, MessageSchema
 from app.errors import InvalidRequest, NotFoundError, Unauthorized
 from app.utils import websocket_manager
 
-router = APIRouter(prefix='/chats')
+router = APIRouter(prefix='/chats/ws')
 
 
 manager = websocket_manager.ConnectionManager()
 
 
-# Currently prefix is ignored for websockets
-# Issue https://github.com/tiangolo/fastapi/issues/2639
-# @router.websocket('/ws/{chat_id}')
-@router.websocket('/api/chats/ws/{chat_id}')
+@router.websocket('/{chat_id}')
 async def websocket_route(chat_id: int, websocket: WebSocket):
     print('Accepting client connection...')
     await manager.connect(websocket)
