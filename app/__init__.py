@@ -1,9 +1,9 @@
 import flask
 
-from app.utils.flask import Flask
+from .application import App
 
 
-app = Flask(__name__)
+app = App()
 
 
 @app.get('/')
@@ -12,9 +12,10 @@ def root():
 
 
 from app.utils.bp import Blueprint
-from app.utils.flask import Flask
 from app.utils.static import Static
 
 
 from .api import bp
 app.register_blueprint(bp)
+
+from . import errors, log

@@ -4,6 +4,9 @@ sqlalchemy
 alembic
 
 flask
+flask-cors
+
+pyyaml
 
 geopy
 geocoder

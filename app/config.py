@@ -1,4 +1,8 @@
 import os
+from pathlib import Path
+import yaml
+
+PATH = Path('./config.yaml')
 
 
 def _get_int(key, default=None):
@@ -25,8 +29,6 @@ LOGIN_EXPIRATION_DAYS = _get_int('LOGIN_EXPIRATION_DAYS', 30)
 
 DB_URL = os.environ.get('DB_URL', 'sqlite:///./app.db')
 
-CORS_ORIGINS = os.environ.get('CORS_ORIGINS', '*').split(',')
-
 FORCE_LOGIN = _get_bool('FORCE_LOGIN')
 
 DISCORD_LOGS = os.environ.get('DISCORD_LOGS')
@@ -42,3 +44,12 @@ SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
 SENDGRID_SENDER_EMAIL = os.environ.get(
     'SENDGRID_SENDER_EMAIL', 'botorgania@gmail.com'
 )
+
+
+def load_file():
+    if not PATH.is_file():
+        return
+    with PATH.open() as f:
+        data = yaml.safe_load(f)
+    for key, value in data.items():
+        os.environ[key] = value
