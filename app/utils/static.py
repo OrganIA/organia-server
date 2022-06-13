@@ -10,7 +10,7 @@ class Static:
         https://github.com/Tina-otoge/
     example:
     some_dict = {'id': '1982', 'postal_code': 12345}
-    class AddressModel(Model):
+    class AddressModel(Static):
         id = int
         zipcode = Model.getter('postal_code', type=str)
     address = AddressModel(some_dict)

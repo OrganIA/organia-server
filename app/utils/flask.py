@@ -48,6 +48,12 @@ class Flask(Base):
 
     @classmethod
     def inject(cls, type: typing.Callable = None, arg='data'):
+        """
+        Extract the JSON passed as the body to the route, and pass it as a
+        parameter to the view
+        :param type: Conversion to apply to the received data
+        :param arg: Parameter name to use to pass the data to the view
+        """
         def decorator(func):
             @functools.wraps(func)
             def wrapper(*args, **kwargs):
@@ -69,6 +75,10 @@ class Flask(Base):
 
     @classmethod
     def success(cls, code: int):
+        """
+        If the decoted view does not return a tuple, change the return value to
+        a tuple with [1] being :param code:
+        """
         def decorator(func):
             @functools.wraps(func)
             def wrapper(*args, **kwargs):
