@@ -1,3 +1,4 @@
+from datetime import datetime
 import inspect
 import typing
 
@@ -71,9 +72,10 @@ class Static:
         for parent in cls.mro()[1:-1]:
             for attr in dir(parent):
                 parents_keys.add(attr)
-        for key in dir(cls):
-            if key in parents_keys:
-                continue
+        keys = [k for k in dir(cls) if k not in parents_keys]
+        if not isinstance(d, dict):
+            d = {k: getattr(d, k) for k in keys}
+        for key in keys:
             type = getattr(cls, key)
             if cls.__AUTO_STR__ and type == str:
                 type = cls.str()
@@ -101,4 +103,6 @@ class Static:
         ])
         return f'<{name} {attrs}>'
 
-
+    class Timed:
+        created_at = datetime
+        updated_at = datetime

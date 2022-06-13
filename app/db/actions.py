@@ -8,7 +8,7 @@ from . import session
 def log(
     action, obj, message=None, author=None, properties=None, session=session
 ):
-    from app.models.action_log import ActionLog
+    from app.db.models.action_log import ActionLog
     log = ActionLog(
         action=action,
         target_type=type(obj).__name__,
@@ -46,26 +46,45 @@ def delete(obj, message=None, author=None, session=session):
     session.commit()
 
 
+class Action:
+    created = False
+
+    @classmethod
+    @property
+    def fetched(cls):
+        return not cls.created
+
+    @classmethod
+    def fetch(cls):
+        cls.created = False
+
+    @classmethod
+    def create(cls):
+        cls.created = True
+
+
 def get_or_create(
     table: Type,
-    search_keys: dict,
-    create_keys=None,
-    include_search_in_create=True,
+    keys: dict = None,
+    filter_keys: list = None,
     message=None,
     author=None,
     session=session,
+    action=Action,
+    **extra_keys,
 ) -> object:
+    keys = keys or {}
+    keys |= extra_keys
+    filter_keys = filter_keys or keys.keys()
+    search_keys = {k: keys[k] for k in filter_keys}
     result = session.query(table).filter_by(**search_keys).first()
-    print("CREATE KEYS: ", create_keys)
-    print("SEARCH KEYS: ", search_keys)
     if not result:
-        create_keys = create_keys or {}
-        if include_search_in_create:
-            # create_keys = search_keys | create_keys
-            create_keys.update(search_keys)
         result = add(
-            table, create_keys, message=message, author=author, session=session
+            table, keys, message=message, author=author, session=session
         )
+        action.create()
+    else:
+        action.fetch()
     return result
 
 

@@ -56,5 +56,5 @@ def close_connection(response):
     return response
 
 
-from .actions import add, commit, delete, edit, get, get_or_create, log
+from .actions import add, commit, delete, edit, get, get_or_create, log, Action
 from .mixins import CreatedMixin, DurationMixin, IdMixin, TimedMixin

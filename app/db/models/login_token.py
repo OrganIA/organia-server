@@ -20,7 +20,7 @@ class LoginToken(db.TimedMixin, db.Base):
         db.Base.__init__(self, *args, **kwargs, _value=value)
 
     def refresh(self):
-        self.created_at = datetime.now()
+        self.created_at = datetime.utcnow()
 
     @property
     def value(self):
@@ -37,17 +37,17 @@ class LoginToken(db.TimedMixin, db.Base):
         try:
             id = int(id)
         except ValueError as e:
-            raise InvalidAuthToken('No valid ID found in token') from e
+            raise InvalidAuthToken('Malformed token, ID field is corrupted') from e
         result = db.session.get(cls, id)
         if not result:
-            raise InvalidAuthToken('Missing Authorization header')
+            raise InvalidAuthToken('No token exist for this token ID')
         if result.value != token:
-            raise InvalidAuthToken('Mismatching token')
+            raise InvalidAuthToken('Mismatching token value')
         return result
 
     @staticmethod
     def get_expiration_date():
-        return datetime.now() - timedelta(days=-config.LOGIN_EXPIRATION_DAYS)
+        return datetime.utcnow() - timedelta(days=-config.LOGIN_EXPIRATION_DAYS)
 
     @classmethod
     def clean(cls):
@@ -58,9 +58,18 @@ class LoginToken(db.TimedMixin, db.Base):
     @classmethod
     def get_valid_for_user(cls, user, clean=False, reuse=True, refresh=True):
         """
-        clean: Delete all expired tokens (all users)
-        reuse: Return an existing token instead of creating a new one
-        refresh: Refresh the token that is reused
+        :param clean: Delete all expired tokens (all users)
+        :param reuse: Return an existing token instead of creating a new one
+        :param refresh: Refresh the token that is reused
+
+        > Why do we re-use tokens?
+        Issuing new tokens for each new login only really makes sense if you
+        want to track the different login locations of a user. So you can allow
+        them to revoke a current session for example. We do not have this kind
+        of feature, so by re-using tokens we save on database usage.
+        We can however allow an user to disconnect from every locations by
+        clearing all of their associated tokens, if they think their account is
+        compromised.
         """
         if clean:
             cls.clean()

@@ -1,38 +1,29 @@
-from app.errors import InvalidRequest, NotFoundError, AlreadyTakenError
-from app.db.models import User, Role
-from app import Blueprint, Flask, Static, db
+from app.db.models import User
+from app import Blueprint, db, auth
 
 
 bp = Blueprint(__name__)
 
 
-# @bp.get('/', response_model=List[UserSchema])
-# def get_users():
-#     return db.session.query(User).all()
+@bp.get('/')
+@auth.check()
+def get_users(data: list[int]):
+    query = db.session.query(User)
+    if data:
+        query = query.filter(User.id.in_(data))
+    return query
 
 
-# @bp.get('/me', response_model=UserSchema)
-# def get_me(logged_user=logged_user):
-#     return logged_user
+@bp.get('/me')
+@auth.check()
+def get_me(auth_user: User):
+    return auth_user
 
 
-# @bp.get('/{user_id}', response_model=UserSchema)
-# def get_user(user_id: int):
-#     return db.session.get(User, user_id) or NotFoundError.r()
-
-
-class UserCreateSchema(Static):
-    email = str
-    password = str
-
-
-@bp.post('/', success=201)
-def create_user(data: UserCreateSchema):
-    User.get_unique_email(data.email)
-    user = User(**data.dict)
-    db.session.add(user)
-    db.session.commit()
-    return user
+@bp.get('/<int:user_id>')
+@auth.check()
+def get_user(user_id: int):
+    return db.get(User, user_id)
 
 
 # @bp.post('/{user_id}', response_model=UserSchema)
@@ -46,9 +37,8 @@ def create_user(data: UserCreateSchema):
 #     return user
 
 
-# @bp.delete('/{user_id}')
-# def delete_user(user_id: int, logged_user=logged_user):
-#     user = get_user(user_id)
-#     permissions.users.can_edit(logged_user, user)
-#     db.session.delete(user)
-#     db.session.commit()
+@bp.delete('/<int:user_id>')
+@auth.check(manage_users=True)
+def delete_user(user_id: int, auth_user: User):
+    user = db.get(user_id)
+    db.delete(user, author=auth_user)

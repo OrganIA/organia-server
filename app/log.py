@@ -1,21 +1,24 @@
-import logging
+import flask
 import requests
+from multiprocessing import Process
+
+from app import config, app
 
 
-class WebhookHandler(logging.Handler):
-    def __init__(self, url=None, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.url = url
+def post(*args, url=None):
+    msg = ' '.join(str(x) for x in args)
+    url = url or config.DISCORD_LOGS
+    if not url:
+        return
+    def f():
+        requests.post(url, data={'content': msg})
+    Process(target=f, daemon=True).start()
 
-    def emit(self, record):
-        if not self.url:
-            return
-        if 'urllib' in record.name or 'request' in record.name:
-            return
-        if record.levelname == 'DEBUG':
-            return
-        message = record.getMessage()
-        if message is None:
-            return
-        message = f'[{record.levelname}] {message}'
-        requests.post(self.url, data={'content': message})
+
+@app.before_request
+def log_request():
+    msg = (
+        f'{flask.request.method} {flask.request.full_path}'
+        f'\n```json\n{flask.request.data.decode() or "(empty body)"}\n```'
+    )
+    post(msg)

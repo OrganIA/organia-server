@@ -1,21 +1,23 @@
-from flask.wrappers import Response
 from app import app
 from werkzeug.exceptions import HTTPException
 
 
-
-class HTTPException(HTTPException):
-    def __init__(self, detail=None, response=None, code=None):
-        self.code = code
-        super().__init__(detail, response)
-
-
 @app.errorhandler(HTTPException)
-def error_handler(e: HTTPException):
+def error_handler_http(e: HTTPException):
     return {
         'msg': e.description,
     }, e.code
 
+
+# @app.errorhandler(Exception)
+# def error_handler(e: Exception):
+#     return error_handler_http(HTTPException(str(e), code=500))
+
+
+class HTTPException(HTTPException):
+    def __init__(self, detail=None, code=None):
+        self.code = code
+        super().__init__(description=detail)
 
 
 class RaisableMixin:
