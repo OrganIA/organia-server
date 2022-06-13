@@ -34,28 +34,6 @@ class Listing(db.DurationMixin, db.Base):
     DR = sa.Column(sa.Integer, default=0, nullable=True)
     DQ = sa.Column(sa.Integer, default=0, nullable=True)
 
-    body_mass_index = sa.Column(sa.Float, default=0, nullable=True)
-    diabetes = sa.Column(sa.Boolean, default=False, nullable=True)
-    functional_status_assistance_required = sa.Column(
-        sa.Boolean, default=False, nullable=True)
-    FVC_percentage = sa.Column(sa.Float, default=0, nullable=True)
-    PA_systolic = sa.Column(sa.Float, default=0, nullable=True)
-    oxygen_requirement = sa.Column(sa.Float, default=0, nullable=True)
-    six_minute_walk_distance_over_150_feet = sa.Column(
-        sa.Boolean, default=True, nullable=True)
-    continuous_mechanical_ventilation = sa.Column(
-        sa.Boolean, default=False, nullable=True)
-    PC02 = sa.Column(sa.Float, default=40, nullable=True)
-    PCO2_increase_superior_to_15_percent = sa.Column(
-        sa.Boolean, default=False, nullable=True)
-    diagnosis_group = sa.Column(sa.String, default="A", nullable=True)
-    detailled_diagnosis = sa.Column(sa.String, nullable=True)
-
-    age_at_transplant = sa.Column(sa.Date, default=0)
-    creatinine_at_transplant = sa.Column(sa.Float, default=0)
-    ADL_required = sa.Column(sa.Boolean, default=True)
-    PCW_over_20_mmHg = sa.Column(sa.Boolean, default=False)
-
     person = orm.relationship('Person', backref='listings')
     hospital = orm.relationship('Hospital', backref='listings')
 
