@@ -1,14 +1,13 @@
-from fastapi import APIRouter, Depends
-
-from app.models import ActionLog
-from .dependencies import get_db
-
-
-router = APIRouter(prefix='/logs')
+from app.db import session
+from app.db.models import ActionLog
+from app.utils.bp import Blueprint
 
 
-@router.get('/')
-async def get_logs(session=Depends(get_db)):
+bp = Blueprint(__name__, prefix='/logs')
+
+
+@bp.get('/')
+def get_logs():
     return (
         session.query(ActionLog)
         .order_by(ActionLog.created_at.desc())

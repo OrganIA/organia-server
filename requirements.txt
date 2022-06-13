@@ -3,8 +3,7 @@ requests
 sqlalchemy
 alembic
 
-fastapi
-uvicorn[standard]
+flask
 
 geopy
 geocoder

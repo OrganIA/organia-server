@@ -1,29 +1,20 @@
-from passlib.context import CryptContext
+from werkzeug import security
 import sqlalchemy as sa
 from sqlalchemy import orm
-from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
-from typing import Optional
 
 from app import db
 from app.errors import AlreadyTakenError, InvalidRequest, PasswordMismatchError
-from app.models.chats import Chat
 
 
 class User(db.TimedMixin, db.Base):
-    PASSWORD_CONTEXT = CryptContext(schemes=['bcrypt'], deprecated='auto')
-    UPDATERS = {
-        'email': 'get_unique_email',
-        'password': 'get_hashed_password'
-    }
-
     email = sa.Column(sa.String, nullable=False, unique=True)
     password = sa.Column(sa.String)
     role_id = sa.Column(sa.ForeignKey('roles.id'), nullable=False)
 
     role = orm.relationship('Role', back_populates='users')
     person = orm.relationship('Person', uselist=False, back_populates='user')
-    messages = orm.relationship("Message", back_populates="sender")
-    groups = orm.relationship("ChatGroup", back_populates="user")
+    messages = orm.relationship('Message', back_populates='sender')
+    groups = orm.relationship('ChatGroup', back_populates='user')
 
     def __init__(self, *args, **kwargs):
         from .role import Role
@@ -49,10 +40,10 @@ class User(db.TimedMixin, db.Base):
 
     @classmethod
     def get_hashed_password(cls, value):
-        return cls.PASSWORD_CONTEXT.hash(value)
+        return security.generate_password_hash(value)
 
     def check_password(self, password, exc=True):
-        result = self.PASSWORD_CONTEXT.verify(password, self.password)
+        result = security.check_password_hash(password, self.password)
         if not result and exc:
             raise exc if isinstance(exc, Exception) else PasswordMismatchError
         return result

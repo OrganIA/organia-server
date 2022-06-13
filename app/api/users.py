@@ -1,64 +1,54 @@
-from typing import List
-from fastapi import APIRouter
-
-from app import db
 from app.errors import InvalidRequest, NotFoundError, AlreadyTakenError
-from app.models import User, Role
-from app.api.schemas.user import UserSchema, UserCreateSchema, UserUpdateSchema
-from . import permissions
-from .dependencies import logged_user
+from app.db.models import User, Role
+from app import Blueprint, Flask, Static, db
 
 
-router = APIRouter(prefix='/users')
+bp = Blueprint(__name__)
 
 
-@router.get('/', response_model=List[UserSchema])
-def get_users():
-    return db.session.query(User).all()
+# @bp.get('/', response_model=List[UserSchema])
+# def get_users():
+#     return db.session.query(User).all()
 
 
-@router.get('/me', response_model=UserSchema)
-def get_me(logged_user=logged_user):
-    return logged_user
+# @bp.get('/me', response_model=UserSchema)
+# def get_me(logged_user=logged_user):
+#     return logged_user
 
 
-@router.get('/{user_id}', response_model=UserSchema)
-def get_user(user_id: int):
-    return db.session.get(User, user_id) or NotFoundError.r()
+# @bp.get('/{user_id}', response_model=UserSchema)
+# def get_user(user_id: int):
+#     return db.session.get(User, user_id) or NotFoundError.r()
 
 
-@router.post('/', status_code=201, response_model=UserSchema)
+class UserCreateSchema(Static):
+    email = str
+    password = str
+
+
+@bp.post('/', success=201)
 def create_user(data: UserCreateSchema):
-    try:
-        role = db.get(Role, data.role_id)
-    except Exception as e:
-        Role.setup_roles()
-    user = db.session.query(User).filter_by(email=data.email).first()
-    if user:
-        raise AlreadyTakenError("email", data.email)
-    try:
-        user = User.from_data(data)
-    except Exception as e:
-        raise InvalidRequest from e
+    User.get_unique_email(data.email)
+    user = User(**data.dict)
     db.session.add(user)
     db.session.commit()
     return user
 
 
-@router.post('/{user_id}', response_model=UserSchema)
-def update_user(
-    user_id: int, data: UserUpdateSchema, logged_user=logged_user
-):
-    user = get_user(user_id)
-    permissions.users.can_edit(logged_user, user)
-    user.update(data)
-    db.session.commit()
-    return user
+# @bp.post('/{user_id}', response_model=UserSchema)
+# def update_user(
+#     user_id: int, data: UserUpdateSchema, logged_user=logged_user
+# ):
+#     user = get_user(user_id)
+#     permissions.users.can_edit(logged_user, user)
+#     user.update(data)
+#     db.session.commit()
+#     return user
 
 
-@router.delete('/{user_id}')
-def delete_user(user_id: int, logged_user=logged_user):
-    user = get_user(user_id)
-    permissions.users.can_edit(logged_user, user)
-    db.session.delete(user)
-    db.session.commit()
+# @bp.delete('/{user_id}')
+# def delete_user(user_id: int, logged_user=logged_user):
+#     user = get_user(user_id)
+#     permissions.users.can_edit(logged_user, user)
+#     db.session.delete(user)
+#     db.session.commit()

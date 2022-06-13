@@ -1,4 +1,21 @@
-from fastapi import HTTPException
+from flask.wrappers import Response
+from app import app
+from werkzeug.exceptions import HTTPException
+
+
+
+class HTTPException(HTTPException):
+    def __init__(self, detail=None, response=None, code=None):
+        self.code = code
+        super().__init__(detail, response)
+
+
+@app.errorhandler(HTTPException)
+def error_handler(e: HTTPException):
+    return {
+        'msg': e.description,
+    }, e.code
+
 
 
 class RaisableMixin:
@@ -10,14 +27,14 @@ class RaisableMixin:
 
 class InvalidRequest(RaisableMixin, HTTPException):
     def __init__(self, msg=None):
-        super().__init__(status_code=422, detail=msg)
+        super().__init__(code=422, detail=msg)
 
 
 class Unauthorized(RaisableMixin, HTTPException):
     DEFAULT = None
 
     def __init__(self, msg=None):
-        super().__init__(status_code=401, detail=msg or self.DEFAULT)
+        super().__init__(code=401, detail=msg or self.DEFAULT)
 
 
 class InsufficientPermissions(Unauthorized):
@@ -31,7 +48,7 @@ class InvalidAuthToken(Unauthorized):
 class AlreadyTakenError(HTTPException):
     def __init__(self, key, value):
         super().__init__(
-            status_code=422, detail=f'{key} "{value}" is already taken.'
+            code=422, detail=f'{key} "{value}" is already taken.'
         )
 
     @classmethod
@@ -52,14 +69,14 @@ class AlreadyTakenError(HTTPException):
 
 class NotFoundError(RaisableMixin, HTTPException):
     def __init__(self, msg=None):
-        super().__init__(status_code=404, detail=msg or 'Not found.')
+        super().__init__(code=404, detail=msg or 'Not found.')
 
 
 class PasswordMismatchError(HTTPException):
     def __init__(self, msg=None):
-        super().__init__(status_code=401, detail=msg or 'Password mismatch.')
+        super().__init__(code=401, detail=msg or 'Password mismatch.')
 
 
 class NotAcceptableError(HTTPException):
     def __init__(self, msg=None):
-        super().__init__(status_code=406, detail=msg or 'Not Acceptable.')
+        super().__init__(code=406, detail=msg or 'Not Acceptable.')

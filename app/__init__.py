@@ -1,18 +1,20 @@
-# import logging
+import flask
 
-# from . import config
-# from .log import WebhookHandler
-
-# logging.basicConfig(
-#     level=logging.DEBUG,
-#     # handlers=[WebhookHandler(config.DISCORD_LOGS)],
-# )
-
-# logger = logging.getLogger(__name__)
-# logger.setLevel(logging.DEBUG)
-
-# sqlalchemy_logger = logging.getLogger('sqlalchemy')
-# sqlalchemy_logger.setLevel(logging.WARNING)
+from app.utils.flask import Flask
 
 
-from . import models
+app = Flask(__name__)
+
+
+@app.get('/')
+def root():
+    return flask.redirect(flask.url_for('api.root'))
+
+
+from app.utils.bp import Blueprint
+from app.utils.flask import Flask
+from app.utils.static import Static
+
+
+from .api import bp
+app.register_blueprint(bp)

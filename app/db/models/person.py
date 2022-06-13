@@ -4,7 +4,7 @@ from sqlalchemy.sql.expression import null
 import enum
 
 from app import db
-from app.helpers.enums import EnumStr
+from app.utils.enums import EnumStr
 from datetime import datetime
 
 

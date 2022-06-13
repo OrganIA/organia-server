@@ -3,7 +3,7 @@ import sqlalchemy as sa
 from sqlalchemy import orm
 
 from app import db
-from app.helpers.enums import EnumStr
+from app.utils.enums import EnumStr
 
 
 class Listing(db.DurationMixin, db.Base):

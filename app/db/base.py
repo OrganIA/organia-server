@@ -1,6 +1,6 @@
 from sqlalchemy import orm
 
-from app.helpers import str_format
+from app.utils import str_format
 
 
 class Base:

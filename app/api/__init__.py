@@ -1,18 +1,28 @@
+from pathlib import Path
 import importlib
-from fastapi import APIRouter
 
-# VERSION = 'v1'
-# PREFIX = f'/api/{VERSION}'
-PREFIX = '/api'
+from app.utils.bp import Blueprint
 
-ROUTERS = [
-    'action_logs', 'auth', 'calendar', 'hospitals', 'info', 'invitation',
-    'listings', 'messages', 'messages_websockets', 'persons', 'roles', 'score',
-    'users',
-]
 
-api = APIRouter(prefix=PREFIX)
+bp = Blueprint(__name__)
 
-for name in ROUTERS:
-    module = importlib.import_module(f'{__name__}.{name}')
-    api.include_router(module.router)
+
+@bp.get('/')
+def root():
+    from .info import get_info
+    return get_info()
+
+
+"""
+Will auto-register blueprints from every Python file in the adjacent directory,
+as long as they are at module-level and called "bp"
+"""
+for file in Path(__file__).parent.glob('*'):
+    if file.stem.startswith('_'):
+        continue
+    print(file)
+    module = importlib.import_module(f'{__name__}.{file.stem}')
+    if not hasattr(module, 'bp'):
+        continue
+    print('Registering', module)
+    bp.register_blueprint(module.bp)
