@@ -1,5 +1,7 @@
 /.venv/
 /venv
 /app.db
+/config.yaml
+/config.yml
 /.coverage
 __pycache__/
