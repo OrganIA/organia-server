@@ -28,7 +28,5 @@ def login(data: LoginSchema, user=None):
 @bp.post('/register', success=201)
 def create_user(data: LoginSchema):
     User.check_email(data.email)
-    user = User(**data.dict)
-    db.session.add(user)
-    db.session.commit()
+    user = db.add(User, data.dict)
     return login(data=data, user=user)

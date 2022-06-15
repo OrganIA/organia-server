@@ -1,11 +1,10 @@
+from datetime import datetime
+import enum
 import sqlalchemy as sa
 from sqlalchemy import orm
-from sqlalchemy.sql.expression import null
-import enum
 
 from app import db
 from app.utils.enums import EnumStr
-from datetime import datetime
 
 
 class Person(db.TimedMixin, db.Base):

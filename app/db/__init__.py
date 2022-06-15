@@ -6,6 +6,7 @@ from werkzeug.local import LocalProxy
 from app import app, config
 from .base import Base as Base_
 
+
 meta = MetaData(naming_convention={
     'ix': 'ix_%(column_0_label)s',
     'uq': 'uq_%(table_name)s_%(column_0_name)s',
@@ -14,7 +15,9 @@ meta = MetaData(naming_convention={
     'pk': 'pk_%(table_name)s'
 })
 
+
 Base: Base_ = orm.declarative_base(cls=Base_, metadata=meta)
+
 
 engine = None
 Session = None
@@ -28,6 +31,7 @@ def setup_db(url=None):
 
 
 setup_db()
+
 
 def get_session():
     if 'db' not in g:

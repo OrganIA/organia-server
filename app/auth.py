@@ -31,8 +31,28 @@ def _check(**permissions):
     return user
 
 
-
 def check(**permissions):
+    """
+    Decorator to require authentication on a route.
+
+    Use `@auth.check()` to simply require a valid auth token.
+    Use `@auth.check(permission_name=True)` to also validate against perms.
+
+    If the route has a parameter named `auth_user`, the current user will be
+    injected as this parameter.
+
+    ```
+    @app.get('/')
+    @auth.check()
+    def index():
+        ...
+
+    @app.get('/admin')
+    @auth.check(manage_users=True) # we omit the "can_" part
+    def admin(auth_user: User):
+        print(f"{auth_user} just accessed the admin page!")
+    ```
+    """
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):

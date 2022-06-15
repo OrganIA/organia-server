@@ -24,6 +24,35 @@ def permissive_json(x):
 
 
 class App(flask.Flask):
+    """
+    Subclass of Flask with out settings pre-applied, such as CORS and loading
+    our config file.
+
+    It is also customized to automatically convert all responses to JSON, and
+    auto-inject schemas into routes when using type-hinting in arguments.
+
+    ```
+    class UserSchema(Static):
+        email = str
+        password = str
+
+    @app.post('/login')
+    def login(data: UserSchema):
+        assert type(data.email) == str
+        assert type(data.password) == str
+    ```
+
+    You can also define response status directly in the route decorator, like so
+    ```
+    @app.post('/item', success=201)
+    def create_item(data: dict):
+        item = db.create('item', data) # pseudo-code
+        return item
+    ```
+    Here the route will return `item` converted to JSON, and set the status code
+    to 201.
+    """
+
     def __init__(self):
         super().__init__(__name__.split('.')[0])
         CORS(self)
