@@ -52,3 +52,15 @@ async def update_lungs_score(listing_id: int, score: int):
     lung.score = score
     db.session.commit()
     return
+
+
+@router.get('/{listing_id}/score_del', status_code=201)
+async def delete_lungs_score(listing_id: int):
+    listing = db.session.query(Listing).filter_by(id=listing_id).first()
+    if listing == None:
+        raise NotFoundError('listing_id', listing_id,
+                            'doesn\'t refer to an existing listing')
+    lung = await get_lungs(listing_id)
+    lung.score = 0.0
+    db.session.commit()
+    return
