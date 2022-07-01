@@ -25,4 +25,4 @@ class Lung(db.TimedMixin, db.Base):
     ADL_required = sa.Column(sa.Boolean, nullable=True)
     PCW_over_20_mmHg = sa.Column(sa.Boolean, nullable=True)
 
-    score = sa.column(sa.Float, nullable=True, default=0)
+    score = sa.Column(sa.Float, nullable=True, default=0)
