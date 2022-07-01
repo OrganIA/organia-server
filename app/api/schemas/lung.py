@@ -60,7 +60,7 @@ class LungCreateSchema(LungSchema):
     class Config:
         orm_mode = True
 
-class LungUpdate(LungSchema):
+class LungUpdateSchema(LungSchema):
     diagnosis_group: Optional[str]
     detailed_diagnosis: Optional[str]
 
