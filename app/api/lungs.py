@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-from api.schemas.listing import ListingGetSchema
 from typing import List
 
 from app import db
