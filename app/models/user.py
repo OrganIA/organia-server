@@ -2,6 +2,7 @@ from passlib.context import CryptContext
 import sqlalchemy as sa
 from sqlalchemy import orm
 from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
+from sqlalchemy_utils import PhoneNumber
 from typing import Optional
 
 from app import db
@@ -17,9 +18,18 @@ class User(db.TimedMixin, db.Base):
     }
 
     email = sa.Column(sa.String, nullable=False, unique=True)
-    password = sa.Column(sa.String)
+    password = sa.Column(sa.String, nullable=False)
+    firstname = sa.Column(sa.String, nullable=False)
+    lastname = sa.Column(sa.String, nullable=False)
     role_id = sa.Column(sa.ForeignKey('roles.id'), nullable=False)
+    phone_number = sa.Column(sa.Unicode(20))
+    country_code = sa.Column(sa.Unicode(8))
 
+    _phone_number = sa.orm.composite(
+        PhoneNumber,
+        phone_number,
+        country_code
+    )
     role = orm.relationship('Role', back_populates='users')
     person = orm.relationship('Person', uselist=False, back_populates='user')
     messages = orm.relationship("Message", back_populates="sender")

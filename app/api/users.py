@@ -14,7 +14,10 @@ router = APIRouter(prefix='/users')
 
 @router.get('/', response_model=List[UserSchema])
 async def get_users():
-    return db.session.query(User).all()
+    users = db.session.query(User).all()
+    for user in users:
+        user.phone_number = user._phone_number.international
+    return users
 
 
 @router.get('/me', response_model=UserSchema)
