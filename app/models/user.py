@@ -22,8 +22,8 @@ class User(db.TimedMixin, db.Base):
     firstname = sa.Column(sa.String, nullable=False)
     lastname = sa.Column(sa.String, nullable=False)
     role_id = sa.Column(sa.ForeignKey('roles.id'), nullable=False)
-    phone_number = sa.Column(sa.Unicode(20))
-    country_code = sa.Column(sa.Unicode(8))
+    phone_number = sa.Column(sa.Unicode(20), nullable=False)
+    country_code = sa.Column(sa.Unicode(8), nullable=False, default="FR")
 
     _phone_number = sa.orm.composite(
         PhoneNumber,
