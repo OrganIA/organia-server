@@ -54,6 +54,8 @@ async def update_user(
 ):
     user = await get_user(user_id)
     permissions.users.can_edit(logged_user, user)
+    if user.email == data.email:
+        del data.email
     user.update(data)
     db.session.commit()
     return user
