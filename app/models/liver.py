@@ -3,7 +3,6 @@ from sqlalchemy.sql.expression import null
 
 from app import db
 
-
 class Liver(db.TimedMixin, db.Base):
     listing_id = sa.Column(sa.ForeignKey('listings.id'))
     tumors_number = sa.Column(sa.Integer, default=0, nullable=False)
