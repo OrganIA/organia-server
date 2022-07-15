@@ -14,7 +14,10 @@ router = APIRouter(prefix='/users')
 
 @router.get('/', response_model=List[UserSchema])
 async def get_users():
-    return db.session.query(User).all()
+    users = db.session.query(User).all()
+    for user in users:
+        user.phone_number = user._phone_number.international
+    return users
 
 
 @router.get('/me', response_model=UserSchema)
@@ -51,6 +54,8 @@ async def update_user(
 ):
     user = await get_user(user_id)
     permissions.users.can_edit(logged_user, user)
+    if user.email == data.email:
+        del data.email
     user.update(data)
     db.session.commit()
     return user
