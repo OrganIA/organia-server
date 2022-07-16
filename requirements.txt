@@ -1,6 +1,8 @@
 requests
 
 sqlalchemy
+sqlalchemy-utils
+phonenumbers
 alembic
 
 fastapi
