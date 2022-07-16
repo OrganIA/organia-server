@@ -22,12 +22,18 @@ async def get_users():
 
 @router.get('/me', response_model=UserSchema)
 async def get_me(logged_user=logged_user):
+    logged_user.phone_number = logged_user._phone_number.international
     return logged_user
 
 
 @router.get('/{user_id}', response_model=UserSchema)
 async def get_user(user_id: int):
-    return db.session.get(User, user_id) or NotFoundError.r()
+    user =  db.session.get(User, user_id)
+    if (user is not None):
+        user.phone_number = user._phone_number.international
+        return user
+    else:
+        return NotFoundError.r()
 
 
 @router.post('/', status_code=201, response_model=UserSchema)
