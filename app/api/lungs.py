@@ -5,52 +5,43 @@ from app import db
 from app.errors import NotFoundError, InvalidRequest
 from app.models import Lung, Listing
 from app.api.schemas.lung import (
-    LungSchema, LungCreateSchema
+    LungSchema, LungCreateSchema, LungUpdateScore
 )
 
 router = APIRouter(prefix='/lungs')
 
 
-@router.get('/{listing_id}', response_model=List[LungSchema])
+@router.get('/{listing_id}', response_model=LungSchema)
 async def get_lungs(listing_id: int):
     query = db.session.query(Lung).filter_by(listing_id=listing_id).first()
     return query
 
 
-@router.post('/{listing_id}', status_code=201)
+@router.post('/{listing_id}', status_code=201, response_model=LungSchema)
 async def update_lungs_variables(listing_id: int, data: LungCreateSchema):
     listing = db.session.query(Listing).filter_by(id=listing_id).first()
     if listing == None:
-        raise NotFoundError('listing_id', listing_id,
-                            'doesn\'t refer to an existing listing')
+        raise NotFoundError('Listing not found')
     listing_lung = db.session.query(Lung).filter_by(
         listing_id=listing_id).first()
     if listing_lung != None:
         raise InvalidRequest('A listing with this id already exists')
-    column_list = []
-    for column_name in Lung.__table__.columns.keys():
-        column_list.append(column_name)
-    for property in data:
-        if property[0] not in column_list:
-            raise InvalidRequest(property[0], 'is not a valid property')
+
     data.listing_id = listing_id
     data = data.dict(exclude_unset=True)
-    db.add(Lung, data)
-    return
+    lungs = db.add(Lung, data)
+    return lungs
 
 
-@router.post('/{listing_id}/score', status_code=201)
-async def update_lungs_score(listing_id: int, score: int):
+@router.post('/{listing_id}/score', status_code=201, response_model=LungSchema)
+async def update_lungs_score(listing_id: int, score: LungUpdateScore):
     listing = db.session.query(Listing).filter_by(id=listing_id).first()
     if listing == None:
-        raise NotFoundError('listing_id', listing_id,
-                            'doesn\'t refer to an existing listing')
-    if type(score) is not float:
-        raise InvalidRequest('score should be of type float')
+        raise NotFoundError('Listing not found')
     lung = await get_lungs(listing_id)
-    lung.score = score
+    lung.score = score.score
     db.session.commit()
-    return
+    return lung
 
 
 @router.get('/{listing_id}/score_del', status_code=201)
