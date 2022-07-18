@@ -9,7 +9,7 @@ from app.api.schemas.listing import ListingGetSchema
 
 class LiverSchema(db.Schema):
     listing_id: Optional[int]
-    tumors_number: int
+    tumors_number: Optional[int]
     biggest_tumor_size: Optional[int]
     alpha_fetoprotein: Optional[int]
 
@@ -24,10 +24,11 @@ class LiverUpdateSchema(db.Schema):
     biggest_tumor_size: Optional[int]
     alpha_fetoprotein: Optional[int]
     
-    score: Optional[int]
-
 class LiverCreateSchema(LiverSchema):
     listing_id: Optional[int]
 
 class LiverGetSchema(LiverSchema):
     listing: ListingGetSchema
+
+class LiverUpdateScore(db.Schema):
+    score: float

@@ -5,7 +5,7 @@ from app import db
 
 class Liver(db.TimedMixin, db.Base):
     listing_id = sa.Column(sa.ForeignKey('listings.id'))
-    tumors_number = sa.Column(sa.Integer, default=0, nullable=False)
+    tumors_number = sa.Column(sa.Integer, default=0, nullable=True)
     biggest_tumor_size = sa.Column(sa.Integer, nullable=True)
     alpha_fetoprotein = sa.Column(sa.Integer, nullable=True)
     score = sa.Column(sa.Float, nullable=True, default=0)

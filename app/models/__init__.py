@@ -3,6 +3,7 @@ from .calendar import CalendarEvent
 from .city import City
 from .hospital import Hospital
 from .listing import Listing
+from .liver import Liver
 from .login_token import LoginToken
 from .person import Person
 from .staff import Staff
