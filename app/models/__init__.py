@@ -11,4 +11,4 @@ from .role import Role
 from .chats import Chat
 from .chat_group import ChatGroup
 from .messages import Message
-from .heart import Heart
+from .heart import HeartScore
