@@ -5,10 +5,11 @@ from .user import UserSchema
 
 
 class CalendarEventSchema(db.CreatedMixin.Schema):
-    start_date: Optional[datetime]
-    end_date: Optional[datetime]
-    title: Optional[str]
+    start_date: datetime
+    end_date: datetime
+    title: str
     description: Optional[str]
+    typerdv: str
     author: Optional[UserSchema]
 
     class Config:
@@ -20,3 +21,4 @@ class CalendarEventCreateSchema(db.Schema):
     end_date: Optional[datetime]
     title: Optional[str]
     description: Optional[str]
+    typerdv: Optional[str]
