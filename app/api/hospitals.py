@@ -1,13 +1,15 @@
 from typing import List
 from fastapi import APIRouter
 
-from app import db
+from app import db, distance
 from typing import Optional
 from app.distance import get_distance
 from app.errors import NotFoundError
 from app.models import City, Hospital
 from app.api.schemas.hospital import (
     HospitalSchema,
+    HospitalGetSchema,
+    HospitalUpdateSchema,
 )
 from .dependencies import logged_user
 
@@ -15,7 +17,7 @@ from .dependencies import logged_user
 router = APIRouter(prefix='/hospitals', dependencies=[logged_user])
 
 
-@router.get('/', response_model=List[HospitalSchema])
+@router.get('/', response_model=List[HospitalGetSchema])
 async def get_hospitals(
     name: Optional[str] = None, city_id: Optional[int] = None
 ):
@@ -27,7 +29,7 @@ async def get_hospitals(
     return query.all()
 
 
-@router.get('/{hospital_id}', response_model=HospitalSchema)
+@router.get('/{hospital_id}', response_model=HospitalGetSchema)
 async def get_hospital(hospital_id: int):
     return db.get(Hospital, hospital_id, error_on_unfound=True)
 
@@ -35,11 +37,31 @@ async def get_hospital(hospital_id: int):
 @router.post('/', status_code=201, response_model=HospitalSchema)
 async def create_hospital(hospital: HospitalSchema):
     data = hospital.dict()
-    city = db.get_or_create(City, data.pop('city'))
+    city_data = data.pop('city')
+    city = db.get_or_create(
+        City,
+        {'department_code': city_data['department_code']},
+        {'name': city_data['name']},
+    )
     data['city'] = city
+    position = distance.get_coordinates(data['name'])
+    if position:
+        data['latitude'] = position[0]
+        data['longitude'] = position[1]
     hospital = db.add(Hospital, data)
     return await get_hospital(hospital.id)
 
+
+@router.post('/{hospital_id}', response_model=HospitalGetSchema)
+async def update_hospital(
+    hospital_id: int, data: HospitalUpdateSchema,
+):
+    data = data.dict()
+    data_pop = data.pop('city')
+    hospital = await get_hospital(hospital_id)
+    hospital.update(data)
+    db.session.commit()
+    return hospital
 
 @router.delete('/{hospital_id}')
 async def delete_hospital(hospital_id: int):

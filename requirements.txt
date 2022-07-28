@@ -1,12 +1,16 @@
-geopy~=2.2.0
-geocoder
-fastapi~=0.75.2
-requests~=2.27.1
-passlib[bcrypt]~=1.7.4
-sqlalchemy~=1.4.35
-autopep8
+requests
 
-pydantic~=1.9.0
-pandas~=1.4.2
-numpy~=1.22.3
-starlette~=0.17.1
+sqlalchemy
+sqlalchemy-utils
+phonenumbers
+alembic
+
+fastapi
+uvicorn[standard]
+
+geopy
+geocoder
+
+passlib[bcrypt]
+
+autopep8
