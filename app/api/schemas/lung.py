@@ -82,3 +82,9 @@ class LungUpdateSchema(LungSchema):
 
     class Config:
         orm_mode = True
+
+class LungUpdateScore(db.Schema):
+    score: float
+
+    class Config:
+        orm_mode = True
