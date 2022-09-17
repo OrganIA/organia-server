@@ -1,27 +1,27 @@
 import datetime
-from app.models import Listing
+from app.models import Listing, Kidney
 
 
-def getDate(receiver_listing: Listing):
-    if receiver_listing.isDialyse is False:
+def getDate(receiver_listing: Listing, listing_kidney):
+    if listing_kidney.isDialyse is False:
         return 0
-    elif receiver_listing.isRetransplantation is False:
-        if receiver_listing.startDateDialyse is not None:
-            return receiver_listing.startDateDialyse
+    elif listing_kidney.isRetransplantation is False:
+        if listing_kidney.startDateDialyse is not None:
+            return listing_kidney.startDateDialyse
         else:
             return 0
-    elif receiver_listing.EndDateDialyse is not None and receiver_listing\
-        .end_date_dialyse > receiver_listing.transplantation_date:
-        return receiver_listing.EndDateDialyse
-    elif receiver_listing.ARFDate is not None:
-        return receiver_listing.ARFDate
+    elif listing_kidney.EndDateDialyse is not None and listing_kidney\
+        .EndDateDialyse > listing_kidney.DateTransplantation:
+        return listing_kidney.EndDateDialyse
+    elif listing_kidney.ARFDate is not None:
+        return listing_kidney.ARFDate
     else:
-        return receiver_listing.ReRegistrationDate
+        return listing_kidney.ReRegistrationDate
 
 
-def getScore(receiver_listing: Listing):
+def getScore(receiver_listing: Listing, listing_kidney):
     try:
-        s = (datetime.datetime.today() - getDate(receiver_listing)).days
+        s = (datetime.datetime.today() - getDate(receiver_listing, listing_kidney)).days
         if s > 3650:
             return 1
         elif s < 0:
@@ -32,22 +32,22 @@ def getScore(receiver_listing: Listing):
         return 0
 
 
-def getWaitingTime(receiver_listing: Listing):
-    DATT = datetime.date.today() - receiver_listing.startDateDialyse
-    if receiver_listing.isDialyse:
-        DDIAL = datetime.date.today() - receiver_listing.startDateDialyse
+def getWaitingTime(receiver_listing: Listing, listing_kidney):
+    DATT = datetime.date.today() - listing_kidney.startDateDialyse
+    if listing_kidney.isDialyse:
+        DDIAL = datetime.date.today() - listing_kidney.startDateDialyse
     else:
         DDIAL = 0
-    if receiver_listing.isRetransplantation or (DATT - DDIAL).days < 365:
+    if listing_kidney.isRetransplantation or (DATT - DDIAL).days < 365:
         return DATT
-    elif receiver_listing.isRetransplantation is False and (receiver_listing.\
-        startDateDialyse - receiver_listing.startDateDialyse) >= 365:
+    elif listing_kidney.isRetransplantation is False and (listing_kidney.\
+        startDateDialyse - listing_kidney.startDateDialyse) >= 365:
         return 12 + DDIAL
     return -1  # need to check error
 
 
-def getWaitingScore(receiver_listing: Listing):
-    if getWaitingTime(receiver_listing).days >= 3650:
+def getWaitingScore(receiver_listing: Listing, listing_kidney: Kidney):
+    if getWaitingTime(receiver_listing, listing_kidney).days >= 3650:
         return 1
     else:
-        return (1 / 120) * getWaitingTime(receiver_listing).days
+        return (1 / 120) * getWaitingTime(receiver_listing, listing_kidney).days
