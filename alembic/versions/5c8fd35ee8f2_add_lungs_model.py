@@ -1,7 +1,7 @@
 """add lungs model
 
 Revision ID: 5c8fd35ee8f2
-Revises: d59b3e678183
+Revises: 5f30590f5c74
 Create Date: 2022-07-16 12:37:40.375164
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = '5c8fd35ee8f2'
-down_revision = 'd59b3e678183'
+down_revision = '5f30590f5c74'
 branch_labels = None
 depends_on = None
 
