@@ -12,3 +12,5 @@ from .chats import Chat
 from .chat_group import ChatGroup
 from .messages import Message
 from .heart import HeartScore
+from .kidney import Kidney
+from .lung import Lung
