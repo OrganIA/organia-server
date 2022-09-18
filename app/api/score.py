@@ -7,6 +7,7 @@ from app.errors import NotFoundError
 from app.models import Person
 from app.models import Listing
 from app.score.Kidney.KidneyScore import *
+from app.score.Lungs.LungsScore import *
 from app.score.Liver.LiverScore import final_score
 from app.api.schemas.person import (
     PersonSchema, PersonGetSchema, PersonUpdateSchema,
@@ -21,28 +22,32 @@ def organs_priority(organs):
     return {
         "HEART": 1,
         "KIDNEY": 2,
+        "LIVER": 3,
+        "LUNG": 4,
     }.get(organs, 3)
 
 
 def compute(donor: Person, receiver: Person, receiver_listing: Listing):
     if receiver_listing.organ == Listing.Organ.KIDNEY:
         return getScoreNAP(receiver, donor, receiver_listing)
-    elif receiver_listing.organ == Listing.Organ.LUNG:
+    elif receiver_listing.organ == Listing.Organ.LIVER:
         return final_score(receiver, donor, receiver_listing)
+    elif receiver_listing.organ == Listing.Organ.LUNG:
+        return lungs_final_score(receiver, donor, receiver_listing)
     else:
         return 0
 
-      
+
 @router.get('/listing/{person_id}')
 async def calculate_organ(person_id: int):
     result_listing = []
     donor = db.session.query(Listing)\
         .filter((Listing.person_id == person_id)).first()
-    if (donor is None):
+    if (donor is None or not donor):
         NotFoundError.r('Donor is not found')
     receivers = db.session.query(Listing)\
         .filter_by(donor=False).all()
-    if (receivers is None):
+    if (receivers is None or not receivers):
         NotFoundError.r('List of receiver is not found')
     for receiver in receivers:
         score = compute(donor.person, receiver.person, receiver)
