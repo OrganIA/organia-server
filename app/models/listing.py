@@ -4,12 +4,14 @@ from sqlalchemy import orm
 
 from app import db
 from app.helpers.enums import EnumStr
+from datetime import datetime
 
 
 class Listing(db.DurationMixin, db.Base):
     class Organ(EnumStr):
         HEART = enum.auto()
         KIDNEY = enum.auto()
+        LIVER = enum.auto()
         LUNG = enum.auto()
 
     person_id = sa.Column(sa.ForeignKey('persons.id'))
