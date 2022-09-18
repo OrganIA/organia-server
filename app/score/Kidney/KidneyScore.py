@@ -1,6 +1,7 @@
 import math
 from app.models import Person, Listing
 from app.distance import get_distance
+from app import db
 from app.score.Kidney.HLA_Age import (
     getABScore,
     getAgeBonus,
@@ -10,15 +11,17 @@ from app.score.Kidney.HLA_Age import (
     getFagScore
 )
 from app.score.Kidney.DialyseScores import getScore, getWaitingScore
+from app.errors import NotFoundError
+from app.models import Kidney, Listing
 
 
-def getHAge(receiver, receiver_listing):
-    return 100 * getScore(receiver_listing) \
+def getHAge(receiver, receiver_listing, listing_kidney):
+    return 100 * getScore(receiver_listing, listing_kidney) \
         + 200 * getWaitingScore(receiver_listing) \
-        + (100 * getABScore(receiver_listing) \
-        + 400 * getDRScore(receiver_listing) \
-        + 100 * getDQScore(receiver_listing) \
-        + 150 * getFagScore()) * getAgeMalus(receiver) \
+        + (100 * getABScore(receiver_listing)
+           + 400 * getDRScore(receiver_listing)
+           + 100 * getDQScore(receiver_listing)
+           + 150 * getFagScore()) * getAgeMalus(receiver) \
         + 750 * getAgeBonus(receiver)
 
 
@@ -34,8 +37,8 @@ def getDifferentialAge(receiver, donor):
     return 1 / (math.exp(pow(0.02 * age, 0.85)))
 
 
-def getScoreHD(receiver, donor, receiver_listing):
-    HAge = getHAge(receiver, receiver_listing)
+def getScoreHD(receiver, donor, receiver_listing, listing_kidney):
+    HAge = getHAge(receiver, receiver_listing, listing_kidney)
     FAge = getDifferentialAge(receiver, donor)
     if receiver.age > donor.age + 20:
         check = 0
@@ -50,6 +53,11 @@ def getScoreMG(hospital_1, hospital_2):
 
 
 def getScoreNAP(receiver, donor, receiver_listing):
-    ScoreHD = getScoreHD(receiver, donor, receiver_listing)
+    listing_kidney = db.session.query(Kidney).filter_by(
+        listing_id=receiver_listing.id).first()
+    if not listing_kidney:
+        raise NotFoundError("No listing found in kidneys table")
+
+    ScoreHD = getScoreHD(receiver, donor, receiver_listing, listing_kidney)
     MGScore = getScoreMG("MARSEILLE", "PARIS")
     return ScoreHD * MGScore

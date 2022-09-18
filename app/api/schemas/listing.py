@@ -16,13 +16,6 @@ class ListingSchema(db.Schema):
     tumors_number: Optional[int]
     biggest_tumor_size: Optional[int]
     alpha_fetoprotein: Optional[int]
-    isDialyse: bool
-    isRetransplantation: bool
-    startDateDialyse: Optional[date]
-    EndDateDialyse: Optional[date]
-    ARFDate: Optional[date]
-    DateTransplantation: Optional[date]
-    ReRegistrationDate: Optional[date]
     A: Optional[int]
     B: Optional[int]
     DR: Optional[int]
