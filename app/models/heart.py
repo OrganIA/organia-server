@@ -14,15 +14,11 @@ from datetime import datetime
 
 
 class HeartScore(db.TimedMixin, db.Base):
-    class MAL(enum.Enum):
-        MAL_CORO = "Maladie Coronarienne"
-        CMNO_IDIO = "Cmno idiopathique"
-
-    class URGENCE(enum.StrEnum):
-        XPCA = "XPCA"
-        XPCP1 = "XPCP1"
-        XPCP2 = "XPCP2"
-        NA = "NA"
+    class URGENCE(EnumStr):
+        XPCA = enum.auto()
+        XPCP1 = enum.auto()
+        XPCP2 = enum.auto()
+        NA = enum.auto()
 
     listing_id = sa.Column(sa.ForeignKey('listings.id'))
     score = sa.Column(sa.Float, nullable=True, default=0)
@@ -30,9 +26,6 @@ class HeartScore(db.TimedMixin, db.Base):
     D_INSC = sa.Column(sa.Date, nullable=True)
     tailler = sa.Column(sa.Float, nullable=True)
     poidsr = sa.Column(sa.Float, nullable=True)
-    MAL = sa.Column(sa.Enum(MAL), nullable=True)
-    MAL2 = sa.Column(sa.Enum(MAL), nullable=True)
-    MAL3 = sa.Column(sa.Enum(MAL), nullable=True)
     urgence = sa.Column(sa.Enum(URGENCE), nullable=True)
     d_urgence = sa.Column(sa.Date, nullable=True)
     KXPC = sa.Column(sa.String, nullable=True)

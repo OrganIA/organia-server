@@ -3,7 +3,7 @@ from typing import List
 
 from app import db
 from app.errors import NotFoundError, InvalidRequest
-from app.models import Heart, Listing
+from app.models import HeartScore, Listing
 from app.api.schemas.heart import (
     HeartSchema, HeartCreateSchema, HeartUpdateScore
 )
@@ -13,7 +13,7 @@ router = APIRouter(prefix='/heart')
 
 @router.get('/{listing_id}', response_model=HeartSchema)
 async def get_heart(listing_id: int):
-    query = db.session.query(Heart).filter_by(listing_id=listing_id).first()
+    query = db.session.query(HeartScore).filter_by(listing_id=listing_id).first()
     return query
 
 
@@ -22,14 +22,14 @@ async def update_heart_variables(listing_id: int, data: HeartCreateSchema):
     listing = db.session.query(Listing).filter_by(id=listing_id).first()
     if listing == None:
         raise NotFoundError('Listing not found')
-    listing_heart = db.session.query(Heart).filter_by(
+    listing_heart = db.session.query(HeartScore).filter_by(
         listing_id=listing_id).first()
     if listing_heart != None:
         raise InvalidRequest('A listing with this id already exists')
 
     data.listing_id = listing_id
     data = data.dict(exclude_unset=True)
-    heart = db.add(Heart, data)
+    heart = db.add(HeartScore, data)
     return heart
 
 
