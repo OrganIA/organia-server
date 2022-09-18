@@ -12,3 +12,5 @@ geocoder
 passlib[bcrypt]
 
 autopep8
+
+numpy
