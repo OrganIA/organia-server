@@ -4,12 +4,14 @@ from sqlalchemy import orm
 
 from app import db
 from app.helpers.enums import EnumStr
+from datetime import datetime
 
 
 class Listing(db.DurationMixin, db.Base):
     class Organ(EnumStr):
         HEART = enum.auto()
         KIDNEY = enum.auto()
+        LIVER = enum.auto()
         LUNG = enum.auto()
 
     person_id = sa.Column(sa.ForeignKey('persons.id'))
@@ -20,13 +22,7 @@ class Listing(db.DurationMixin, db.Base):
     biggest_tumor_size = sa.Column(sa.Integer, nullable=True)
     alpha_fetoprotein = sa.Column(sa.Integer, nullable=True)
     organ = sa.Column(sa.Enum(Organ))
-    isDialyse = sa.Column(sa.Boolean, default=False, nullable=True)
-    isRetransplantation = sa.Column(sa.Boolean, default=False, nullable=True)
-    startDateDialyse = sa.Column(sa.Date, nullable=True)
-    EndDateDialyse = sa.Column(sa.Date, nullable=True)
-    ARFDate = sa.Column(sa.Date, nullable=True)
-    DateTransplantation = sa.Column(sa.Date, nullable=True)
-    ReRegistrationDate = sa.Column(sa.Date, nullable=True)
+
     A = sa.Column(sa.Integer, default=0, nullable=True)
     B = sa.Column(sa.Integer, default=0, nullable=True)
     DR = sa.Column(sa.Integer, default=0, nullable=True)
@@ -37,9 +33,9 @@ class Listing(db.DurationMixin, db.Base):
 
     @property
     def alpha_fetoprotein_score(self):
-        if (self.tumors_number == 0 \
-        or self.biggest_tumor_size is None \
-        or self.alpha_fetoprotein is None):
+        if (self.tumors_number == 0
+            or self.biggest_tumor_size is None
+                or self.alpha_fetoprotein is None):
             return 0
         alpha_fetoprotein_score = 0
         if (self.tumors_number >= 4):
