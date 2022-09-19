@@ -41,7 +41,7 @@ async def update_livers_score(listing_id: int, score: LiverUpdateScore):
     db.session.commit()
     return liver
 
-router.get('/{listing_id}/score_del', status_code=201)
+router.delete('/{listing_id}/score_del', status_code=201)
 async def delete_livers_score(listing_id: int):
     listing = db.session.query(Listing).filter_by(id=listing_id).first()
     if listing == None:
