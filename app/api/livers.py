@@ -14,6 +14,8 @@ router = APIRouter(prefix='/livers')
 @router.get('/{listing_id}', response_model=LiverSchema)
 async def get_livers(listing_id: int):
     query = db.session.query(Liver).filter_by(listing_id=listing_id).first()
+    if not query:
+        raise NotFoundError('No Listing found')
     return query
 
 @router.post('/{listing_id}', status_code=201, response_model=LiverSchema)

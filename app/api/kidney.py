@@ -14,6 +14,8 @@ router = APIRouter(prefix='/kidneys')
 @router.get('/{listing_id}', response_model=KidneySchema)
 async def get_kidneys(listing_id: int):
     query = db.session.query(Kidney).filter_by(listing_id=listing_id).first()
+    if not query:
+        raise NotFoundError('No Listing found')
     return query
 
 

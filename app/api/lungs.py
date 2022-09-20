@@ -14,6 +14,8 @@ router = APIRouter(prefix='/lungs')
 @router.get('/{listing_id}', response_model=LungSchema)
 async def get_lungs(listing_id: int):
     query = db.session.query(Lung).filter_by(listing_id=listing_id).first()
+    if not query:
+        raise NotFoundError('No Listing found')
     return query
 
 
