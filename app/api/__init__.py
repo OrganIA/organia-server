@@ -6,7 +6,7 @@ from fastapi import APIRouter
 PREFIX = '/api'
 
 ROUTERS = [
-    'action_logs', 'auth', 'calendar', 'heart', 'hospitals', 'info', 'listings',
+    'action_logs', 'auth', 'calendar', 'heart', 'hospitals', 'info', 'listings', 'livers',
     'messages', 'messages_websockets', 'persons', 'roles', 'score', 'users', 'lungs', 'kidney', 'organs'
 ]
 
