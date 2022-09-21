@@ -1,6 +1,4 @@
 from datetime import date
-from optparse import Option
-from tokenize import String
 from typing import Optional
 from app import db
 from app.models import heart

@@ -1,14 +1,12 @@
 from datetime import date
-from optparse import Option
-from tokenize import String
 from typing import Optional
 from app import db
-from app.models import kidney
+from app.models import Kidney
 
 
-class KidneySchema(db.Schema):
+class KidneySchema(Kidney.Schema):
     listing_id: Optional[int]
-    
+
     isDialyse: Optional[bool]
     isRetransplantation: Optional[bool]
     startDateDialyse: Optional[date]
@@ -16,14 +14,14 @@ class KidneySchema(db.Schema):
     ARFDate: Optional[date]
     DateTransplantation: Optional[date]
     ReRegistrationDate: Optional[date]
-    
+
     score: Optional[int]
-    
+
     class Config:
         orm_mode = True
-        
+
 class KidneyUpdateScore(db.Schema):
     score: float
-    
+
     class Config:
         orm_mode = True

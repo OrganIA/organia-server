@@ -1,7 +1,6 @@
 from typing import List
 
 from app import db
-from app.api.schemas.user import UserSchema
 from typing import Optional
 
 

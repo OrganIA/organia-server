@@ -1,5 +1,4 @@
 import sqlalchemy as sa
-from sqlalchemy.sql.expression import null
 
 from app import db
 

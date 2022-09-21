@@ -1,13 +1,9 @@
-from datetime import date
-from optparse import Option
-from tokenize import String
 from typing import Optional
 from app import db
-from app.models import lung
 
-class LungSchema(db.Schema):
+class LungSchema(db.TimedMixin.Schema):
     listing_id: Optional[int]
-    
+
     diagnosis_group: Optional[str]
     detailed_diagnosis: Optional[str]
 
@@ -26,7 +22,7 @@ class LungSchema(db.Schema):
     creatinine_at_transplant: Optional[float]
     ADL_required: Optional[bool]
     PCW_over_20_mmHg: Optional[bool]
-    
+
     score: Optional[int]
 
     class Config:
@@ -34,8 +30,9 @@ class LungSchema(db.Schema):
 
 
 class LungCreateSchema(LungSchema):
+    id: Optional[int]
     listing_id: Optional[int]
-    
+
     diagnosis_group: Optional[str]
     detailed_diagnosis: Optional[str]
 
@@ -54,7 +51,7 @@ class LungCreateSchema(LungSchema):
     creatinine_at_transplant: Optional[float]
     ADL_required: Optional[bool]
     PCW_over_20_mmHg: Optional[bool]
-    
+
     score: Optional[int]
 
     class Config:

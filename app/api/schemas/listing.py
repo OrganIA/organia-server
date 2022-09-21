@@ -1,5 +1,4 @@
 from datetime import date
-from optparse import Option
 from typing import Optional
 from app import db
 from app.models import Listing
@@ -58,5 +57,5 @@ class ListingCreateSchema(ListingSchema):
     person_id: int
 
 
-class ListingGetSchema(ListingSchema):
+class ListingGetSchema(ListingSchema, Listing.Schema):
     person: PersonGetSchema
