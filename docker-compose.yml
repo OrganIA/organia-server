@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 
 services:
   backend:
@@ -8,6 +8,7 @@ services:
       context: .
     volumes:
       - ./app:/app/app:z
+      - ./tests:/app/tests:z
       - ./alembic:/app/alembic:z
       - ./app.db:/app/app.db:z
       - ./scripts:/app/scripts:z

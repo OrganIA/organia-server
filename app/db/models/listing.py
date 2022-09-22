@@ -1,4 +1,5 @@
 import enum
+
 import sqlalchemy as sa
 from sqlalchemy import orm
 
@@ -37,19 +38,21 @@ class Listing(db.DurationMixin, db.Base):
 
     @property
     def alpha_fetoprotein_score(self):
-        if (self.tumors_number == 0 \
-        or self.biggest_tumor_size is None \
-        or self.alpha_fetoprotein is None):
+        if (
+            self.tumors_number == 0
+            or self.biggest_tumor_size is None
+            or self.alpha_fetoprotein is None
+        ):
             return 0
         alpha_fetoprotein_score = 0
-        if (self.tumors_number >= 4):
+        if self.tumors_number >= 4:
             alpha_fetoprotein_score += 2
-        if (self.biggest_tumor_size > 3 and self.biggest_tumor_size <= 6):
+        if self.biggest_tumor_size > 3 and self.biggest_tumor_size <= 6:
             alpha_fetoprotein_score += 1
-        elif (self.biggest_tumor_size > 6):
+        elif self.biggest_tumor_size > 6:
             alpha_fetoprotein_score += 4
-        if (self.alpha_fetoprotein > 100 and self.alpha_fetoprotein <= 1000):
+        if self.alpha_fetoprotein > 100 and self.alpha_fetoprotein <= 1000:
             alpha_fetoprotein_score += 2
-        elif (self.alpha_fetoprotein > 1000):
+        elif self.alpha_fetoprotein > 1000:
             alpha_fetoprotein_score += 3
         return alpha_fetoprotein_score

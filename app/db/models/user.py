@@ -1,6 +1,6 @@
-from werkzeug import security
 import sqlalchemy as sa
 from sqlalchemy import orm
+from werkzeug import security
 
 from app import db
 from app.errors import AlreadyTakenError, PasswordMismatchError
@@ -8,6 +8,7 @@ from app.errors import AlreadyTakenError, PasswordMismatchError
 
 def get_default_role_id():
     from .role import Role
+
     return Role.default.id
 
 
@@ -16,7 +17,9 @@ class User(db.TimedMixin, db.Base):
 
     email = sa.Column(sa.String, nullable=False, unique=True)
     password = sa.Column(sa.String)
-    role_id = sa.Column(sa.ForeignKey('roles.id'), nullable=False, default=get_default_role_id)
+    role_id = sa.Column(
+        sa.ForeignKey('roles.id'), nullable=False, default=get_default_role_id
+    )
 
     role = orm.relationship('Role', back_populates='users')
     person = orm.relationship('Person', uselist=False, back_populates='user')
@@ -24,14 +27,18 @@ class User(db.TimedMixin, db.Base):
     groups = orm.relationship('ChatGroup', back_populates='user')
 
     def __init__(self, **kwargs):
-        if (password := kwargs.pop('password', None)):
+        if password := kwargs.pop('password', None):
             self.save_password(password)
+        if 'role' not in kwargs and 'role_id' not in kwargs:
+            kwargs['role_id'] = get_default_role_id()
+        print(kwargs)
         super().__init__(**kwargs)
 
     @classmethod
     @property
     def admin(cls):
         from .role import Role
+
         user = db.get_or_create(cls, email='admin@localhost')
         if db.Action.created:
             user.role = Role.admin
@@ -41,7 +48,9 @@ class User(db.TimedMixin, db.Base):
     @classmethod
     def check_email(cls, value, obj=None):
         AlreadyTakenError.check(
-            cls, 'email', value,
+            cls,
+            'email',
+            value,
             filters=cls.id != obj.id if obj else None,
         )
         return value

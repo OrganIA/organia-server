@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+
 import sqlalchemy as sa
 from sqlalchemy import orm
 
@@ -37,7 +38,9 @@ class LoginToken(db.TimedMixin, db.Base):
         try:
             id = int(id)
         except ValueError as e:
-            raise InvalidAuthToken('Malformed token, ID field is corrupted') from e
+            raise InvalidAuthToken(
+                'Malformed token, ID field is corrupted'
+            ) from e
         result = db.session.get(cls, id)
         if not result:
             raise InvalidAuthToken('No token exist for this token ID')
@@ -74,11 +77,15 @@ class LoginToken(db.TimedMixin, db.Base):
         if clean:
             cls.clean()
         result = None
-        if reuse:
-            result = db.session.query(cls).filter(
-                (cls.user == user)
-                & (cls.created_at >= cls.get_expiration_date())
-            ).first()
+        if reuse and user.id:
+            result = (
+                db.session.query(cls)
+                .filter(
+                    (cls.user == user)
+                    & (cls.created_at >= cls.get_expiration_date())
+                )
+                .first()
+            )
             if result and refresh:
                 result.refresh()
         if not result:

@@ -1,16 +1,18 @@
+# easy http calls
 requests
 
+# db
 sqlalchemy
 alembic
 
+# api app
 flask
 flask-cors
-
-pyyaml
-
-geopy
-geocoder
-
 passlib[bcrypt]
 
-autopep8
+# yaml support for config files etc
+pyyaml
+
+# getting long/lat from addresses for hospitals etc
+geopy
+geocoder

@@ -25,10 +25,11 @@ class Base:
             if column.name != 'id'
         ]
         return '<{header}: {body}>'.format(
-            header=' '.join(header),
-            body=', '.join(body)
+            header=' '.join(header), body=', '.join(body)
         )
 
     def dict(self):
-        keys = self._KEYS or [c.key for c in sa.inspect(self).mapper.column_attrs]
+        keys = self._KEYS or [
+            c.key for c in sa.inspect(self).mapper.column_attrs
+        ]
         return {k: getattr(self, k) for k in keys}

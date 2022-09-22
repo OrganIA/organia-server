@@ -1,6 +1,10 @@
-from datetime import datetime
+import builtins
 import inspect
 import typing
+from datetime import datetime
+
+from app import errors
+
 
 class Static:
     """
@@ -19,25 +23,33 @@ class Static:
     address.zipcode == '12345'
     AddressModel.dict(some_dict) -> {'id': 1982, 'zipcode': '12345'}
     """
+
     __AUTO_STR__ = True
     __ERROR_ON_UNFOUND__ = True
+    __CUSTOM_UNFOUND_RAISE__ = errors.schema_key_unfound
 
     @classmethod
-    def _get(cls, d: dict, key):
+    def _get(cls, d: builtins.dict, key):
         if cls.__ERROR_ON_UNFOUND__:
-            return d[key]
+            if cls.__CUSTOM_UNFOUND_RAISE__:
+                if key not in d:
+                    cls.__CUSTOM_UNFOUND_RAISE__(key)
+            else:
+                return d[key]
         return d.get(key)
 
     @staticmethod
     def exists(x):
-        return x != None
+        return x is not None
 
     @staticmethod
     def true(x):
         return bool(x)
 
     @classmethod
-    def getter(cls, key=None, type=None, cond=None, default='_none') -> typing.Callable:
+    def getter(
+        cls, key=None, type=None, cond=None, default='_none'
+    ) -> typing.Callable:
         def f(d: dict, _model_key=None):
             _key = key or _model_key
             value = cls._get(d, _key)
@@ -46,12 +58,14 @@ class Static:
             elif default != '_none':
                 value = default
             return value
+
         return f
 
     @staticmethod
     def const(value):
         def f(_d: dict):
             return value
+
         return f
 
     @classmethod
@@ -63,10 +77,11 @@ class Static:
             if lower:
                 x = x.lower()
             return x
+
         return cls.getter(key=key, type=f)
 
     @classmethod
-    def dict(cls, d: dict) -> dict:
+    def dict(cls, d: builtins.dict) -> builtins.dict:
         result = {}
         parents_keys = set()
         for parent in cls.mro()[1:-1]:
@@ -96,11 +111,9 @@ class Static:
 
     def __repr__(self):
         name = self.__class__.__name__
-        attrs = ', '.join([
-            f'{key}={value}'
-            for key, value
-            in self.dict.items()
-        ])
+        attrs = ', '.join(
+            [f'{key}={value}' for key, value in self.dict.items()]
+        )
         return f'<{name} {attrs}>'
 
     class Timed:

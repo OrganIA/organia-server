@@ -1,23 +1,45 @@
-#!/bin/sh
+#!/bin/bash
 
 [ -d .venv ] && source .venv/bin/activate
 
 code=0
+
+export PYTHONPATH=.
 
 
 pip install pytest pytest-cov requests >/dev/null
 echo
 echo Running pytest
 echo
-DB_URL='sqlite://' pytest app/tests --cov=app --cov-fail-under=90 || code=1
+DB_URL='sqlite://' pytest tests --cov=app --cov-fail-under=90
+last=$?
+
+echo -n "Unit tests + coverage: "
+if [ $last == 0 ]; then
+	echo OK
+else
+	code=1
+	echo FAIL
+fi
 
 
 pip install flake8 >/dev/null
 echo
 echo Running flake8
 echo
-flake8 --statistics --show-source app || code=1
+flake8 --statistics --show-source app
+last=$?
+
+echo -n "Coding style: "
+if [ $last == 0 ]; then
+	echo OK
+else
+	code=1
+	echo FAIL
+fi
 
 
+echo
+echo
 echo Exit status $code
 exit $code

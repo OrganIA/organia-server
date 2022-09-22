@@ -1,4 +1,5 @@
 import enum
+
 import sqlalchemy as sa
 from sqlalchemy import orm
 
@@ -23,7 +24,7 @@ class ActionLog(db.CreatedMixin, db.Base):
 
     def __str__(self):
         return (
-            f'Action "{self.action.value}"'
+            f'Action "{self.action}"'
             f' for {self.target_type}#{self.target_id}:'
             f' "{self.message}" (props {self.properties}) '
             f' by {self.author}'

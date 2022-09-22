@@ -2,6 +2,7 @@ import logging
 from typing import Type, Union
 
 from app import errors
+
 from . import session
 
 
@@ -9,6 +10,7 @@ def log(
     action, obj, message=None, author=None, properties=None, session=session
 ):
     from app.db.models.action_log import ActionLog
+
     log = ActionLog(
         action=action,
         target_type=type(obj).__name__,
@@ -30,12 +32,13 @@ def add(table, keys, message=None, author=None, session=session):
     obj = table(**keys)
     session.add(obj)
     session.flush()
-    log(
-        action='create',
-        obj=obj, properties=keys,
-        message=message,
-        author=author
-    )
+    # log(
+    #     action='create',
+    #     obj=obj,
+    #     properties=keys,
+    #     message=message,
+    #     author=author,
+    # )
     session.commit()
     return obj
 
@@ -67,8 +70,6 @@ def get_or_create(
     table: Type,
     keys: dict = None,
     filter_keys: list = None,
-    message=None,
-    author=None,
     session=session,
     action=Action,
     **extra_keys,
@@ -79,9 +80,7 @@ def get_or_create(
     search_keys = {k: keys[k] for k in filter_keys}
     result = session.query(table).filter_by(**search_keys).first()
     if not result:
-        result = add(
-            table, keys, message=message, author=author, session=session
-        )
+        result = add(table, keys, session=session)
         action.create()
     else:
         action.fetch()

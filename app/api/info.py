@@ -1,14 +1,19 @@
-import flask
-import subprocess
-import platform
-import os
 import logging
+import os
+import platform
+import subprocess
 from datetime import datetime
+
+import flask
 
 
 def get_git_version():
     try:
-        return subprocess.check_output('git describe --always'.split()).decode().strip()
+        return (
+            subprocess.check_output('git describe --always'.split())
+            .decode()
+            .strip()
+        )
     except Exception:
         logging.warning("Could not get version info from git", exc_info=True)
         return None

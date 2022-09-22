@@ -1,19 +1,21 @@
-from flask import g
 import sqlalchemy as sa
-from sqlalchemy import orm, MetaData
+from flask import g
+from sqlalchemy import MetaData, orm
 from werkzeug.local import LocalProxy
 
-from app import app, config
+from app import config
+
 from .base import Base as Base_
 
-
-meta = MetaData(naming_convention={
-    'ix': 'ix_%(column_0_label)s',
-    'uq': 'uq_%(table_name)s_%(column_0_name)s',
-    'ck': 'ck_%(table_name)s_%(column_0_name)s',
-    'fk': 'fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s',
-    'pk': 'pk_%(table_name)s'
-})
+meta = MetaData(
+    naming_convention={
+        'ix': 'ix_%(column_0_label)s',
+        'uq': 'uq_%(table_name)s_%(column_0_name)s',
+        'ck': 'ck_%(table_name)s_%(column_0_name)s',
+        'fk': 'fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s',
+        'pk': 'pk_%(table_name)s',
+    }
+)
 
 
 Base: Base_ = orm.declarative_base(cls=Base_, metadata=meta)
@@ -23,19 +25,20 @@ engine = None
 Session = None
 
 
-def setup_db(url=None):
+def setup_db(url=None, create_tables=False):
     global engine, Session
     url = url or config.DB_URL
-    engine = sa.create_engine(url, echo=config.LOG_SQL, connect_args={'check_same_thread': False})
-    Session = orm.sessionmaker(bind=engine, autoflush=False)
+    engine = sa.create_engine(
+        url, echo=config.LOG_SQL, connect_args={'check_same_thread': False}
+    )
+    Session = orm.sessionmaker(bind=engine)
 
-
-setup_db()
+    if create_tables:
+        Base.metadata.create_all(engine)
 
 
 def get_session():
-    if 'db' not in g:
-        g.db = Session()
+    g.db = Session()
     return g.db
 
 
@@ -48,17 +51,18 @@ def _close_session():
         g.db = None
 
 
-@app.before_request
-def setup_connection():
+def before_request():
     _close_session()
     g.db = Session()
 
 
-@app.after_request
-def close_connection(response):
+def after_request(response):
     _close_session()
     return response
 
 
-from .actions import add, commit, delete, edit, get, get_or_create, log, Action
-from .mixins import CreatedMixin, DurationMixin, IdMixin, TimedMixin
+from .actions import get_or_create as get_or_create
+from .mixins import CreatedMixin as CreatedMixin
+from .mixins import DurationMixin as DurationMixin
+from .mixins import IdMixin as IdMixin
+from .mixins import TimedMixin as TimedMixin

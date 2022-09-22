@@ -1,12 +1,14 @@
-import flask
-from flask_cors import CORS
 import functools
 import inspect
 import json
-from sqlalchemy import orm
 import typing
+from pathlib import Path
 
-from app import config
+import flask
+from flask_cors import CORS
+from sqlalchemy import orm
+
+from app import config, db
 
 
 def permissive_json(x):
@@ -25,7 +27,7 @@ def permissive_json(x):
 
 class App(flask.Flask):
     """
-    Subclass of Flask with out settings pre-applied, such as CORS and loading
+    Subclass of Flask with our settings pre-applied, such as CORS and loading
     our config file.
 
     It is also customized to automatically convert all responses to JSON, and
@@ -57,6 +59,7 @@ class App(flask.Flask):
         super().__init__(__name__.split('.')[0])
         CORS(self)
         config.load_file()
+        db.setup_db()
 
     def make_response(self, rv):
         code = None
@@ -75,14 +78,22 @@ class App(flask.Flask):
             )
         return super().make_response(rv)
 
-    def add_url_rule(self, rule, endpoint=None, view_func=None, provide_automatic_options=None, **options):
+    def add_url_rule(
+        self,
+        rule,
+        endpoint=None,
+        view_func=None,
+        provide_automatic_options=None,
+        **options,
+    ):
         view_func = self.inject(
             type=options.pop('inject_type', None),
             arg=options.pop('inject_arg', 'data'),
         )(view_func)
         view_func = self.success(options.pop('success', None))(view_func)
-        return super().add_url_rule(rule, endpoint, view_func, provide_automatic_options, **options)
-
+        return super().add_url_rule(
+            rule, endpoint, view_func, provide_automatic_options, **options
+        )
 
     @classmethod
     def inject(cls, type: typing.Callable = None, arg='data'):
@@ -92,6 +103,7 @@ class App(flask.Flask):
         :param type: Conversion to apply to the received data
         :param arg: Parameter name to use to pass the data to the view
         """
+
         def decorator(func):
             @functools.wraps(func)
             def wrapper(*args, **kwargs):
@@ -108,15 +120,18 @@ class App(flask.Flask):
                         data = coerce(data)
                     kwargs[arg] = data
                 return func(*args, **kwargs)
+
             return wrapper
+
         return decorator
 
     @classmethod
     def success(cls, code: int):
         """
-        If the decoted view does not return a tuple, change the return value to
-        a tuple with [1] being :param code:
+        If the decorated view does not return a tuple, change the return value
+        to a tuple with [1] being :param code:
         """
+
         def decorator(func):
             @functools.wraps(func)
             def wrapper(*args, **kwargs):
@@ -124,5 +139,23 @@ class App(flask.Flask):
                 if not isinstance(result, tuple):
                     result = result, code
                 return result
+
             return wrapper
+
         return decorator
+
+
+class TestApp(App):
+    TEMP_DB_PATH = './test_db.db'
+
+    def __init__(self):
+        config.DISCORD_LOGS = None
+        config.LOG_SQL = False
+        config.SENDGRID_API_KEY = None
+        file = Path(self.TEMP_DB_PATH)
+        if file.exists():
+            file.unlink()
+        config.DB_URL = 'sqlite:///./test_db.db'
+        flask.Flask.__init__(self, 'test')
+        self.config['TESTING'] = True
+        db.setup_db(create_tables=True)

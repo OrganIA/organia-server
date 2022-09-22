@@ -1,5 +1,6 @@
-from datetime import datetime
 import enum
+from datetime import datetime
+
 import sqlalchemy as sa
 from sqlalchemy import orm
 
@@ -17,7 +18,7 @@ class Person(db.TimedMixin, db.Base):
         A = enum.auto()
         B = enum.auto()
         AB = enum.auto()
-        O = enum.auto()
+        O = enum.auto()  # noqa
 
     class Rhesus(enum.Enum):
         POSITIVE = '+'
@@ -44,6 +45,9 @@ class Person(db.TimedMixin, db.Base):
     @property
     def age(self):
         now = datetime.utcnow().date()
-        age = now.year - self.birthday.year - \
-            ((now.month, now.day) < (self.birthday.month, self.birthday.day))
+        age = (
+            now.year
+            - self.birthday.year
+            - ((now.month, now.day) < (self.birthday.month, self.birthday.day))
+        )
         return age

@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+
 import yaml
 
 PATH = Path('./config.yaml')
@@ -24,6 +25,8 @@ def _get_bool(key, default=None):
 
 # A cryptographically secured key will be generated if none is provided
 SECRET_KEY = os.environ.get('SECRET_KEY')
+
+PORT = _get_int('PORT', 8000)
 
 LOGIN_EXPIRATION_DAYS = _get_int('LOGIN_EXPIRATION_DAYS', 30)
 

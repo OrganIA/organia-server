@@ -1,0 +1,41 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Setup venv",
+      "type": "shell",
+      "command": "python -m venv .venv",
+      "windows": {
+        "command": "python -m venv venv"
+      },
+      "options": {
+        "statusbar": {
+          "hide": true
+        }
+      }
+    },
+    {
+      "label": "Setup formatters",
+      "type": "shell",
+      "dependsOn": ["Setup venv"],
+      "command": "./.venv/bin/pip install 'docformatter[tomli]' black autoflake",
+      "windows": {
+        "command": ".\\venv\\Scripts\\pip install docformatter[tomli] black autoflake"
+      }
+    },
+    {
+      "label": "Run app",
+      "command": "${workspaceFolder}/scripts/run.sh",
+      "windows": {
+        "command": "${workspaceFolder}/scripts/run.ps1"
+      },
+      "dependsOn": ["Setup venv"]
+    },
+    {
+      "label": "Run app (docker)",
+      "command": "${workspaceFolder}/scripts/compose.sh"
+    }
+  ]
+}

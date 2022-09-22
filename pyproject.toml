@@ -1,0 +1,6 @@
+[tool.autoflake]
+check = true
+
+[tool.black]
+line-length = 80
+skip-string-normalization = true

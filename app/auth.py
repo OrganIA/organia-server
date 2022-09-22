@@ -1,6 +1,7 @@
-import inspect
-import flask
 import functools
+import inspect
+
+import flask
 
 from app import config
 from app.db.models import LoginToken, User
@@ -18,7 +19,8 @@ def _check(**permissions):
         raise InvalidAuthToken(
             f"Malformed token, does not start with prefix \"{PREFIX}\""
         )
-    token = auth[len(PREFIX):]
+
+    token = auth[len(PREFIX) :]
     user = LoginToken.get_from_token(token).user
     for permission, value in permissions.items():
         if not value:
@@ -53,6 +55,7 @@ def check(**permissions):
         print(f"{auth_user} just accessed the admin page!")
     ```
     """
+
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
@@ -61,5 +64,7 @@ def check(**permissions):
             if 'auth_user' in sig.parameters:
                 kwargs.setdefault('auth_user', user)
             return func(*args, **kwargs)
+
         return wrapper
+
     return decorator

@@ -1,8 +1,6 @@
-from app import app
 from werkzeug.exceptions import HTTPException
 
 
-@app.errorhandler(HTTPException)
 def error_handler_http(e: HTTPException):
     return {
         'msg': e.description,
@@ -12,6 +10,10 @@ def error_handler_http(e: HTTPException):
 # @app.errorhandler(Exception)
 # def error_handler(e: Exception):
 #     return error_handler_http(HTTPException(str(e), code=500))
+
+
+def schema_key_unfound(key):
+    raise InvalidRequest(f'Missing required key "{key}"')
 
 
 class HTTPException(HTTPException):
@@ -49,9 +51,7 @@ class InvalidAuthToken(Unauthorized):
 
 class AlreadyTakenError(HTTPException):
     def __init__(self, key, value):
-        super().__init__(
-            code=422, detail=f'{key} "{value}" is already taken.'
-        )
+        super().__init__(code=422, detail=f'{key} "{value}" is already taken.')
 
     @classmethod
     def check(cls, model, column, value, filters=None):
@@ -62,6 +62,7 @@ class AlreadyTakenError(HTTPException):
         error accordingly if it will, otherwise do nothing
         """
         from app import db
+
         query = db.session.query(model)
         if filters:
             query = query.filter(filters)

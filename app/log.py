@@ -1,8 +1,9 @@
-import flask
-import requests
 from multiprocessing import Process
 
-from app import config, app
+import flask
+import requests
+
+from app import config
 
 
 def post(*args, url=None):
@@ -10,12 +11,13 @@ def post(*args, url=None):
     url = url or config.DISCORD_LOGS
     if not url:
         return
+
     def f():
         requests.post(url, data={'content': msg})
+
     Process(target=f, daemon=True).start()
 
 
-@app.before_request
 def log_request():
     msg = (
         f'{flask.request.method} {flask.request.full_path}'

@@ -14,4 +14,5 @@ else
 fi
 
 alembic upgrade head
-uvicorn app.main:app $reload_opts --host 0.0.0.0 --port ${1:-8000}
+export PORT=${1:-8000}
+FLASK_RUN_PORT=$PORT flask run

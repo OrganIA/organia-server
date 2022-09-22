@@ -1,0 +1,31 @@
+{
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "source.organizeImports": true
+  },
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "match": "\\.py$",
+        "cmd": "./.venv/bin/autoflake --in-place ${file}"
+      },
+      {
+        "match": "\\.py$",
+        "cmd": ".\\venv\\Scripts\\autoflake --in-place ${file}"
+      }
+    ]
+  },
+  "python.formatting.provider": "black",
+  "python.analysis.diagnosticMode": "workspace",
+  "python.linting.flake8Enabled": true,
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportUndefinedVariable": "error",
+    "reportUnusedImport": "error"
+  },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.python"
+  }
+  // "python.analysis.inlayHints.variableTypes": true,
+  // "python.analysis.inlayHints.functionReturnTypes": true,
+}
