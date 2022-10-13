@@ -4,7 +4,7 @@ from werkzeug import security
 
 from app import db
 from app.db.mixins import TimedMixin
-from app.errors import AlreadyTakenError, InvalidRequest
+from app.errors import AlreadyTakenError, InvalidRequest, PasswordMismatchError
 
 
 class User(TimedMixin, db.Base):
