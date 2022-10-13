@@ -7,31 +7,49 @@ from app import db
 from app.utils.enums import EnumStr
 
 
-class Listing(db.DurationMixin, db.Base):
+class Listing(db.Base):
+    class Type(EnumStr):
+        DONOR = enum.auto()
+        PATIENT = enum.auto()
+
     class Organ(EnumStr):
         HEART = enum.auto()
         KIDNEY = enum.auto()
         LUNG = enum.auto()
 
-    person_id = sa.Column(sa.ForeignKey('persons.id'))
+    # fields
+
     notes = sa.Column(sa.String)
-    hospital_id = sa.Column(sa.ForeignKey('hospitals.id'))
-    donor = sa.Column(sa.Boolean, default=False, nullable=False)
+    type = sa.Column(sa.Enum(Type))
+    organ = sa.Column(sa.Enum(Organ))
+
+    # algo fields
+
     tumors_number = sa.Column(sa.Integer, default=0, nullable=False)
     biggest_tumor_size = sa.Column(sa.Integer, nullable=True)
     alpha_fetoprotein = sa.Column(sa.Integer, nullable=True)
-    organ = sa.Column(sa.Enum(Organ))
-    isDialyse = sa.Column(sa.Boolean, default=False, nullable=True)
-    isRetransplantation = sa.Column(sa.Boolean, default=False, nullable=True)
-    startDateDialyse = sa.Column(sa.Date, nullable=True)
-    EndDateDialyse = sa.Column(sa.Date, nullable=True)
-    ARFDate = sa.Column(sa.Date, nullable=True)
-    DateTransplantation = sa.Column(sa.Date, nullable=True)
-    ReRegistrationDate = sa.Column(sa.Date, nullable=True)
+    # specific to kidneys?
+    is_under_dialysis = sa.Column(sa.Boolean, default=False, nullable=True)
+    # can only have one dialysis report?
+    dialysis_start_date = sa.Column(sa.Date, nullable=True)
+    dialysis_end_date = sa.Column(sa.Date, nullable=True)
+    is_retransplantation = sa.Column(sa.Boolean, default=False, nullable=True)
+    # what does ARF mean?
+    arf_date = sa.Column(sa.Date, nullable=True)
+    # isn't this the same as end_date?
+    transplantation_date = sa.Column(sa.Date, nullable=True)
+    # isbn't this just having 2 listings?
+    re_registration_date = sa.Column(sa.Date, nullable=True)
+    # no idea what this is, should be more specific
     A = sa.Column(sa.Integer, default=0, nullable=True)
     B = sa.Column(sa.Integer, default=0, nullable=True)
     DR = sa.Column(sa.Integer, default=0, nullable=True)
     DQ = sa.Column(sa.Integer, default=0, nullable=True)
+
+    # relationships
+
+    person_id = sa.Column(sa.ForeignKey('persons.id'))
+    hospital_id = sa.Column(sa.ForeignKey('hospitals.id'))
 
     person = orm.relationship('Person', backref='listings')
     hospital = orm.relationship('Hospital', backref='listings')

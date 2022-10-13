@@ -1,14 +1,11 @@
 import flask
 
-from . import db, errors, log
-from .application import App, TestApp
+from . import db
+from .application import App
 
 
-def create_app(test=False):
-    if not test:
-        app = App()
-    else:
-        app = TestApp()
+def create_app():
+    app = App()
 
     @app.get('/')
     def root():
@@ -19,15 +16,10 @@ def create_app(test=False):
 
     app.register_blueprint(bp)
 
-    app.register_error_handler(errors.HTTPException, errors.error_handler_http)
+    app.teardown_appcontext(db.teardown)
 
-    app.before_request(log.log_request)
+    from .errors import register_error_handler
 
-    app.before_request(db.before_request)
-    app.after_request(db.after_request)
+    register_error_handler(app)
 
     return app
-
-
-from app.utils.bp import Blueprint as Blueprint
-from app.utils.static import Static as Static

@@ -1,24 +1,20 @@
 from datetime import datetime
+
 import sqlalchemy as sa
 from sqlalchemy import orm
 
 
 @orm.declarative_mixin
-class IdMixin:
-    id = sa.Column(sa.Integer, primary_key=True)
+class CreatedMixin:
+    """Adds a `created_at` column auto-filled with the creation time of the
+    row"""
 
-
-@orm.declarative_mixin
-class CreatedMixin(IdMixin):
     created_at = sa.Column(sa.DateTime, default=datetime.utcnow)
 
 
 @orm.declarative_mixin
 class TimedMixin(CreatedMixin):
+    """Adds a `updated_at` column auto-filled with the last update time of the
+    row, in addition to the `created_at` column"""
+
     updated_at = sa.Column(sa.DateTime, onupdate=datetime.utcnow)
-
-
-@orm.declarative_mixin
-class DurationMixin(IdMixin):
-    start_date = sa.Column(sa.Date)
-    end_date = sa.Column(sa.Date)

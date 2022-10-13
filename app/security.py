@@ -1,8 +1,7 @@
-from pathlib import Path
 import secrets
+from pathlib import Path
 
 from app import config
-
 
 SECRET_FILE = Path('./secret.key')
 

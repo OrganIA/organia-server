@@ -1,10 +1,10 @@
 import functools
 import inspect
 import json
-import typing
-from pathlib import Path
+import typing as t
 
 import flask
+from flask import Flask
 from flask_cors import CORS
 from sqlalchemy import orm
 
@@ -12,6 +12,9 @@ from app import config, db
 
 
 def permissive_json(x):
+    """Converts queries to list, dictable objects to dict, and functions to
+    their result"""
+
     if isinstance(x, orm.Query):
         return x.all()
     if hasattr(x, 'dict'):
@@ -25,7 +28,7 @@ def permissive_json(x):
     return x
 
 
-class App(flask.Flask):
+class App(Flask):
     """
     Subclass of Flask with our settings pre-applied, such as CORS and loading
     our config file.
@@ -59,24 +62,38 @@ class App(flask.Flask):
         super().__init__(__name__.split('.')[0])
         CORS(self)
         config.load_file()
-        db.setup_db()
+        self.config['JSONIFY_MIMETYPE'] = 'application/json'
+        db.init_db()
 
-    def make_response(self, rv):
+    def make_response(self, return_value):
+        """The method that converts the return value of a route to a response
+
+        We overload it to convert the return value to JSON if it's not already
+        a response object.
+
+        We also set the response code to 204 for empty responses.
+        """
+
         code = None
-        if isinstance(rv, tuple):
-            code = rv[1]
-            rv = rv[0]
-        if not isinstance(rv, (self.response_class, Exception)):
-            if rv is None:
+        if isinstance(return_value, tuple):
+            # We support returning a tuple of (data, status_code), like Flask
+            code = return_value[1]
+            return_value = return_value[0]
+            if return_value is None:
                 code = code or 204
-            else:
-                rv = json.dumps(rv, default=permissive_json, indent=2)
-            rv = self.response_class(
-                rv,
+        if not isinstance(return_value, (self.response_class, Exception)):
+            print('Overloading response')
+            if return_value:
+                return_value = json.dumps(
+                    return_value, default=permissive_json, indent=2
+                )
+            return_value = self.response_class(
+                return_value,
                 mimetype=self.config['JSONIFY_MIMETYPE'],
                 status=code,
             )
-        return super().make_response(rv)
+        print(flush=True)
+        return super().make_response(return_value)
 
     def add_url_rule(
         self,
@@ -86,6 +103,12 @@ class App(flask.Flask):
         provide_automatic_options=None,
         **options,
     ):
+        """The method that adds a route to the app
+
+        We overload it to automatically inject schemas into the route, and
+        set the response code.
+        """
+
         view_func = self.inject(
             type=options.pop('inject_type', None),
             arg=options.pop('inject_arg', 'data'),
@@ -96,7 +119,7 @@ class App(flask.Flask):
         )
 
     @classmethod
-    def inject(cls, type: typing.Callable = None, arg='data'):
+    def inject(cls, type: t.Callable = None, arg='data'):
         """
         Extract the JSON passed as the body to the route, and pass it as a
         parameter to the view
@@ -143,19 +166,3 @@ class App(flask.Flask):
             return wrapper
 
         return decorator
-
-
-class TestApp(App):
-    TEMP_DB_PATH = './test_db.db'
-
-    def __init__(self):
-        config.DISCORD_LOGS = None
-        config.LOG_SQL = False
-        config.SENDGRID_API_KEY = None
-        file = Path(self.TEMP_DB_PATH)
-        if file.exists():
-            file.unlink()
-        config.DB_URL = 'sqlite:///./test_db.db'
-        flask.Flask.__init__(self, 'test')
-        self.config['TESTING'] = True
-        db.setup_db(create_tables=True)

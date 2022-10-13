@@ -1,8 +1,10 @@
 from flask import Blueprint as Base
 
+from app import auth as auth_module
+
 
 class Blueprint(Base):
-    def __init__(self, module_name: str, prefix=True):
+    def __init__(self, module_name: str, prefix=True, auth=True, admin=False):
         name = module_name.replace('.', '_')
         if isinstance(prefix, str):
             prefix = prefix
@@ -11,3 +13,6 @@ class Blueprint(Base):
         else:
             prefix = None
         super().__init__(name, module_name, url_prefix=prefix)
+
+        if auth:
+            self.before_request(lambda: auth_module.check(admin=admin))

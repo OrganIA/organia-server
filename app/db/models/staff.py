@@ -4,7 +4,7 @@ from sqlalchemy import orm
 from app import db
 
 
-class Staff(db.IdMixin, db.Base):
+class Staff(db.Base):
     """Represents a medical staff"""
 
     __tablename__ = 'staff'

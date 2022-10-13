@@ -1,25 +1,8 @@
-from werkzeug.exceptions import HTTPException
-
-
-def error_handler_http(e: HTTPException):
-    return {
-        'msg': e.description,
-    }, e.code
-
-
-# @app.errorhandler(Exception)
-# def error_handler(e: Exception):
-#     return error_handler_http(HTTPException(str(e), code=500))
+from werkzeug.exceptions import HTTPException as _HTTPException
 
 
 def schema_key_unfound(key):
     raise InvalidRequest(f'Missing required key "{key}"')
-
-
-class HTTPException(HTTPException):
-    def __init__(self, detail=None, code=None):
-        self.code = code
-        super().__init__(description=detail)
 
 
 class RaisableMixin:
@@ -29,29 +12,49 @@ class RaisableMixin:
         raise cls(*args, **kwargs)
 
 
-class InvalidRequest(RaisableMixin, HTTPException):
-    def __init__(self, msg=None):
-        super().__init__(code=422, detail=msg)
+class HTTPException(_HTTPException, RaisableMixin):
+    pass
 
 
-class Unauthorized(RaisableMixin, HTTPException):
-    DEFAULT = None
+def error_handler(e: HTTPException):
+    return {
+        'msg': e.description,
+    }, e.code
 
-    def __init__(self, msg=None):
-        super().__init__(code=401, detail=msg or self.DEFAULT)
+
+def register_error_handler(app):
+    app.register_error_handler(HTTPException, error_handler)
+
+
+class InternalServerError(HTTPException):
+    code = 500
+    description = 'An uncategorized error occurred'
+
+
+class InvalidRequest(HTTPException):
+    code = 422
+
+
+class Unauthorized(HTTPException):
+    code = 401
+    description = 'Unauthorized'
 
 
 class InsufficientPermissions(Unauthorized):
-    DEFAULT = 'You do not have the required permissions to perform this action'
+    description = (
+        'You do not have the required permissions to perform this action'
+    )
 
 
 class InvalidAuthToken(Unauthorized):
-    DEFAULT = 'Invalid auth token'
+    description = 'Invalid auth token'
 
 
 class AlreadyTakenError(HTTPException):
+    code = 422
+
     def __init__(self, key, value):
-        super().__init__(code=422, detail=f'{key} "{value}" is already taken.')
+        super().__init__(f'{key} "{value}" is already taken.')
 
     @classmethod
     def check(cls, model, column, value, filters=None):
@@ -70,16 +73,6 @@ class AlreadyTakenError(HTTPException):
             raise cls(column, value)
 
 
-class NotFoundError(RaisableMixin, HTTPException):
-    def __init__(self, msg=None):
-        super().__init__(code=404, detail=msg or 'Not found.')
-
-
-class PasswordMismatchError(HTTPException):
-    def __init__(self, msg=None):
-        super().__init__(code=401, detail=msg or 'Password mismatch.')
-
-
-class NotAcceptableError(HTTPException):
-    def __init__(self, msg=None):
-        super().__init__(code=406, detail=msg or 'Not Acceptable.')
+class NotFoundError(HTTPException):
+    code = 404
+    description = 'The requested resource was not found'

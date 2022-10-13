@@ -5,10 +5,14 @@ import sqlalchemy as sa
 from sqlalchemy import orm
 
 from app import db
+from app.db.mixins import TimedMixin
 from app.utils.enums import EnumStr
 
 
-class Person(db.TimedMixin, db.Base):
+class Person(TimedMixin, db.Base):
+    """Represents a physicql person, either a patient or a staff member, holds
+    information such as name, address, age, gender, etc."""
+
     class Gender(EnumStr):
         MALE = enum.auto()
         FEMALE = enum.auto()
@@ -18,7 +22,7 @@ class Person(db.TimedMixin, db.Base):
         A = enum.auto()
         B = enum.auto()
         AB = enum.auto()
-        O = enum.auto()  # noqa
+        O = enum.auto()  # noqa capital O
 
     class Rhesus(enum.Enum):
         POSITIVE = '+'
@@ -26,7 +30,7 @@ class Person(db.TimedMixin, db.Base):
 
     first_name = sa.Column(sa.String, nullable=False)
     last_name = sa.Column(sa.String, nullable=False)
-    birthday = sa.Column(sa.Date, nullable=False)
+    birth_date = sa.Column(sa.Date, nullable=False)
     description = sa.Column(sa.String)
     user_id = sa.Column(sa.ForeignKey('users.id'), unique=True)
     gender = sa.Column(sa.Enum(Gender))
@@ -45,9 +49,9 @@ class Person(db.TimedMixin, db.Base):
     @property
     def age(self):
         now = datetime.utcnow().date()
-        age = (
-            now.year
-            - self.birthday.year
-            - ((now.month, now.day) < (self.birthday.month, self.birthday.day))
+        aged_this_year = (now.month, now.day) >= (
+            self.birth_date.month,
+            self.birth_date.day,
         )
+        age = now.year - self.birth_date.year - (1 if aged_this_year else 0)
         return age

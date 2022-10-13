@@ -4,10 +4,10 @@ import sqlalchemy as sa
 from sqlalchemy import orm
 
 from app import config, db, security
-from app.errors import InvalidAuthToken
+from app.db.mixins import TimedMixin
 
 
-class LoginToken(db.TimedMixin, db.Base):
+class LoginToken(TimedMixin, db.Base):
     user_id = sa.Column(sa.ForeignKey('users.id'))
     _value = sa.Column('value', sa.String)
 
@@ -38,14 +38,12 @@ class LoginToken(db.TimedMixin, db.Base):
         try:
             id = int(id)
         except ValueError as e:
-            raise InvalidAuthToken(
-                'Malformed token, ID field is corrupted'
-            ) from e
+            raise Exception('Malformed token, ID field is corrupted') from e
         result = db.session.get(cls, id)
         if not result:
-            raise InvalidAuthToken('No token exist for this token ID')
+            raise Exception('No token exist for this token ID')
         if result.value != token:
-            raise InvalidAuthToken('Mismatching token value')
+            raise Exception('Mismatching token value')
         return result
 
     @staticmethod
