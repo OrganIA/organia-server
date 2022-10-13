@@ -1,8 +1,9 @@
-from app import Blueprint, Static, db
+from app import db
 from app.db.models import LoginToken, User
-from app.errors import InvalidRequest
+from app.utils.bp import Blueprint
+from app.utils.static import Static
 
-bp = Blueprint(__name__)
+bp = Blueprint(__name__, auth=False)
 
 
 class LoginSchema(Static):
@@ -12,14 +13,11 @@ class LoginSchema(Static):
 
 @bp.post('/login')
 def login(data: LoginSchema, user=None):
-    """
-    Raises a 401 for invalid password and 404 for non-existing user
-    """
     user: User = (
         user or db.session.query(User).filter_by(email=data.email).first()
     )
     if not user:
-        raise InvalidRequest("User not found")
+        raise Exception("User not found")
     user.check_password(data.password)
     token = LoginToken.get_valid_for_user(user)
     db.session.commit()
@@ -32,5 +30,4 @@ def create_user(data: LoginSchema):
     user = User(**data.dict)
     db.session.add(user)
     db.session.commit()
-    db.session.flush()
     return login(data=data, user=user)

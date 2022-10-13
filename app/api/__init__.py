@@ -3,7 +3,7 @@ from pathlib import Path
 
 from app.utils.bp import Blueprint
 
-bp = Blueprint(__name__)
+bp = Blueprint(__name__, auth=False)
 
 
 @bp.get("/")

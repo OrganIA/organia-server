@@ -1,12 +1,11 @@
+from app import auth, db
 from app.db.models import User
-from app import Blueprint, db, auth
-
+from app.utils.bp import Blueprint
 
 bp = Blueprint(__name__)
 
 
 @bp.get('/')
-@auth.check()
 def get_users(data: list[int]):
     query = db.session.query(User)
     if data:
@@ -15,13 +14,11 @@ def get_users(data: list[int]):
 
 
 @bp.get('/me')
-@auth.check()
 def get_me(auth_user: User):
     return auth_user
 
 
 @bp.get('/<int:user_id>')
-@auth.check()
 def get_user(user_id: int):
     return db.get(User, user_id)
 
@@ -38,7 +35,7 @@ def get_user(user_id: int):
 
 
 @bp.delete('/<int:user_id>')
-@auth.check(manage_users=True)
+@auth.route(admin=True)
 def delete_user(user_id: int, auth_user: User):
     user = db.get(user_id)
     db.delete(user, author=auth_user)
