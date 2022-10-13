@@ -10,7 +10,7 @@ services:
       - ./app:/app/app:z
       - ./tests:/app/tests:z
       - ./alembic:/app/alembic:z
-      - ./app.db:/app/app.db:z
+      - ./data:/app/data:z
       - ./scripts:/app/scripts:z
     command: ./scripts/run.sh 80
     environment:
