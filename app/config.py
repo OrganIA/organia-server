@@ -6,47 +6,44 @@ import yaml
 PATH = Path('./config.yaml')
 
 
-def _get_int(key, default=None):
-    result = os.environ.get(key, default)
-    if result:
-        result = int(result)
-    return result
+def _to_int(value: str) -> int:
+    return int(value)
 
 
-def _get_bool(key, default=None):
-    result = os.environ.get(key, default)
-    if not result:
-        return False
-    result = result.lower()
-    if result in ['n', 'no', 'false', 'f', '0', 'none', 'null']:
+def _to_bool(value: str) -> bool:
+    value = value.lower()
+    if value in ['n', 'no', 'false', 'f', '0', 'none', 'null']:
         return False
     return True
 
 
+def env(key, default=None, coerce=None):
+    result = os.environ.get(key, default)
+    coerce = coerce or type(default)
+    if not result or result == default:
+        return result
+    if coerce == int:
+        result = _to_int(result)
+    elif coerce == bool:
+        result = _to_bool(result)
+    return result
+
+
+PORT = env('PORT', 8000)
+
 # A cryptographically secured key will be generated if none is provided
-SECRET_KEY = os.environ.get('SECRET_KEY')
+# Used to hash passwords etc
+SECRET_KEY = env('SECRET_KEY')
 
-PORT = _get_int('PORT', 8000)
+# Longetivity of a session
+LOGIN_EXPIRATION_DAYS = env('LOGIN_EXPIRATION_DAYS', 30)
 
-LOGIN_EXPIRATION_DAYS = _get_int('LOGIN_EXPIRATION_DAYS', 30)
+DB_URL = env('DB_URL', 'sqlite:///./data/app.db')
+# Should SQL queries be logged?
+LOG_SQL = env('LOG_SQL', False)
 
-DB_URL = os.environ.get('DB_URL', 'sqlite:///./app.db')
-
-FORCE_LOGIN = _get_bool('FORCE_LOGIN')
-
-DISCORD_LOGS = os.environ.get('DISCORD_LOGS')
-
-LOG_SQL = _get_bool('LOG_SQL', 'no')
-
-SENDGRID_API_URL = os.environ.get(
-    'SENDGRID_API_URL', 'https://api.sendgrid.com/v3/mail/send'
-)
-
-SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
-
-SENDGRID_SENDER_EMAIL = os.environ.get(
-    'SENDGRID_SENDER_EMAIL', 'botorgania@gmail.com'
-)
+# Identifies as admin if no authorization header is provided
+FORCE_LOGIN = env('FORCE_LOGIN', False)
 
 
 def load_file():
@@ -55,4 +52,4 @@ def load_file():
     with PATH.open() as f:
         data = yaml.safe_load(f)
     for key, value in data.items():
-        os.environ[key] = value
+        os.environ[key] = str(value)
