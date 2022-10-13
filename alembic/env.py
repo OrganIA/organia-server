@@ -9,7 +9,7 @@ from app import db
 # access to the values within the .ini file in use.
 config = context.config
 
-db.setup_db()
+db.init_db()
 config.set_main_option('sqlalchemy.url', str(db.engine.url))
 
 # Interpret the config file for Python logging.
