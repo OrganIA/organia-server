@@ -68,4 +68,4 @@ async def compute_matches(listing_id: int):
         listing_lungs_receiver_ids.append(listing_lungs_receiver.id)
         person_receiver = await get_person(listing_lungs_receiver.person_id)
         await update_lungs_score(listing_lungs_receiver.id, lungs_final_score(person_receiver, None, listing_lungs_receiver))
-    return db.session.query(Lung).filter(Lung.listing_id.in_(listing_lungs_receiver_ids)).order_by(Lung.score.asc()).all()
+    return db.session.query(Lung).filter(Lung.listing_id.in_(listing_lungs_receiver_ids)).order_by(Lung.score.desc()).all()
