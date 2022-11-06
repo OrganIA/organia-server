@@ -33,6 +33,7 @@ def getScore(receiver_listing: Listing, listing_kidney):
 
 
 def getWaitingTime(receiver_listing: Listing, listing_kidney):
+    #A revoir
     DATT = datetime.date.today() - listing_kidney.startDateDialyse
     if listing_kidney.isDialyse:
         DDIAL = datetime.date.today() - listing_kidney.startDateDialyse
@@ -46,7 +47,8 @@ def getWaitingTime(receiver_listing: Listing, listing_kidney):
     return -1  # need to check error
 
 
-def getWaitingScore(receiver_listing: Listing, listing_kidney: Kidney):
+def getWaitingScore(receiver_listing: Listing, listing_kidney):
+    #A revoir
     if getWaitingTime(receiver_listing, listing_kidney).days >= 3650:
         return 1
     else:

@@ -17,12 +17,13 @@ from app.models import Kidney, Listing
 
 def getHAge(receiver, receiver_listing, listing_kidney):
     return 100 * getScore(receiver_listing, listing_kidney) \
-        + 200 * getWaitingScore(receiver_listing) \
         + (100 * getABScore(receiver_listing)
            + 400 * getDRScore(receiver_listing)
            + 100 * getDQScore(receiver_listing)
            + 150 * getFagScore()) * getAgeMalus(receiver) \
         + 750 * getAgeBonus(receiver)
+        # + 200 * getWaitingScore(receiver_listing, listing_kidney) \
+
 
 
 def checkAge(receiver, donor):

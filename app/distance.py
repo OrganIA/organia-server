@@ -1,11 +1,12 @@
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
 
-geolocator = Nominatim(user_agent="Organia")
+geolocator = Nominatim(user_agent="NewOrganiaa")
 
 
 def get_coordinates(address):
     location = geolocator.geocode(address)
+    print(location)
     if not location:
         return None
     position = (location.latitude, location.longitude)
