@@ -6,9 +6,9 @@ from app import db
 from app.errors import NotFoundError, InvalidRequest
 from app.models import Kidney, Listing
 from app.api.schemas.kidney import (
-    KidneySchema, KidneyUpdateScore
+    KidneyCreateSchema, KidneySchema, KidneyUpdateScore
 )
-from score.Kidney.KidneyScore import getScoreNAP
+from app.score.Kidney.KidneyScore import getScoreNAP
 
 router = APIRouter(prefix='/kidneys')
 
@@ -22,7 +22,7 @@ async def get_kidneys(listing_id: int):
 
 
 @router.post('/{listing_id}', status_code=201, response_model=KidneySchema)
-async def create_kidney_variables(listing_id: int, data: KidneySchema):
+async def create_kidney_variables(listing_id: int, data: KidneyCreateSchema):
     listing = db.session.query(Listing).filter_by(id=listing_id).first()
     if listing == None:
         raise NotFoundError('Listing not found')
@@ -43,7 +43,7 @@ async def update_kidney_score(listing_id: int, score: KidneyUpdateScore):
     if listing == None:
         raise NotFoundError('Listing not found')
     kidney = await get_kidneys(listing_id)
-    kidney.score = score.score
+    kidney.score = score
     db.session.commit()
     return kidney
 
@@ -62,14 +62,15 @@ async def delete_kidney_score(listing_id: int):
 
 @router.get('/{listing_id}/matches', status_code=201)
 async def compute_matches(listing_id: int):
-    receivers_listings = db.session.query(Listing).filter_by(
+    receivers_listings = db.session.query(Listing).filter(
         Listing.id != listing_id, Listing.donor == False, Listing.organ == "KIDNEY").all()
-    donor_listing = db.session.query(Listing).filter_by(
-        Listing.id == listing_id).first()
     donor_person = await get_person(listing_id)
     listings_ids = []
     for receiver in receivers_listings:
+        hasKidneyData = db.session.query(Kidney).filter(Kidney.listing_id == receiver.id).all()
+        if hasKidneyData == []: continue
         listings_ids.append(receiver.id)
-        listing_person = await get_person(receiver.person_id)
-        getScoreNAP(listing_person, donor_person, receiver)
-    return
+        receiver_listing_person = await get_person(receiver.person_id)
+        score = getScoreNAP(receiver_listing_person, donor_person, receiver)
+        await update_kidney_score(receiver.id, score)
+    return db.session.query(Kidney).filter(Kidney.listing_id.in_(listings_ids)).order_by(Kidney.score.desc()).all()

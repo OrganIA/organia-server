@@ -17,7 +17,7 @@ from app.models import Kidney, Listing
 
 def getHAge(receiver, receiver_listing, listing_kidney):
     return 100 * getScore(receiver_listing, listing_kidney) \
-        + 200 * getWaitingScore(receiver_listing) \
+        + 200 * getWaitingScore(receiver_listing, listing_kidney) \
         + (100 * getABScore(receiver_listing)
            + 400 * getDRScore(receiver_listing)
            + 100 * getDQScore(receiver_listing)
@@ -53,8 +53,10 @@ def getScoreMG(hospital_1, hospital_2):
 
 
 def getScoreNAP(receiver, donor, receiver_listing):
+    # print(receiver_listing.id)
     listing_kidney = db.session.query(Kidney).filter_by(
         listing_id=receiver_listing.id).first()
+    # print(listing_kidney)
     if not listing_kidney:
         raise NotFoundError("No listing found in kidneys table")
 
