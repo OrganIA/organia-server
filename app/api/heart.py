@@ -8,8 +8,14 @@ from app.api.schemas.heart import (
     HeartSchema, HeartCreateSchema, HeartUpdateSchema, HeartUpdateScore
 )
 
-router = APIRouter(prefix='/heart')
+from app.api.persons import get_person
 
+router = APIRouter(prefix='/hearts')
+
+
+@router.get('/', response_model=List[HeartSchema])
+async def get_hearts():
+    return db.session.query(HeartScore).all()
 
 @router.get('/{listing_id}', response_model=HeartSchema)
 async def get_heart(listing_id: int):
@@ -20,8 +26,9 @@ async def get_heart(listing_id: int):
     return query
 
 
-@router.post('/{listing_id}', status_code=201, response_model=HeartSchema)
-async def create_heart_variables(listing_id: int, data: HeartCreateSchema):
+@router.post('/', status_code=201, response_model=HeartSchema)
+async def create_heart_variables(data: HeartCreateSchema):
+    listing_id = data.listing_id
     listing = db.session.query(Listing).filter_by(id=listing_id).first()
     if listing == None:
         raise NotFoundError('Listing not found')
@@ -29,12 +36,9 @@ async def create_heart_variables(listing_id: int, data: HeartCreateSchema):
         listing_id=listing_id).first()
     if listing_heart != None:
         raise InvalidRequest('A listing with this id already exists')
-
-    data.listing_id = listing_id
     data = data.dict(exclude_unset=True)
     heart = db.add(HeartScore, data)
     return heart
-
 
 @router.put('/{listing_id}', status_code=201, response_model=HeartSchema)
 async def update_heart_score(listing_id: int, data: HeartUpdateSchema):
@@ -68,3 +72,23 @@ async def delete_heart_score(listing_id: int):
     heart.score = 0.0
     db.session.commit()
     return
+
+
+@router.get('/{listing_id}/matches')
+async def match_heart(listing_id):
+    list_score = []
+    listing_donor = db.session.get(Listing, listing_id)
+    if listing_donor.donor is False:
+        return InvalidRequest.r("This patient is not a donor")
+    donor = await get_person(listing_donor.person_id)
+    listings = db.session.query(Listing).filter(~Listing.donor).all()
+    if listings is None:
+        return NotFoundError.r("List is empty: ", listings)
+    else:
+        for listing_receiver in listings:
+            if listing_receiver.organ.value == "HEART":
+                print(listing_receiver.organ.value)
+            receiver = await get_person(listing_receiver.person_id)
+        #     # score = 
+        #     list_score.append({"listing_id": listing_receiver.id, "score": score})
+        # return sorted(list_score, key=lambda d: d["score"], reverse=True)
