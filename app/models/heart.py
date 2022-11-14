@@ -1,5 +1,6 @@
 import numpy as np
 from datetime import datetime
+from random import randrange
 from cmath import isnan
 from math import ceil as round
 from numpy import log as ln
@@ -394,33 +395,36 @@ class HeartScore(db.TimedMixin, db.Base):
 
     # ------------------------------------Calcul de l’Index de Risque Cardiaque (ICAR)---------------------------------------
 
-    def getICAR(self, model):
-        C_ICAR = 1.301335 * 0 + 0.157691 * 1 - \
-            0.510058 * ln(150) + 0.615711 * ln(5)
-        F_Decile_PNj = self.getF_Decile_PNj(model.CEC, model.CAT, model.SIAV, model.DBNP, model.BNP, model.PROBNP,
-                                            model.Date_Courante, model.DPROBNB, model.DelaiVarBioGRF)
-        F_Ln_DFG_LAj = self.getF_Ln_DFG_LAj(model.DIA, model.CREAT, model.DCREAT, model.sexR, model.ageR, model.Date_Courante,
-                                            model.DelaiVarBioGRF)
-        F_Ln_BILI_LAj = self.getF_Ln_BILI_LAj(
-            model.BILI, model.DBILI, model.Date_Courante, model.DelaiVarBioGRF)
-        F_ASCD = self.getF_ASCD(model.CEC)
-        F_RisquePreGRFj = self.getF_RisquePreGRFj(
-            F_ASCD, F_Decile_PNj, F_Ln_DFG_LAj, F_Ln_BILI_LAj)
-        ICARj = self.getICARj(F_RisquePreGRFj, C_ICAR)
+    # def getICAR(self, model):
+    #     C_ICAR = 1.301335 * 0 + 0.157691 * 1 - \
+    #         0.510058 * ln(150) + 0.615711 * ln(5)
+    #     F_Decile_PNj = self.getF_Decile_PNj(model.CEC, model.CAT, model.SIAV, model.DBNP, model.BNP, model.PROBNP,
+    #                                         model.Date_Courante, model.DPROBNB, model.DelaiVarBioGRF)
+    #     F_Ln_DFG_LAj = self.getF_Ln_DFG_LAj(model.DIA, model.CREAT, model.DCREAT, model.sexR, model.ageR, model.Date_Courante,
+    #                                         model.DelaiVarBioGRF)
+    #     F_Ln_BILI_LAj = self.getF_Ln_BILI_LAj(
+    #         model.BILI, model.DBILI, model.Date_Courante, model.DelaiVarBioGRF)
+    #     F_ASCD = self.getF_ASCD(model.CEC)
+    #     F_RisquePreGRFj = self.getF_RisquePreGRFj(
+    #         F_ASCD, F_Decile_PNj, F_Ln_DFG_LAj, F_Ln_BILI_LAj)
+    #     ICARj = self.getICARj(F_RisquePreGRFj, C_ICAR)
 
-        F_Ln_BILI_LAi = self.getF_Ln_BILI_LAi(model.BILI_AVI)
-        F_Ln_DFG_LAi = self.getF_Ln_DFG_LAi(
-            model.DIA_AVI, model.CRE_AVI, model.sexR, model.ageR)
-        F_Decile_PNi = self.getF_Decile_PNi(model.BNP_AVI, model.PBN_AVI, model.PROBNP, model.BNP, model.CEC, model.CAT,
-                                            model.SIAV)
-        F_RisquePreGRFi = self.getF_RisquePreGRFi(
-            F_ASCD, F_Decile_PNi, F_Ln_DFG_LAi, F_Ln_BILI_LAi)
-        ICARi = self.getICARi(F_RisquePreGRFi, C_ICAR)
+    #     F_Ln_BILI_LAi = self.getF_Ln_BILI_LAi(model.BILI_AVI)
+    #     F_Ln_DFG_LAi = self.getF_Ln_DFG_LAi(
+    #         model.DIA_AVI, model.CRE_AVI, model.sexR, model.ageR)
+    #     F_Decile_PNi = self.getF_Decile_PNi(model.BNP_AVI, model.PBN_AVI, model.PROBNP, model.BNP, model.CEC, model.CAT,
+    #                                         model.SIAV)
+    #     F_RisquePreGRFi = self.getF_RisquePreGRFi(
+    #         F_ASCD, F_Decile_PNi, F_Ln_DFG_LAi, F_Ln_BILI_LAi)
+    #     ICARi = self.getICARi(F_RisquePreGRFi, C_ICAR)
 
-        if model.CEC != 'O' and model.DRG != 'O':
-            return ICARj
-        else:
-            return max(ICARj, ICARi)
+    #     if model.CEC != 'O' and model.DRG != 'O':
+    #         return ICARj
+    #     else:
+    #         return max(ICARj, ICARi)
+
+    def getICAR(self):
+        return randrange(100)
 
     def checkICAR(self, ICAR):
         if ICAR > 40 or ICAR < 0:
