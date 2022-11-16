@@ -62,13 +62,22 @@ async def delete_kidney_score(listing_id: int):
 
 @router.get('/{listing_id}/matches', status_code=201)
 async def compute_matches(listing_id: int):
+    donor_listing = db.session.query(
+        Listing).filter(listing_id == Listing.id).first()
+    if donor_listing == None:
+        raise NotFoundError(
+            'Id provided doest not refer to an existing listing')
+    if donor_listing.donor == False:
+        raise InvalidRequest('This listing is a receiver not a donor')
     receivers_listings = db.session.query(Listing).filter(
         Listing.id != listing_id, Listing.donor == False, Listing.organ == "KIDNEY").all()
     donor_person = await get_person(listing_id)
     listings_ids = []
     for receiver in receivers_listings:
-        hasKidneyData = db.session.query(Kidney).filter(Kidney.listing_id == receiver.id).all()
-        if hasKidneyData == []: continue
+        hasKidneyData = db.session.query(Kidney).filter(
+            Kidney.listing_id == receiver.id).all()
+        if hasKidneyData == []:
+            continue
         listings_ids.append(receiver.id)
         receiver_listing_person = await get_person(receiver.person_id)
         score = getScoreNAP(receiver_listing_person, donor_person, receiver)
