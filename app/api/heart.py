@@ -13,7 +13,7 @@ from app.api.persons import get_person
 router = APIRouter(prefix='/hearts')
 
 
-@router.get('/', response_model=List[HeartSchema])
+@router.get('/')
 async def get_hearts():
     return db.session.query(HeartScore).all()
 
@@ -87,10 +87,11 @@ async def match_heart(listing_id):
     else:
         for listing_receiver in listings:
             if listing_receiver.organ.value == "HEART":
+                receiver = await get_person(listing_receiver.person_id)
                 heart_receiver = await get_heart(listing_receiver.id)
-                score = heart_receiver.getICAR()
-                print(score)
+                score = heart_receiver.getICAR(receiver.gender.value, receiver.age)
                 list_score.append({"listing_id": listing_receiver.id, "score": score})
             else:
                 continue
     return sorted(list_score, key=lambda d: d["score"], reverse=True)
+    

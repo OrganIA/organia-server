@@ -21,18 +21,23 @@ class HeartScore(db.TimedMixin, db.Base):
         XPCP2 = enum.auto()
         NA = enum.auto()
 
+
     listing_id = sa.Column(sa.ForeignKey('listings.id'))
-    score = sa.Column(sa.Float, nullable=True, default=0)
+    tailleD = sa.Column(sa.Float, nullable=True)
+    poidsD= sa.Column(sa.Float, nullable=True)
+    ABOD = sa.Column(sa.String, nullable=True)
+    sexD = sa.Column(sa.String, nullable=True)
     R_D_NAI = sa.Column(sa.Date, nullable=True)
     D_INSC = sa.Column(sa.Date, nullable=True)
-    tailler = sa.Column(sa.Float, nullable=True)
-    poidsr = sa.Column(sa.Float, nullable=True)
+    MAL = sa.Column(sa.String, nullable=True)
+    MAL2 = sa.Column(sa.String, nullable=True)
+    MAL3 = sa.Column(sa.String, nullable=True)
     urgence = sa.Column(sa.Enum(URGENCE), nullable=True)
     d_urgence = sa.Column(sa.Date, nullable=True)
     KXPC = sa.Column(sa.String, nullable=True)
-    XPC = sa.Column(sa.String, nullable=True)
-    DRG = sa.Column(sa.Boolean, nullable=True)
-    CEC = sa.Column(sa.Boolean, nullable=True)
+    XPC = sa.Column(sa.Integer, nullable=True)
+    DRG = sa.Column(sa.String, nullable=True)
+    CEC = sa.Column(sa.String, nullable=True)
     DCEC = sa.Column(sa.Date, nullable=True)
     SIAV = sa.Column(sa.String, nullable=True)
     CAT = sa.Column(sa.String, nullable=True)
@@ -40,6 +45,36 @@ class HeartScore(db.TimedMixin, db.Base):
     DBNP = sa.Column(sa.Integer, nullable=True)
     PROBNP = sa.Column(sa.Float, nullable=True)
     DPROBNP = sa.Column(sa.Date, nullable=True)
+    DIA = sa.Column(sa.String, nullable=True)
+    CREAT = sa.Column(sa.Float, nullable=True)
+    DCREAT = sa.Column(sa.Date, nullable=True)
+    BILI = sa.Column(sa.Float, nullable=True)
+    DBILI = sa.Column(sa.Date, nullable=True)
+    BNP_AVI = sa.Column(sa.Float, nullable=True)
+    PBN_AVI = sa.Column(sa.Float, nullable=True)
+    DIA_AVI = sa.Column(sa.String, nullable=True)
+    CRE_AVI = sa.Column(sa.Float, nullable=True)
+    BILI_AVI = sa.Column(sa.Float, nullable=True)
+    TTLGP = sa.Column(sa.Float, nullable=True)
+    ICAR = sa.Column(sa.Float, nullable=True)
+    F_ICAR = sa.Column(sa.Float, nullable=True)
+    comp_ad_std = sa.Column(sa.Float, nullable=True)
+    comp_ad_XPCA = sa.Column(sa.Float, nullable=True)
+    comp_ped_std = sa.Column(sa.Float, nullable=True)
+    comp_ped_XPCP = sa.Column(sa.Float, nullable=True)
+    score_CCB = sa.Column(sa.Float, nullable=True)
+    F1_DifAge = sa.Column(sa.Boolean, nullable=True)
+    F2_ABO = sa.Column(sa.Boolean, nullable=True)
+    F3_SC = sa.Column(sa.Boolean, nullable=True)
+    F4_SurvPostGRF = sa.Column(sa.Boolean, nullable=True)
+    score_CCP = sa.Column(sa.Float, nullable=True)
+    score_NACG = sa.Column(sa.Float, nullable=True)
+    D_D_NAI = sa.Column(sa.Date, nullable=True)
+    D_PREL = sa.Column(sa.Date, nullable=True)
+    score = sa.Column(sa.Float, nullable=True, default=0)
+
+
+
 
     def getDelaiVarBioGRF(self, CEC, DRG):
         if CEC != 'O' and DRG != 'O':
@@ -112,13 +147,13 @@ class HeartScore(db.TimedMixin, db.Base):
         else:
             return 0
 
-    def getScoreCCB(self, model, F_ICAR):
-        CAS = self.getCAS(model.ageR, model.urgence, F_ICAR)
-        XPCA = self.getXPCA(model.ageR, model.urgence,
-                            model.XPC, F_ICAR, model.KXPC, model.DAURG)
-        CPS = self.getCPS(model.ageR, model.urgence, model.DA)
-        XPCP = self.getXPCP(model.urgence, model.KXPC, model.DAURG)
-        return (CAS + XPCA + CPS + XPCP)
+    # def getScoreCCB(self, F_ICAR):
+    #     CAS = self.getCAS(self.ageR, self.urgence, F_ICAR)
+    #     XPCA = self.getXPCA(self.ageR, self.urgence,
+    #                         self.XPC, F_ICAR, self.KXPC, self.DAURG)
+    #     CPS = self.getCPS(self.ageR, self.urgence, self.DA)
+    #     XPCP = self.getXPCP(self.urgence, self.KXPC, self.DAURG)
+    #     return (CAS + XPCA + CPS + XPCP)
 
     def getDifAge(self, ageR, ageD):
         ageRD = ageR - ageD
@@ -147,12 +182,12 @@ class HeartScore(db.TimedMixin, db.Base):
         fscR = 0.007184 * (pow(tailleR, 0.725)) * (pow(poidsR, 0.425))
 
         if ageR >= 18:
-            if 0.8 * fscR < fscD or (sexD == 'H' and poidsD >= 70):
+            if 0.8 * fscR < fscD or (sexD == 'MALE' and poidsD >= 70):
                 return 1
             else:
                 return 0
         else:
-            if (0.8 * fscR < fscD and 2 * fscR > fscD) or (sexD == 'H' and poidsD >= 70):
+            if (0.8 * fscR < fscD and 2 * fscR > fscD) or (sexD == 'MALE' and poidsD >= 70):
                 return 1
             else:
                 return 0
@@ -208,7 +243,7 @@ class HeartScore(db.TimedMixin, db.Base):
     # Fonction sur l’appariement du sexe entre donneur et receveur
 
     def getsexRD(self, sexD, sexR):
-        if sexD == 'M' and sexR == 'F':
+        if sexD == 'MALE' and sexR == 'FEMALE':
             return 1
         else:
             return 0
@@ -224,34 +259,34 @@ class HeartScore(db.TimedMixin, db.Base):
     # Fonction Débit de Filtration Glomérulaire en Liste d’attente (méthode MDRD) du jour
 
     def getF_DFGj(self, SEXR, AGER, CREAT):
-        if SEXR == 'F':
+        if SEXR == 'FEMALE':
             return 186.3 * (pow((CREAT / 88.4), -1.154)) * (pow(AGER, -0.203)) * 0.742
         else:
             return 186.3 * (pow((CREAT / 88.4), -1.154)) * (pow(AGER, -0.203)) * 1
 
     # ********************Score CCP******************
 
-    def getScoreCCP(self, model, CCB):
-        F_DFGj = self.getF_DFGj(model.sexR, model.ageR, model.CREAT)
-        LnDFG = self.getLnDFG(
-            model.DIA, model.CREAT, model.DCREAT,
-            model.DelaiVarBioGRF, F_DFGj, model.Date_Courante
-        )
-        fageD = self.getfageD(model.ageD)
-        sexRD = self.getsexRD(model.sexD, model.sexR)
-        LnBili = self.getLnBili(model.BILI, model.dateDBILI,
-                                model.DelaiVarBioGRF, model.Date_Courante)
-        fMAL = self.getfMAL(model.MAL, model.MAL2, model.MAL3)
-        fageR = self.getFager(model.ageR)
-        riskPostGRF = self.getRiskPostGRF(
-            fageR, fageD, fMAL, LnBili, LnDFG, sexRD)
-        difAge = self.getDifAge(model.ageR, model.ageD)
-        ABO = self.getABO(model.ABOD, model.ABOR)
-        SC = self.getSC(model.tailleD, model.tailleR, model.poidsD,
-                        model.poidsR, model.ageR, model.sexD)
-        survPostGRF = self.getSurvPostGRF(riskPostGRF)
-        trisurvpostgrf = self.triSurvPostGRF(survPostGRF, model.ageR)
-        return CCB * difAge * ABO * SC * trisurvpostgrf
+    # def getScoreCCP(self, CCB):
+    #     F_DFGj = self.getF_DFGj(self.sexR, self.ageR, self.CREAT)
+    #     LnDFG = self.getLnDFG(
+    #         self.DIA, self.CREAT, self.DCREAT,
+    #         self.DelaiVarBioGRF, F_DFGj, self.Date_Courante
+    #     )
+    #     fageD = self.getfageD(self.ageD)
+    #     sexRD = self.getsexRD(self.sexD, self.sexR)
+    #     LnBili = self.getLnBili(self.BILI, self.dateDBILI,
+    #                             self.DelaiVarBioGRF, self.Date_Courante)
+    #     fMAL = self.getfMAL(self.MAL, self.MAL2, self.MAL3)
+    #     fageR = self.getFager(self.ageR)
+    #     riskPostGRF = self.getRiskPostGRF(
+    #         fageR, fageD, fMAL, LnBili, LnDFG, sexRD)
+    #     difAge = self.getDifAge(self.ageR, self.ageD)
+    #     ABO = self.getABO(self.ABOD, self.ABOR)
+    #     SC = self.getSC(self.tailleD, self.tailleR, self.poidsD,
+    #                     self.poidsR, self.ageR, self.sexD)
+    #     survPostGRF = self.getSurvPostGRF(riskPostGRF)
+    #     trisurvpostgrf = self.triSurvPostGRF(survPostGRF, self.ageR)
+    #     return CCB * difAge * ABO * SC * trisurvpostgrf
 
     # ***********************************************
 
@@ -259,12 +294,12 @@ class HeartScore(db.TimedMixin, db.Base):
 
     # Fonction Décile des peptides natriurétiques (BNP ou NT-ProBNP) du jour
 
-    def getF_Decile_PNj(self, CEC, CAT, SIAV, DBNP, BNP, PROBNP, Date_Courante, DPROBNB, Delai_Var_Bio_LA):
+    def getF_Decile_PNj(self, CEC, CAT, SIAV, DBNP, BNP, PROBNP, Date_Courante, DPROBNP, Delai_Var_Bio_LA):
         if CEC == 'O' or CAT == 'O' or SIAV == 'B':
             return 10
         elif isnan(BNP) is True and isnan(PROBNP) is True:
             return 1
-        elif isnan(PROBNP) is not True and (Date_Courante - DPROBNB).days <= Delai_Var_Bio_LA:
+        elif isnan(PROBNP) is not True and (Date_Courante - DPROBNP).days <= Delai_Var_Bio_LA:
             conditions = [928, 1478, 2044, 2661, 3416, 4406, 5645, 8000, 11332]
             res = [1, 2, 3, 4, 5, 6, 7, 8, 9]
             if PROBNP >= 11332:
@@ -286,7 +321,7 @@ class HeartScore(db.TimedMixin, db.Base):
     # Fonction Débit de Filtration Glomérulaire en Liste d’attente (méthode MDRD) du jour
 
     def getF_DFGj(self, SEXR, AGER, CREAT):
-        if SEXR == 'F':
+        if SEXR == 'FEMALE':
             return 186.3 * (pow((CREAT / 88.4), -1.154)) * (pow(AGER, -0.203)) * 0.742
         else:
             return 186.3 * (pow((CREAT / 88.4), -1.154)) * (pow(AGER, -0.203)) * 1
@@ -359,7 +394,7 @@ class HeartScore(db.TimedMixin, db.Base):
     # Fonction Débit de Filtration Glomérulaire en Liste d’attente (méthode MDRD) initiale
 
     def getF_DFGi(self, SEXR, CRE_AVI, AGER):
-        if SEXR == 'F':
+        if SEXR == 'FEMALE':
             return 186.3 * ((CRE_AVI / 88.4) * -1.154) * (pow(AGER, -0.203)) * 0.742
         else:
             return 186.3 * ((CRE_AVI / 88.4) * -1.154) * (pow(AGER, -0.203)) * 1
@@ -395,36 +430,40 @@ class HeartScore(db.TimedMixin, db.Base):
 
     # ------------------------------------Calcul de l’Index de Risque Cardiaque (ICAR)---------------------------------------
 
-    # def getICAR(self, model):
-    #     C_ICAR = 1.301335 * 0 + 0.157691 * 1 - \
-    #         0.510058 * ln(150) + 0.615711 * ln(5)
-    #     F_Decile_PNj = self.getF_Decile_PNj(model.CEC, model.CAT, model.SIAV, model.DBNP, model.BNP, model.PROBNP,
-    #                                         model.Date_Courante, model.DPROBNB, model.DelaiVarBioGRF)
-    #     F_Ln_DFG_LAj = self.getF_Ln_DFG_LAj(model.DIA, model.CREAT, model.DCREAT, model.sexR, model.ageR, model.Date_Courante,
-    #                                         model.DelaiVarBioGRF)
-    #     F_Ln_BILI_LAj = self.getF_Ln_BILI_LAj(
-    #         model.BILI, model.DBILI, model.Date_Courante, model.DelaiVarBioGRF)
-    #     F_ASCD = self.getF_ASCD(model.CEC)
-    #     F_RisquePreGRFj = self.getF_RisquePreGRFj(
-    #         F_ASCD, F_Decile_PNj, F_Ln_DFG_LAj, F_Ln_BILI_LAj)
-    #     ICARj = self.getICARj(F_RisquePreGRFj, C_ICAR)
+    def getICAR(self, sexR, ageR):
+        print(ageR)
+        Date_Courante = datetime.utcnow().date()
+        DelaiVarBioGRF = 30
+        if self.CREAT <= 0:
+            self.CREAT += 10
+        C_ICAR = 1.301335 * 0 + 0.157691 * 1 - \
+            0.510058 * ln(150) + 0.615711 * ln(5)
+        F_Decile_PNj = self.getF_Decile_PNj(self.CEC, self.CAT, self.SIAV, self.DBNP, self.BNP, self.PROBNP,
+                                            Date_Courante, self.DPROBNP, DelaiVarBioGRF)
+        F_Ln_DFG_LAj = self.getF_Ln_DFG_LAj(self.DIA, self.CREAT, self.DCREAT, sexR, ageR, Date_Courante,
+                                            DelaiVarBioGRF)
+        F_Ln_BILI_LAj = self.getF_Ln_BILI_LAj(
+            self.BILI, self.DBILI, Date_Courante, DelaiVarBioGRF)
+        F_ASCD = self.getF_ASCD(self.CEC)
+        F_RisquePreGRFj = self.getF_RisquePreGRFj(
+            F_ASCD, F_Decile_PNj, F_Ln_DFG_LAj, F_Ln_BILI_LAj)
+        ICARj = self.getICARj(F_RisquePreGRFj, C_ICAR)
 
-    #     F_Ln_BILI_LAi = self.getF_Ln_BILI_LAi(model.BILI_AVI)
-    #     F_Ln_DFG_LAi = self.getF_Ln_DFG_LAi(
-    #         model.DIA_AVI, model.CRE_AVI, model.sexR, model.ageR)
-    #     F_Decile_PNi = self.getF_Decile_PNi(model.BNP_AVI, model.PBN_AVI, model.PROBNP, model.BNP, model.CEC, model.CAT,
-    #                                         model.SIAV)
-    #     F_RisquePreGRFi = self.getF_RisquePreGRFi(
-    #         F_ASCD, F_Decile_PNi, F_Ln_DFG_LAi, F_Ln_BILI_LAi)
-    #     ICARi = self.getICARi(F_RisquePreGRFi, C_ICAR)
+        F_Ln_BILI_LAi = self.getF_Ln_BILI_LAi(self.BILI_AVI)
+        F_Ln_DFG_LAi = self.getF_Ln_DFG_LAi(
+            self.DIA_AVI, self.CRE_AVI, sexR, ageR)
+        F_Decile_PNi = self.getF_Decile_PNi(self.BNP_AVI, self.PBN_AVI, self.PROBNP, self.BNP, self.CEC, self.CAT,
+                                            self.SIAV)
+        F_RisquePreGRFi = self.getF_RisquePreGRFi(
+            F_ASCD, F_Decile_PNi, F_Ln_DFG_LAi, F_Ln_BILI_LAi)
+        ICARi = self.getICARi(F_RisquePreGRFi, C_ICAR)
 
-    #     if model.CEC != 'O' and model.DRG != 'O':
-    #         return ICARj
-    #     else:
-    #         return max(ICARj, ICARi)
+        if self.CEC != 'O' and self.DRG != 'O':
+            return ICARj
+        else:
+            return max(ICARj, ICARi)
 
-    def getICAR(self):
-        return randrange(100)
+
 
     def checkICAR(self, ICAR):
         if ICAR > 40 or ICAR < 0:
