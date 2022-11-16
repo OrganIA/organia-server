@@ -41,7 +41,8 @@ async def create_heart_variables(data: HeartCreateSchema):
     return heart
 
 @router.put('/{listing_id}', status_code=201, response_model=HeartSchema)
-async def update_heart_score(listing_id: int, data: HeartUpdateSchema):
+async def update_heart_variables(data: HeartUpdateSchema):
+    listing_id = data.listing_id
     listing = db.session.query(Listing).filter_by(id=listing_id).first()
     if listing == None:
         raise NotFoundError('Listing not found')
@@ -58,6 +59,8 @@ async def update_heart_score(listing_id: int, score: HeartUpdateScore):
         raise NotFoundError('Listing not found')
     heart = await get_heart(listing_id)
     heart.score = score.score
+    if heart.score < 0:
+        raise NotFoundError('The score must be positive')
     db.session.commit()
     return heart
 
@@ -90,7 +93,7 @@ async def match_heart(listing_id):
                 receiver = await get_person(listing_receiver.person_id)
                 heart_receiver = await get_heart(listing_receiver.id)
                 score = heart_receiver.getICAR(receiver.gender.value, receiver.age)
-                list_score.append({"listing_id": listing_receiver.id, "score": score})
+                list_score.append({"listing_id": listing_receiver, "score": score})
             else:
                 continue
     return sorted(list_score, key=lambda d: d["score"], reverse=True)

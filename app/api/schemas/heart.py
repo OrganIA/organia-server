@@ -55,10 +55,6 @@ class HeartSchema(db.Schema):
     score_NACG: Optional[float]
     D_D_NAI: Optional[date]
     D_PREL: Optional[date]
-    # sexR: Optional[int]
-    # ABO_R: Optional[int]
-    # tailler: Optional[float]
-    # poidsr: Optional[float]
 
     class Config:
         orm_mode = True
@@ -114,16 +110,11 @@ class HeartCreateSchema(HeartSchema):
     score_NACG: Optional[float]
     D_D_NAI: Optional[date]
     D_PREL: Optional[date]
-    # sexR: Optional[int]
-    # ABO_R: Optional[int]
-    # tailler: Optional[float]
-    # poidsr: Optional[float]
     score: Optional[float]
 
     
 
 class HeartUpdateSchema(HeartSchema):
-    listing_id: Optional[int]
     tailleD: Optional[float]
     poidsD: Optional[float]
     ABOD: Optional[str]
@@ -137,7 +128,7 @@ class HeartUpdateSchema(HeartSchema):
     d_urgence: Optional[date]
     KXPC: Optional[str]
     XPC: Optional[int]
-    DRG: Optional[bool]
+    DRG: Optional[str]
     CEC: Optional[str]
     DCEC: Optional[date]
     SIAV: Optional[str]
@@ -172,10 +163,6 @@ class HeartUpdateSchema(HeartSchema):
     score_NACG: Optional[float]
     D_D_NAI: Optional[date]
     D_PREL: Optional[date]
-    # sexR: Optional[int]
-    # ABO_R: Optional[int]
-    # tailler: Optional[float]
-    # poidsr: Optional[float]
     score: Optional[float]
     
 class HeartUpdateScore(HeartSchema):
