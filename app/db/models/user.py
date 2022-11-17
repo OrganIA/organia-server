@@ -4,7 +4,7 @@ from werkzeug import security
 
 from app import db
 from app.db.mixins import TimedMixin
-from app.errors import AlreadyTakenError, InvalidRequest
+from app.errors import AlreadyTakenError, InvalidRequest, PasswordMismatchError
 
 
 class User(TimedMixin, db.Base):
@@ -27,7 +27,7 @@ class User(TimedMixin, db.Base):
     @property
     def admin(cls):
         action = db.session.get_or_create(
-            cls, filter_keys=['email'], email='admin@localhost', is_admin=True
+            cls, filter_cols=['email'], email='admin@localhost', is_admin=True
         )
         if action.created:
             db.session.commit()
@@ -51,6 +51,8 @@ class User(TimedMixin, db.Base):
         self.password = security.generate_password_hash(value)
 
     def check_password(self, password, exc=True):
+        if not self.password:
+            raise InvalidRequest('User has no password')
         result = security.check_password_hash(self.password, password)
         if not result and exc:
             raise exc if isinstance(exc, Exception) else PasswordMismatchError

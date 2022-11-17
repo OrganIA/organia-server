@@ -5,16 +5,16 @@
     "source.organizeImports": true
   },
   "emeraldwalk.runonsave": {
-    "commands": [
-      {
-        "match": "\\.py$",
-        "cmd": "./.venv/bin/autoflake --in-place ${file}"
-      },
-      {
-        "match": "\\.py$",
-        "cmd": ".\\venv\\Scripts\\autoflake --in-place ${file}"
-      }
-    ]
+    // "commands": [
+    //   {
+    //     "match": "\\.py$",
+    //     "cmd": "./.venv/bin/autoflake --in-place ${file}"
+    //   },
+    //   {
+    //     "match": "\\.py$",
+    //     "cmd": ".\\venv\\Scripts\\autoflake --in-place ${file}"
+    //   }
+    // ]
   },
   "python.formatting.provider": "black",
   "python.analysis.diagnosticMode": "workspace",

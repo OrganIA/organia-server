@@ -2,9 +2,8 @@ import sqlalchemy as sa
 from sqlalchemy import MetaData, orm
 
 from app import config
-from app.db.actions import get_or_create as _get_or_create
-
-from .base import Base as Base_
+from app.db.actions.get_or_create import get_or_create as _get_or_create
+from app.db.base import Base as Base_
 
 meta = MetaData(
     naming_convention={

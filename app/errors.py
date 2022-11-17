@@ -40,6 +40,10 @@ class Unauthorized(HTTPException):
     description = 'Unauthorized'
 
 
+class PasswordMismatchError(InvalidRequest):
+    description = 'Password mismatch'
+
+
 class InsufficientPermissions(Unauthorized):
     description = (
         'You do not have the required permissions to perform this action'

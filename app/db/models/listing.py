@@ -38,7 +38,7 @@ class Listing(db.Base):
     arf_date = sa.Column(sa.Date, nullable=True)
     # isn't this the same as end_date?
     transplantation_date = sa.Column(sa.Date, nullable=True)
-    # isbn't this just having 2 listings?
+    # isn't this just having 2 listings?
     re_registration_date = sa.Column(sa.Date, nullable=True)
     # no idea what this is, should be more specific
     A = sa.Column(sa.Integer, default=0, nullable=True)

@@ -2,7 +2,6 @@ from app import db
 from app.db.models import Listing
 from app.errors import NotFoundError
 from app.utils.bp import Blueprint
-from app.utils.static import Static
 
 bp = Blueprint('listings')
 
@@ -24,10 +23,24 @@ def get_listing(id):
 def get_listing_matches(id):
     import random
 
-    return [
-        {
-            "listing": "data",
-            "score": random.random(),
+    def schemaify(l: Listing):
+        return {
+            'id': l.id,
+            'type': l.type,
+            'notes': l.notes,
+            'organ': l.organ,
+            'person_id': l.person_id,
+            'hospital_id': l.hospital_id,
         }
-        for _ in range(10)
-    ]
+
+    return sorted(
+        [
+            {
+                "listing": schemaify(l),
+                "score": random.random(),
+            }
+            for l in db.session.query(Listing)
+        ],
+        key=lambda x: x['score'],
+        reverse=True,
+    )

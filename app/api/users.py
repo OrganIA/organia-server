@@ -1,5 +1,6 @@
 from app import auth, db
 from app.db.models import User
+from app.errors import NotFoundError
 from app.utils.bp import Blueprint
 
 bp = Blueprint(__name__)
@@ -14,13 +15,14 @@ def get_users(data: list[int]):
 
 
 @bp.get('/me')
+@auth.route()
 def get_me(auth_user: User):
     return auth_user
 
 
 @bp.get('/<int:user_id>')
 def get_user(user_id: int):
-    return db.get(User, user_id)
+    return db.session.get(User, user_id)
 
 
 # @bp.post('/{user_id}', response_model=UserSchema)
@@ -37,5 +39,8 @@ def get_user(user_id: int):
 @bp.delete('/<int:user_id>')
 @auth.route(admin=True)
 def delete_user(user_id: int, auth_user: User):
-    user = db.get(user_id)
-    db.delete(user, author=auth_user)
+    user = db.session.get(User, user_id)
+    if not user:
+        raise NotFoundError
+    db.session.delete(user)
+    db.session.commit()
