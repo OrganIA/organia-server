@@ -80,3 +80,7 @@ class AlreadyTakenError(HTTPException):
 class NotFoundError(HTTPException):
     code = 404
     description = 'The requested resource was not found'
+
+
+class PasswordMismatchError(Unauthorized):
+    description = 'Password mismatch'
