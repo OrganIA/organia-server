@@ -25,8 +25,12 @@ def meld_score(receiver_listing):
         (1.120 * math.log(1)) + 0.6431)
     return meld
 
-def final_score(receiver, donor, receiver_listing):
+def final_score(receiver, donor, receiver_listing, donor_listing):
+    #POUR NICO: RETROUVER LE LISTING DU DONOR
     if donor.age > 40 and (receiver.age >= 15 and receiver.age< 40):
-        return alpha_fetoprotein_score(receiver_listing) * meld_score(receiver_listing) * getScoreHD(receiver, donor, receiver_listing)
+        return alpha_fetoprotein_score(receiver_listing) * meld_score(receiver_listing) * getScoreHD(receiver, donor, receiver_listing, donor_listing)
+        # return alpha_fetoprotein_score(receiver_listing) * meld_score(receiver_listing)
+
     else:
-        return (alpha_fetoprotein_score(receiver_listing) * meld_score(receiver_listing) * getScoreHD(receiver, donor, receiver_listing)) / getScoreMG("PARIS", "MARSEILLE")
+        return (alpha_fetoprotein_score(receiver_listing) * meld_score(receiver_listing) * getScoreHD(receiver, donor, receiver_listing, donor_listing)) / getScoreMG("PARIS", "MARSEILLE")
+        # return alpha_fetoprotein_score(receiver_listing) * meld_score(receiver_listing) / getScoreMG("Aulnay-Sous-Bois", "Marseille")
