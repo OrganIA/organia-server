@@ -1,5 +1,5 @@
 from datetime import date
-from typing import Optional
+from typing import Optional, Literal
 from app import db
 from app.models import heart
 
@@ -13,9 +13,9 @@ class HeartSchema(db.Schema):
     sexD: Optional[str] #
     R_D_NAI: Optional[date]
     D_INSC: Optional[date]
-    MAL: Optional[str] #['Maladie valvulaire', 'Maladie congenitale','Maladie congenitale non Eisenmenger']
-    MAL2: Optional[str] #['Maladie valvulaire', 'Maladie congenitale','Maladie congenitale non Eisenmenger']
-    MAL3: Optional[str] #['Maladie valvulaire', 'Maladie congenitale','Maladie congenitale non Eisenmenger']
+    MAL: Literal["Maladie valvulaire", "Maladie congenitale", "Maladie congenitale non Eisenmenger"]
+    MAL2: Literal['Maladie valvulaire', 'Maladie congenitale','Maladie congenitale non Eisenmenger']
+    MAL3: Literal['Maladie valvulaire', 'Maladie congenitale','Maladie congenitale non Eisenmenger']
     urgence: Optional[heart.HeartScore.URGENCE] #XPCA/XPCP1/XPCP2
     d_urgence: Optional[date]
     KXPC: Optional[str]
@@ -68,9 +68,9 @@ class HeartCreateSchema(HeartSchema):
     sexD: Optional[str]
     R_D_NAI: Optional[date]
     D_INSC: Optional[date]
-    MAL: Optional[str]
-    MAL2: Optional[str]
-    MAL3: Optional[str]
+    MAL: Literal["Maladie valvulaire", "Maladie congenitale", "Maladie congenitale non Eisenmenger"]
+    MAL2: Literal['Maladie valvulaire', 'Maladie congenitale','Maladie congenitale non Eisenmenger']
+    MAL3: Literal['Maladie valvulaire', 'Maladie congenitale','Maladie congenitale non Eisenmenger']
     urgence: Optional[heart.HeartScore.URGENCE]
     d_urgence: Optional[date]
     KXPC: Optional[str]
@@ -121,9 +121,9 @@ class HeartUpdateSchema(HeartSchema):
     sexD: Optional[str]
     R_D_NAI: Optional[date]
     D_INSC: Optional[date]
-    MAL: Optional[str]
-    MAL2: Optional[str]
-    MAL3: Optional[str]
+    MAL: Literal["Maladie valvulaire", "Maladie congenitale", "Maladie congenitale non Eisenmenger"]
+    MAL2: Literal['Maladie valvulaire', 'Maladie congenitale','Maladie congenitale non Eisenmenger']
+    MAL3: Literal['Maladie valvulaire', 'Maladie congenitale','Maladie congenitale non Eisenmenger']
     urgence: Optional[heart.HeartScore.URGENCE]
     d_urgence: Optional[date]
     KXPC: Optional[str]
