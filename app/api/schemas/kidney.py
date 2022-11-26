@@ -22,7 +22,9 @@ class KidneySchema(db.TimedMixin.Schema):
 
 
 class KidneyCreateSchema(KidneySchema):
+    id: Optional[int]
     listing_id: Optional[int]
+
     isDialyse: Optional[bool]
     isRetransplantation: Optional[bool]
     startDateDialyse: Optional[date]
