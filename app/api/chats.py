@@ -1,7 +1,6 @@
-from app import db
-from app import auth
-from app.db.models import User, ChatGroup, Chat, Message
-from app.errors import NotFoundError, InvalidRequest, Unauthorized
+from app import auth, db
+from app.db.models import Chat, ChatGroup, Message, User
+from app.errors import InvalidRequest, NotFoundError, Unauthorized
 from app.utils.bp import Blueprint
 from app.utils.static import Static
 
@@ -9,7 +8,7 @@ bp = Blueprint(__name__)
 
 
 @bp.get('/')
-@auth.route(admin=False)
+@auth.route()
 def get_users_chats(auth_user: User):
     chat_group = (
         db.session.query(ChatGroup).filter_by(user_id=auth_user.id).all()
@@ -36,20 +35,8 @@ def get_users_chats(auth_user: User):
     return item_list
 
 
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-
-
 @bp.get('/<int:chat_id>')
-@auth.route(admin=False)
+@auth.route()
 def get_chat_by_id(chat_id: int, auth_user: User):
     chat_group = (
         db.session.query(ChatGroup)
@@ -60,7 +47,6 @@ def get_chat_by_id(chat_id: int, auth_user: User):
         raise NotFoundError("No chat found for the user with this id.")
     chat = db.session.query(Chat).filter_by(id=chat_id).first()
     group = db.session.query(ChatGroup).filter_by(chat_id=chat_id).all()
-    print(f"{bcolors.WARNING}{group}{bcolors.ENDC}")
     user_list = []
     for elem in group:
         user_list.append(elem.user_id)
@@ -74,7 +60,7 @@ def get_chat_by_id(chat_id: int, auth_user: User):
 
 
 @bp.get('/messages/latest')
-@auth.route(admin=False)
+@auth.route()
 def get_latest_message_chat(auth_user: User):
     chat_groups = (
         db.session.query(ChatGroup).filter_by(user_id=auth_user.id)
@@ -94,7 +80,7 @@ def get_latest_message_chat(auth_user: User):
 
 
 @bp.get('/<int:chat_id>/messages')
-@auth.route(admin=False)
+@auth.route()
 def get_messages_of_chat(chat_id: int, auth_user: User):
     chat = (
         db.session.query(ChatGroup)
@@ -112,7 +98,7 @@ class ChatGroupsCreateSchema(Static):
 
 
 @bp.post('/')
-@auth.route(admin=False)
+@auth.route()
 def create_chat(data: ChatGroupsCreateSchema, auth_user: User):
     if auth_user.id not in data.users_ids:
         raise InvalidRequest(msg="Cannot create a chat for other users.")
@@ -136,7 +122,7 @@ def create_chat(data: ChatGroupsCreateSchema, auth_user: User):
 
 
 @bp.post('/<int:chat_id>')
-@auth.route(admin=False)
+@auth.route()
 def update_chat(data: dict, chat_id: int, auth_user: User):
     chat = db.session.query(Chat).filter_by(id=chat_id).all()
     if not chat:
@@ -187,7 +173,7 @@ def update_chat(data: dict, chat_id: int, auth_user: User):
 
 
 @bp.delete('/<int:chat_id>')
-@auth.route(admin=False)
+@auth.route()
 def delete_chat(chat_id: int, auth_user: User):
     chats = db.session.query(Chat).filter_by(id=chat_id).first()
     chat_groups = db.session.query(ChatGroup).filter_by(chat_id=chat_id).all()
@@ -209,7 +195,7 @@ class MessageCreateSchema(Static):
 
 
 @bp.post('/<int:chat_id>/message')
-@auth.route(admin=False)
+@auth.route()
 def send_message(chat_id: int, data: MessageCreateSchema, auth_user: User):
     chat = (
         db.session.query(ChatGroup)

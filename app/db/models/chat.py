@@ -1,10 +1,13 @@
 import sqlalchemy as sa
 from sqlalchemy import orm
+
 from app import db
 
 
 class Chat(db.mixins.TimedMixin, db.Base):
-    chat_name = sa.Column(sa.String, default="New Conversation", nullable=False)
+    chat_name = sa.Column(
+        sa.String, default="Nouvelle conversation", nullable=False
+    )
     creator_id = sa.Column(sa.ForeignKey('users.id'))
 
     creator = orm.relationship("User", back_populates="chats")
