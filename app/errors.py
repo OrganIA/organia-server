@@ -32,7 +32,9 @@ class InternalServerError(HTTPException):
 
 
 class InvalidRequest(HTTPException):
-    code = 422
+    def __init__(self, msg: str):
+        self.code = 422
+        self.description = msg
 
 
 class Unauthorized(HTTPException):
@@ -80,7 +82,3 @@ class AlreadyTakenError(HTTPException):
 class NotFoundError(HTTPException):
     code = 404
     description = 'The requested resource was not found'
-
-
-class PasswordMismatchError(Unauthorized):
-    description = 'Password mismatch'
