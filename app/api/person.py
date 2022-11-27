@@ -10,7 +10,7 @@ bp = Blueprint('persons', auth=False)
 class PersonSchema(Static):
     first_name = str
     last_name = str
-    birthday = str
+    birth_date = str
     description = str
     abo = str
     rhesus = str
@@ -31,23 +31,23 @@ def get_person(id):
 
 
 @bp.post('/')
-async def create_person(data: PersonSchema):
+def create_person(data: PersonSchema):
     person = Person(**data.dict)
     db.session.add(person)
     db.session.commit()
-    return await get_person(person.id)
+    return get_person(person.id)
 
 
-# @bp.post('/{person_id}')
-# async def update_person(person_id, data):
-#     person = await get_person(person_id)
-#     person.update(data)
-#     db.session.commit()
-#     return person
+@bp.post('/{person_id}')
+async def update_person(person_id, data):
+    person = await get_person(person_id)
+    person.update(data)
+    db.session.commit()
+    return person
 
 
-# @bp.delete('/{person_id}')
-# async def delete_person(person_id: int):
-#     person = await get_person(person_id)
-#     db.session.delete(person)
-#     db.session.commit()
+@bp.delete('/{person_id}')
+async def delete_person(person_id: int):
+    person = await get_person(person_id)
+    db.session.delete(person)
+    db.session.commit()
