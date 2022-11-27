@@ -154,11 +154,11 @@ calls = [
     # Useful to check if the server is up, or to check if it is running
     # the latest version.
     Get('/', auth=False),
-    # Login and get a token.
-    Post('/auth/login', [user_login, user_login_fail], auth=False),
     # Register a new user, response should be the same as login, so no need to
     # login after registering.
     Post('/auth/register', [user_login_random, user_login], auth=False),
+    # Login and get a token.
+    Post('/auth/login', [user_login, user_login_fail], auth=False),
     # List all users
     Get('/users'),
     # Get info about the current user
