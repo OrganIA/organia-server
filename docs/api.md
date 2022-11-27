@@ -1,5 +1,5 @@
 # API Documentation
-Generated on: 2022-11-27 at 23:12:52
+Generated on: 2022-11-27 at 23:21:31
 
 - [GET /api/](#get--api-)
 - [POST /api/auth/login](#post--api-auth-login)
@@ -45,7 +45,7 @@ Login and get a token.
 ```json
 {
   "email": "user@email.com",
-  "password": "no-the-password"
+  "password": "not-the-password"
 }
 ```
 
@@ -59,8 +59,11 @@ login after registering.
 ### Request
 ```json
 {
-  "email": "user385@email.com",
-  "password": "password"
+  "email": "user255@email.com",
+  "password": "password",
+  "firstname": "prenom",
+  "lastname": "nom",
+  "phone_number": "123456789"
 }
 ```
 

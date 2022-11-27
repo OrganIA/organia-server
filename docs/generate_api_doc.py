@@ -143,11 +143,14 @@ class Delete(Route):
 
 
 user_login = {"email": "user@email.com", "password": "password"}
-user_login_fail = {"email": "user@email.com", "password": "no-the-password"}
-user_login_random = {
+user_register = {
     "email": f"user{random.randint(0, 1000)}@email.com",
     "password": "password",
+    "firstname": "prenom",
+    "lastname": "nom",
+    "phone_number": "123456789",
 }
+user_login_fail = {"email": "user@email.com", "password": "not-the-password"}
 
 calls = [
     # Information about the server, such as the version or the OS.
@@ -158,7 +161,7 @@ calls = [
     Post('/auth/login', [user_login, user_login_fail], auth=False),
     # Register a new user, response should be the same as login, so no need to
     # login after registering.
-    Post('/auth/register', [user_login_random, user_login], auth=False),
+    Post('/auth/register', [user_register, user_login], auth=False),
     # List all users
     Get('/users'),
     # Get info about the current user
