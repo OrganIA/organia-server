@@ -4,6 +4,8 @@ requests
 # db
 sqlalchemy
 alembic
+sqlalchemy-utils
+phonenumbers
 
 # api app
 flask

@@ -15,4 +15,4 @@ fi
 
 alembic upgrade head
 export PORT=${1:-8000}
-FLASK_RUN_HOST=0.0.0.0 FLASK_RUN_PORT=$PORT flask run
+FLASK_RUN_HOST=0.0.0.0 FLASK_RUN_PORT=$PORT flask run $reload_opts
