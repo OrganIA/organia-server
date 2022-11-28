@@ -45,6 +45,13 @@ class Unauthorized(HTTPException):
         self.description = msg
 
 
+class NotAcceptableError(HTTPException):
+    code = 400
+
+    def __init__(self, msg: str = "Not acceptable"):
+        self.description = msg
+
+
 class PasswordMismatchError(InvalidRequest):
     description = 'Password mismatch'
 

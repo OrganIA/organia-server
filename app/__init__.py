@@ -38,6 +38,7 @@ def roles_table_created(*args, **kwargs):
             'can_edit_staff': True,
             'can_edit_roles': True,
             'can_edit_persons': True,
+            'can_invite': True,
             'name': 'admin',
         }
     )
@@ -51,6 +52,7 @@ def roles_table_created(*args, **kwargs):
             'can_edit_staff': False,
             'can_edit_roles': False,
             'can_edit_persons': False,
+            'can_invite': False,
             'name': 'default',
         }
     )

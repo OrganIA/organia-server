@@ -122,7 +122,10 @@ def create_chat(data: ChatGroupsCreateSchema, auth_user: User):
     }
     for i in data.users_ids:
         db.session.add(ChatGroup(**{"user_id": i, "chat_id": chat.id}))
-        item_list["users_ids"].append(db.session.get(User, i).id)
+        if (user := db.session.get(User, i)) is None:
+            raise NotFoundError("User not found.")
+        else:
+            item_list["users_ids"].append(user.id)
     db.session.commit()
     return item_list
 
