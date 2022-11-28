@@ -74,3 +74,28 @@ class Listing(db.Base):
         elif self.alpha_fetoprotein > 1000:
             alpha_fetoprotein_score += 3
         return alpha_fetoprotein_score
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'notes': self.notes,
+            'type': self.type,
+            'organ': self.organ,
+            'tumors_number': self.tumors_number,
+            'biggest_tumor_size': self.biggest_tumor_size,
+            'alpha_fetoprotein': self.alpha_fetoprotein,
+            'is_under_dialysis': self.is_under_dialysis,
+            'dialysis_start_date': self.dialysis_start_date,
+            'dialysis_end_date': self.dialysis_end_date,
+            'is_retransplantation': self.is_retransplantation,
+            'arf_date': self.arf_date,
+            'transplantation_date': self.transplantation_date,
+            're_registration_date': self.re_registration_date,
+            'A': self.A,
+            'B': self.B,
+            'DR': self.DR,
+            'DQ': self.DQ,
+            'person_id': self.person_id,
+            'hospital_id': self.hospital_id,
+            'alpha_fetoprotein_score': self.alpha_fetoprotein_score,
+        }

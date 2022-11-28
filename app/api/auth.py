@@ -1,5 +1,6 @@
 from app import db
 from app.db.models import LoginToken, User
+from app.errors import InvalidRequest
 from app.utils.bp import Blueprint
 from app.utils.static import Static
 
@@ -25,11 +26,11 @@ def login(data: LoginSchema, user=None):
         user or db.session.query(User).filter_by(email=data.email).first()
     )
     if not user:
-        raise Exception("User not found")
+        raise InvalidRequest('Invalid email or password')
     user.check_password(data.password)
     token = LoginToken.get_valid_for_user(user)
     db.session.commit()
-    return {'token': token.value, 'user': user}
+    return {'token': token.value, 'user': user.to_dict()}
 
 
 @bp.post('/register', success=201)

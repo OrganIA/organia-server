@@ -17,12 +17,12 @@ def get_users(data: list[int]):
 @bp.get('/me')
 @auth.route()
 def get_me(auth_user: User):
-    return auth_user
+    return auth_user.to_dict()
 
 
 @bp.get('/<int:user_id>')
 def get_user(user_id: int):
-    return db.session.get(User, user_id)
+    return db.session.get(User, user_id).to_dict()
 
 
 # @bp.post('/{user_id}', response_model=UserSchema)

@@ -1,11 +1,11 @@
 import sqlalchemy as sa
 from sqlalchemy import orm
+from sqlalchemy_utils import PhoneNumber
 from werkzeug import security
 
 from app import db
 from app.db.mixins import TimedMixin
 from app.errors import AlreadyTakenError, InvalidRequest, PasswordMismatchError
-from sqlalchemy_utils import PhoneNumber
 
 
 class User(TimedMixin, db.Base):
@@ -55,6 +55,16 @@ class User(TimedMixin, db.Base):
             raise AlreadyTakenError('email', value)
 
         return value
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'email': self.email,
+            'firstname': self.firstname,
+            'lastname': self.lastname,
+            'phone_number': self.phone_number,
+            'country_code': self.country_code,
+        }
 
     def save_password(self, value):
         self.password = security.generate_password_hash(value)

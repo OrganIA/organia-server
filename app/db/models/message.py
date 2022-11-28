@@ -11,3 +11,12 @@ class Message(db.mixins.TimedMixin, db.Base):
 
     sender = orm.relationship("User", back_populates="messages")
     chat = orm.relationship("Chat", back_populates="messages")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "content": self.content,
+            "chat_id": self.chat_id,
+            "sender_id": self.sender_id,
+            "created_at": self.created_at,
+        }

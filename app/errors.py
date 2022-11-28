@@ -40,7 +40,9 @@ class InvalidRequest(HTTPException):
 
 class Unauthorized(HTTPException):
     code = 401
-    description = 'Unauthorized'
+
+    def __init__(self, msg: str = "Unauthorized"):
+        self.description = msg
 
 
 class PasswordMismatchError(InvalidRequest):

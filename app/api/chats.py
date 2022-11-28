@@ -75,8 +75,10 @@ def get_latest_message_chat(auth_user: User):
             .order_by(Message.created_at.desc())
         ).first()
         if message:
-            latest_messages.append(message)
-    return latest_messages
+            latest_messages.append(message.to_dict())
+    return sorted(
+        latest_messages, key=lambda obj: obj['created_at'], reverse=True
+    )
 
 
 @bp.get('/<int:chat_id>/messages')
@@ -89,7 +91,12 @@ def get_messages_of_chat(chat_id: int, auth_user: User):
     )
     if not chat:
         raise NotFoundError("No chat found for the user with this id.")
-    return db.session.query(Message).filter_by(chat_id=chat_id).all()
+    return [
+        message.to_dict()
+        for message in db.session.query(Message)
+        .filter_by(chat_id=chat_id)
+        .all()
+    ]
 
 
 class ChatGroupsCreateSchema(Static):
@@ -114,9 +121,8 @@ def create_chat(data: ChatGroupsCreateSchema, auth_user: User):
         "creator_id": chat.creator_id,
     }
     for i in data.users_ids:
-        item = ChatGroup(**{"user_id": i, "chat_id": chat.id})
-        item_list["users_ids"].append(item)
-        db.session.add(item)
+        db.session.add(ChatGroup(**{"user_id": i, "chat_id": chat.id}))
+        item_list["users_ids"].append(db.session.get(User, i).id)
     db.session.commit()
     return item_list
 
@@ -194,12 +200,12 @@ class MessageCreateSchema(Static):
     content = str
 
 
-@bp.post('/<int:chat_id>/message')
+@bp.post('/message')
 @auth.route()
-def send_message(chat_id: int, data: MessageCreateSchema, auth_user: User):
+def send_message(data: MessageCreateSchema, auth_user: User):
     chat = (
         db.session.query(ChatGroup)
-        .filter_by(chat_id=chat_id, user_id=auth_user.id)
+        .filter_by(chat_id=data.chat_id, user_id=auth_user.id)
         .all()
     )
     if not chat:
@@ -209,4 +215,4 @@ def send_message(chat_id: int, data: MessageCreateSchema, auth_user: User):
         raise InvalidRequest
     db.session.add(message)
     db.session.commit()
-    return message
+    return message.to_dict()
