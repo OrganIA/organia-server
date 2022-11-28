@@ -24,15 +24,12 @@ class PersonSchema(Static):
 
 
 def update(person, data):
-    if data["rhesus"] == '+':
-        person.rhesus = Person.Rhesus.POSITIVE
-    else:
-        person.rhesus = Person.Rhesus.NEGATIVE
-    person.first_name = data["first_name"]
-    person.last_name = data["last_name"]
-    person.description = data["description"]
-    person.abo = data["abo"]
-    person.gender = data["gender"]
+    person.first_name = data.first_name
+    person.last_name = data.last_name
+    person.description = data.description
+    person.abo = data.abo
+    person.rhesus = data.rhesus
+    person.gender = data.gender
     return person
 
 
@@ -58,10 +55,11 @@ def create_person(data: PersonSchema):
 
 
 @bp.post('/<int:id>')
-def update_person(id, data):
-    person = update(get_person(id), data)
+def update_person(id, data: PersonSchema):
+    person = db.session.get(Person, id)
+    person_update = update(person, data)
     db.session.commit()
-    return person
+    return person_update
 
 
 @bp.delete('/<int:id>')
