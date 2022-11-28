@@ -10,7 +10,7 @@ from app.utils.enums import EnumStr
 
 
 class Person(TimedMixin, db.Base):
-    """Represents a physicql person, either a patient or a staff member, holds
+    """Represents a physical person, either a patient or a staff member, holds
     information such as name, address, age, gender, etc."""
 
     class Gender(EnumStr):
@@ -30,7 +30,7 @@ class Person(TimedMixin, db.Base):
 
     first_name = sa.Column(sa.String, nullable=False)
     last_name = sa.Column(sa.String, nullable=False)
-    birth_date = sa.Column(sa.Date, nullable=False)
+    birth_date = sa.Column(sa.Date, nullable=True)
     description = sa.Column(sa.String)
     user_id = sa.Column(sa.ForeignKey('users.id'), unique=True)
     gender = sa.Column(sa.Enum(Gender))

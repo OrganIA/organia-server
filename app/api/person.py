@@ -1,20 +1,39 @@
+from datetime import datetime
+
 from app import db
 from app.db.models import Person
 from app.errors import NotFoundError
 from app.utils.bp import Blueprint
 from app.utils.static import Static
 
-bp = Blueprint('persons', auth=False)
+bp = Blueprint('persons', auth=True)
 
 
 class PersonSchema(Static):
+    @staticmethod
+    def birth_date(d):
+        birth_date = Static._get(d, 'birth_date')
+        return datetime.fromisoformat(birth_date).date()
+
     first_name = str
     last_name = str
-    birth_date = str
     description = str
-    abo = str
-    rhesus = str
-    gender = str
+    abo = Person.ABO
+    rhesus = Person.Rhesus
+    gender = Person.Gender
+
+
+def update(person, data):
+    if data["rhesus"] == '+':
+        person.rhesus = Person.Rhesus.POSITIVE
+    else:
+        person.rhesus = Person.Rhesus.NEGATIVE
+    person.first_name = data["first_name"]
+    person.last_name = data["last_name"]
+    person.description = data["description"]
+    person.abo = data["abo"]
+    person.gender = data["gender"]
+    return person
 
 
 @bp.get('/')
@@ -38,16 +57,15 @@ def create_person(data: PersonSchema):
     return get_person(person.id)
 
 
-@bp.post('/{person_id}')
-async def update_person(person_id, data):
-    person = await get_person(person_id)
-    person.update(data)
+@bp.post('/<int:id>')
+def update_person(id, data):
+    person = update(get_person(id), data)
     db.session.commit()
     return person
 
 
-@bp.delete('/{person_id}')
-async def delete_person(person_id: int):
-    person = await get_person(person_id)
+@bp.delete('/<int:id>')
+def delete_person(id: int):
+    person = get_person(id)
     db.session.delete(person)
     db.session.commit()
