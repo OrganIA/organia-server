@@ -77,3 +77,15 @@ async def delete_lungs_score(listing_id: int):
     lung.score = 0.0
     db.session.commit()
     return
+
+@bp.get('<int:listing_id>/matches', success=201)
+async def compute_matches(listing_id: int):
+    return []
+    # listing_lungs_receivers = db.session.query(Listing).filter(
+    #     Listing.id != listing_id, Listing.donor == False, Listing.organ == "LUNG").all()
+    # listing_lungs_receiver_ids = []
+    # for listing_lungs_receiver in listing_lungs_receivers:
+    #     listing_lungs_receiver_ids.append(listing_lungs_receiver.id)
+    #     person_receiver = await get_person(listing_lungs_receiver.person_id)
+    #     await update_lungs_score(listing_lungs_receiver.id, lungs_final_score(person_receiver, None, listing_lungs_receiver))
+    # return db.session.query(Lung).filter(Lung.listing_id.in_(listing_lungs_receiver_ids)).order_by(Lung.score.desc()).all()
