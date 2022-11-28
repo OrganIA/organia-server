@@ -18,12 +18,14 @@ class User(TimedMixin, db.Base):
     lastname = sa.Column(sa.String, nullable=False)
     phone_number = sa.Column(sa.Unicode(20), nullable=False)
     country_code = sa.Column(sa.Unicode(8), nullable=False, default="FR")
+    role_id = sa.Column(sa.ForeignKey('roles.id'), nullable=False, default=1)
 
     _phone_number = sa.orm.composite(PhoneNumber, phone_number, country_code)
     person = orm.relationship('Person', uselist=False, back_populates='user')
     groups = orm.relationship('ChatGroup', back_populates='user')
     chats = orm.relationship('Chat', back_populates='creator')
     messages = orm.relationship('Message', back_populates='sender')
+    role = orm.relationship('Role', back_populates='user')
 
     # TODO: Use getter/setter for password instead of save_password
 
@@ -64,6 +66,7 @@ class User(TimedMixin, db.Base):
             'lastname': self.lastname,
             'phone_number': self.phone_number,
             'country_code': self.country_code,
+            'role_id': self.role_id,
         }
 
     def save_password(self, value):

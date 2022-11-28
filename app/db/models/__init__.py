@@ -5,6 +5,7 @@ from .city import City as City
 from .user import User as User
 from .staff import Staff as Staff
 from .person import Person as Person
+from .roles import Role as Role
 from .message import Message as Message
 from .listing import Listing as Listing
 from .chat import Chat as Chat
