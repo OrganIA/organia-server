@@ -16,4 +16,4 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           host: ${{ secrets.PROD_HOST }}
           script: |
-            sudo systemctl restart organia-dev
+            organia-deploy dev organia-server master
