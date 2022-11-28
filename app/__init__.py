@@ -29,7 +29,6 @@ def create_app():
 
 @listens_for(Role.__table__, "after_create")
 def roles_table_created(*args, **kwargs):
-    print("Done")
     admin = Role(
         **{
             'can_edit_users': True,
@@ -42,8 +41,6 @@ def roles_table_created(*args, **kwargs):
             'name': 'admin',
         }
     )
-    db.session.add(admin)
-    db.session.commit()
     default = Role(
         **{
             'can_edit_users': False,
@@ -56,5 +53,5 @@ def roles_table_created(*args, **kwargs):
             'name': 'default',
         }
     )
-    db.session.add(default)
+    db.session.add_all([admin, default])
     db.session.commit()
