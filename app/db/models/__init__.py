@@ -11,3 +11,4 @@ from .chat import Chat as Chat
 from .login_token import LoginToken as LoginToken
 from .hospital import Hospital as Hospital
 from .chat_group import ChatGroup as ChatGroup
+from .lung import Lung as Lung
