@@ -203,14 +203,18 @@ class MessageCreateSchema(Static):
     content = str
 
 
-@bp.post('/message')
+@bp.post('/<int:chat_id>/message')
 @auth.route()
-def send_message(data: MessageCreateSchema, auth_user: User):
+def send_message(chat_id: int, data: MessageCreateSchema, auth_user: User):
     chat = (
         db.session.query(ChatGroup)
-        .filter_by(chat_id=data.chat_id, user_id=auth_user.id)
+        .filter_by(chat_id=chat_id, user_id=auth_user.id)
         .all()
     )
+    if chat_id != data.chat_id:
+        raise InvalidRequest(
+            msg="Chat id in URL does not match chat id in data."
+        )
     if not chat:
         raise NotFoundError("No chat found for the user with this id.")
     message = Message(**data.dict)

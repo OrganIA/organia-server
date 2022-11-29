@@ -37,13 +37,11 @@ class RoleUpdateSchema(Static):
 
 
 @bp.get('/')
-@auth.route()
 def get_roles():
     return db.session.query(Role).all()
 
 
 @bp.get('/<int:role_id>')
-@auth.route()
 def get_role(role_id: int):
     return db.session.get(Role, role_id).to_dict()
 

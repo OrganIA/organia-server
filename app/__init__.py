@@ -30,28 +30,24 @@ def create_app():
 @listens_for(Role.__table__, "after_create")
 def roles_table_created(*args, **kwargs):
     admin = Role(
-        **{
-            'can_edit_users': True,
-            'can_edit_hospitals': True,
-            'can_edit_listings': True,
-            'can_edit_staff': True,
-            'can_edit_roles': True,
-            'can_edit_persons': True,
-            'can_invite': True,
-            'name': 'admin',
-        }
+        can_edit_users=True,
+        can_edit_hospitals=True,
+        can_edit_listings=True,
+        can_edit_staff=True,
+        can_edit_roles=True,
+        can_edit_persons=True,
+        can_invite=True,
+        name='admin',
     )
     default = Role(
-        **{
-            'can_edit_users': False,
-            'can_edit_hospitals': False,
-            'can_edit_listings': False,
-            'can_edit_staff': False,
-            'can_edit_roles': False,
-            'can_edit_persons': False,
-            'can_invite': False,
-            'name': 'default',
-        }
+        can_edit_users=False,
+        can_edit_hospitals=False,
+        can_edit_listings=False,
+        can_edit_staff=False,
+        can_edit_roles=False,
+        can_edit_persons=False,
+        can_invite=False,
+        name='default',
     )
     db.session.add_all([admin, default])
     db.session.commit()
