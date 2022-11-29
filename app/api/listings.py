@@ -6,10 +6,7 @@ from app.errors import NotFoundError
 from app.utils.bp import Blueprint
 from app.utils.static import Static
 
-# from typing import
-
-
-bp = Blueprint('listings', auth=False)
+bp = Blueprint('listings', auth=True)
 
 
 class ListingSchema(Static):
@@ -41,7 +38,6 @@ class ListingSchema(Static):
     notes = str
     type = Listing.Type
     organ = Listing.Organ
-    donor = bool
     tumors_number = int
     biggest_tumor_size = int
     alpha_fetoprotein = int
