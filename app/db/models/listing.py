@@ -22,6 +22,7 @@ class Listing(db.Base):
     notes = sa.Column(sa.String)
     type = sa.Column(sa.Enum(Type))
     organ = sa.Column(sa.Enum(Organ))
+    donor = sa.Column(sa.Boolean)
 
     # algo fields
 
@@ -49,10 +50,10 @@ class Listing(db.Base):
     # relationships
 
     person_id = sa.Column(sa.ForeignKey('persons.id'))
-    hospital_id = sa.Column(sa.ForeignKey('hospitals.id'))
+    # hospital_id = sa.Column(sa.ForeignKey('hospitals.id'))
 
     person = orm.relationship('Person', backref='listings')
-    hospital = orm.relationship('Hospital', backref='listings')
+    # hospital = orm.relationship('Hospital', backref='listings')
 
     @property
     def alpha_fetoprotein_score(self):

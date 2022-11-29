@@ -6,19 +6,22 @@ from app.errors import NotFoundError
 from app.utils.bp import Blueprint
 from app.utils.static import Static
 
+# from typing import
+
+
 bp = Blueprint('listings', auth=False)
 
 
 class ListingSchema(Static):
     @staticmethod
-    def dialyse_start_date(d):
-        dialyse_start_date = Static._get(d, 'dialyse_start_date')
-        return datetime.fromisoformat(dialyse_start_date).date()
+    def dialysis_start_date(d):
+        dialysis_start_date = Static._get(d, 'dialysis_start_date')
+        return datetime.fromisoformat(dialysis_start_date).date()
 
     @staticmethod
-    def dialyse_end_date(d):
-        dialyse_end_date = Static._get(d, 'dialyse_end_date')
-        return datetime.fromisoformat(dialyse_end_date).date()
+    def dialysis_end_date(d):
+        dialysis_end_date = Static._get(d, 'dialysis_end_date')
+        return datetime.fromisoformat(dialysis_end_date).date()
 
     @staticmethod
     def arf_date(d):
@@ -38,6 +41,7 @@ class ListingSchema(Static):
     notes = str
     type = Listing.Type
     organ = Listing.Organ
+    donor = bool
     tumors_number = int
     biggest_tumor_size = int
     alpha_fetoprotein = int
@@ -48,6 +52,15 @@ class ListingSchema(Static):
     DQ = int
     person_id = int
     hospital_id = int
+
+
+def update(listing, data):
+    for key, value in data.dict.items():
+        if value == 'null':
+            setattr(listing, key, None)
+        elif value is not None:
+            setattr(listing, key, value)
+    return listing
 
 
 @bp.get('/')
@@ -69,6 +82,20 @@ def create_listing(data: ListingSchema):
     db.session.add(person)
     db.session.commit()
     return get_listing(person.id)
+
+
+@bp.post('/<int:id>')
+def update_listing(id, data: ListingSchema):
+    listing = db.session.get(Listing, id)
+    db.session.commit()
+    return update(listing, data)
+
+
+@bp.delete('/<int:id>')
+def delete_listing(id: int):
+    listing = get_listing(id)
+    db.session.delete(listing)
+    db.session.commit()
 
 
 @bp.get('/<int:id>/matches')
