@@ -142,13 +142,15 @@ class Delete(Route):
     method = 'delete'
 
 
-user_login = {"email": "user@email.com", "password": "password"}
-user_register = {
+user_login = {
     "email": f"user{random.randint(0, 1000)}@email.com",
     "password": "password",
-    "firstname": "prenom",
-    "lastname": "nom",
-    "phone_number": "123456789",
+}
+user_register = dict(
+    **user_login,
+    firstname="prenom",
+    lastname="nom",
+    phone_number="+33123456789",
 }
 user_login_fail = {"email": "user@email.com", "password": "not-the-password"}
 
@@ -157,11 +159,11 @@ calls = [
     # Useful to check if the server is up, or to check if it is running
     # the latest version.
     Get('/', auth=False),
-    # Login and get a token.
-    Post('/auth/login', [user_login, user_login_fail], auth=False),
     # Register a new user, response should be the same as login, so no need to
     # login after registering.
-    Post('/auth/register', [user_register, user_login], auth=False),
+    Post('/auth/register', [user_register, user_register], auth=False),
+    # Login and get a token.
+    Post('/auth/login', [user_login, user_login_fail], auth=False),
     # List all users
     Get('/users'),
     # Get info about the current user
