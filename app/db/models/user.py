@@ -66,7 +66,7 @@ class User(TimedMixin, db.Base):
             'lastname': self.lastname,
             'phone_number': self.phone_number,
             'country_code': self.country_code,
-            'role_id': self.role_id,
+            'role': self.role,
         }
 
     def save_password(self, value):
