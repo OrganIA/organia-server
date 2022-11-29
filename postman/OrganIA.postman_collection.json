@@ -392,12 +392,12 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "4-2-0fdc42590ce5d8de2de47fe4eeecb7bef1cab2a36ce94b3fe0cb1fa713caee97",
+									"value": "1-1-d10ff213d81c60aba869175637ee3d4b46396ebadb49180ceb08f3c405b74730",
 									"type": "string"
 								}
 							]
 						},
-						"method": "PUT",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
@@ -444,6 +444,36 @@
 						}
 					},
 					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "1-1-d10ff213d81c60aba869175637ee3d4b46396ebadb49180ceb08f3c405b74730",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
 				}
 			]
 		},
@@ -619,6 +649,128 @@
 							"path": [
 								"api",
 								"hospitals"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Listings",
+			"item": [
+				{
+					"name": "Get all listings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/listings/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"listings",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a listing",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Create a listing",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1-1-d10ff213d81c60aba869175637ee3d4b46396ebadb49180ceb08f3c405b74730",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"person_id\": 1,\n    \"notes\": \"\",\n    \"type\": \"DONOR\",\n    \"donor\": \"true\",\n    \"organ\": \"HEART\",\n    \"tumors_number\": \"0\",\n    \"biggest_tumor_size\": \"0\",\n    \"alpha_fetoprotein\": \"0\",\n    \"is_under_dialysis\": \"false\",\n    \"dialyse_start_date\": \"2021-09-15\",\n    \"dialyse_end_date\": \"2021-09-15\",\n    \"is_retransplantation\": \"false\",\n    \"arf_date\": \"2021-09-15\",\n    \"transplantation_date\": \"2021-09-15\",\n    \"re_registration_date\": \"2021-09-15\",\n    \"A\": \"0\",\n    \"B\": \"0\",\n    \"DR\": \"0\",\n    \"DQ\": \"0\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/api/listings/",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"listings",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a listing",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"person_id\": 1,\n    \"notes\": \"\",\n    \"type\": \"PATIENT\",\n    \"organ\": \"HEART\",\n    \"tumors_number\": \"1\",\n    \"hospital_id\": \"4\",\n    \"biggest_tumor_size\": \"0\",\n    \"alpha_fetoprotein\": \"0\",\n    \"is_under_dialysis\": \"false\",\n    \"dialysis_start_date\": \"2021-09-15\",\n    \"dialysis_end_date\": \"2021-09-15\",\n    \"is_retransplantation\": \"false\",\n    \"arf_date\": \"2021-09-15\",\n    \"transplantation_date\": \"2021-09-15\",\n    \"re_registration_date\": \"2021-09-15\",\n    \"A\": \"0\",\n    \"B\": \"4\",\n    \"DR\": \"0\",\n    \"DQ\": \"0\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/api/listings/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"listings",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a listing",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8000/api/listings/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"listings",
+								"2"
 							]
 						}
 					},
