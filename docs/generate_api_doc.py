@@ -108,25 +108,25 @@ class Route:
 
         lines = []
 
-        def l(*args):
+        def line(*args):
             for arg in args:
                 if not arg:
                     continue
                 lines.append(arg)
 
-        l(f'## {self.title}')
-        l(self.desc)
+        line(f'## {self.title}')
+        line(self.desc)
         if self.admin:
-            l(ADMIN_NOTE)
+            line(ADMIN_NOTE)
         elif self.auth:
-            l(AUTH_NOTE)
+            line(AUTH_NOTE)
         for response in self.responses:
             if response.get('request'):
-                l('### Request')
-                l(format_json(response['request']))
-            l('### Response')
-            l(format_json(response['response'].content))
-            l(f'**Status:** {response["response"].status_code}')
+                line('### Request')
+                line(format_json(response['request']))
+            line('### Response')
+            line(format_json(response['response'].content))
+            line(f'**Status:** {response["response"].status_code}')
         return '\n'.join(lines)
 
 
@@ -142,12 +142,17 @@ class Delete(Route):
     method = 'delete'
 
 
-user_login = {"email": "user@email.com", "password": "password"}
-user_login_fail = {"email": "user@email.com", "password": "no-the-password"}
-user_login_random = {
+user_login = {
     "email": f"user{random.randint(0, 1000)}@email.com",
     "password": "password",
 }
+user_register = dict(
+    **user_login,
+    firstname="prenom",
+    lastname="nom",
+    phone_number="+33123456789",
+}
+user_login_fail = {"email": "user@email.com", "password": "not-the-password"}
 
 calls = [
     # Information about the server, such as the version or the OS.
@@ -156,7 +161,7 @@ calls = [
     Get('/', auth=False),
     # Register a new user, response should be the same as login, so no need to
     # login after registering.
-    Post('/auth/register', [user_login_random, user_login], auth=False),
+    Post('/auth/register', [user_register, user_register], auth=False),
     # Login and get a token.
     Post('/auth/login', [user_login, user_login_fail], auth=False),
     # List all users
@@ -173,6 +178,23 @@ calls = [
     Get('/listings/1'),
     # Get the matching listings for an organ
     Get('/listings/1/matches'),
+    # Get all the users chats
+    Get('/chats'),
+    # Get a specific chat
+    Get('/chats/1'),
+    # Create a new chat
+    Post('/chats', {"chat_name": "Chat name", "users_ids": [1, 2]}),
+    # Get all latest messages
+    Get('/chats/messages/latest'),
+    # Get all messages for a specific chat
+    Get('/chats/1/messages'),
+    # Send a message
+    Post(
+        '/chats/1/messages',
+        {"content": "Hello world!", "sender_id": 1, "chat_id": 1},
+    ),
+    # Delete a chat
+    Delete('/chats/1'),
 ]
 
 

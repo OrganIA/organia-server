@@ -5,6 +5,7 @@ from werkzeug import security
 from app import db
 from app.db.mixins import TimedMixin
 from app.errors import AlreadyTakenError, InvalidRequest, PasswordMismatchError
+from sqlalchemy_utils import PhoneNumber
 
 
 class User(TimedMixin, db.Base):
@@ -13,8 +14,16 @@ class User(TimedMixin, db.Base):
     email = sa.Column(sa.String, nullable=False, unique=True)
     password = sa.Column(sa.String)
     is_admin = sa.Column(sa.Boolean, default=False)
+    firstname = sa.Column(sa.String, nullable=False)
+    lastname = sa.Column(sa.String, nullable=False)
+    phone_number = sa.Column(sa.Unicode(20), nullable=False)
+    country_code = sa.Column(sa.Unicode(8), nullable=False, default="FR")
 
+    _phone_number = sa.orm.composite(PhoneNumber, phone_number, country_code)
     person = orm.relationship('Person', uselist=False, back_populates='user')
+    groups = orm.relationship('ChatGroup', back_populates='user')
+    chats = orm.relationship('Chat', back_populates='creator')
+    messages = orm.relationship('Message', back_populates='sender')
 
     # TODO: Use getter/setter for password instead of save_password
 

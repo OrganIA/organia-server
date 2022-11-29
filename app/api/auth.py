@@ -11,6 +11,14 @@ class LoginSchema(Static):
     password = str
 
 
+class RegisterSchema(Static):
+    email = str
+    password = str
+    firstname = str
+    lastname = str
+    phone_number = str
+
+
 @bp.post('/login')
 def login(data: LoginSchema, user=None):
     user: User = (
@@ -25,7 +33,7 @@ def login(data: LoginSchema, user=None):
 
 
 @bp.post('/register', success=201)
-def create_user(data: LoginSchema):
+def create_user(data: RegisterSchema):
     User.check_email(data.email)
     user = User(**data.dict)
     db.session.add(user)

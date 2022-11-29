@@ -6,14 +6,14 @@ on:
 
 jobs:
   update:
-    name: Push to production
+    name: Deploy to production instance
     runs-on: ubuntu-latest
     steps:
-      - name: Restart production server
+      - name: Run deploy command on remote server
         uses: appleboy/ssh-action@master
         with:
           username: ${{ secrets.PROD_USER }}
           key: ${{ secrets.SSH_KEY }}
           host: ${{ secrets.PROD_HOST }}
           script: |
-            sudo systemctl restart organia-prod
+            organia-deploy prod organia-server ${{ GITHUB_REF }}
