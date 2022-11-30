@@ -5,8 +5,7 @@ from simple_websocket.ws import Server
 
 from app import db, sock
 from app.api.chats import MessageCreateSchema
-from app.db.models.chat_group import ChatGroup
-from app.db.models.message import Message
+from app.db.models import ChatGroup, Message
 from app.errors import (
     HTTPException,
     InvalidRequest,

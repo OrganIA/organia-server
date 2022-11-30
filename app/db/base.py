@@ -5,6 +5,9 @@ from app.utils import str_format
 
 
 class Base:
+    __AUTO_DICT__ = True
+    __AUTO_DICT_EXCLUDE__ = ['password']
+
     @orm.declared_attr
     def __tablename__(cls):
         name = cls.__name__
@@ -14,19 +17,24 @@ class Base:
 
     id = sa.Column(sa.Integer, primary_key=True)
 
-    def __repr__(self):
-        if isinstance(self, type):
-            class_ = self
+    def __repr__(self) -> str:
+        state = sa.inspect(self)
+
+        if state.transient:
+            pk = f"(transient {id(self)})"
+        elif state.pending:
+            pk = f"(pending {id(self)})"
         else:
-            class_ = type(self)
-        header = [class_.__name__]
-        if getattr(self, 'id'):
-            header.append(f'#{self.id}')
-        body = [
-            f'{column.name}={getattr(self, column.name)}'
-            for column in class_.__table__.columns
-            if column.name != 'id'
-        ]
-        return '<{header}: {body}>'.format(
-            header=' '.join(header), body=', '.join(body)
-        )
+            pk = ", ".join(map(str, state.identity))
+
+        return f"<{type(self).__name__} {pk}>"
+
+    def to_dict(self):
+        if not self.__AUTO_DICT__:
+            raise NotImplementedError
+        inst = sa.inspect(self)
+        return {
+            c.key: getattr(self, c.key)
+            for c in inst.mapper.column_attrs
+            if c.key not in self.__AUTO_DICT_EXCLUDE__
+        }

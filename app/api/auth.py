@@ -13,6 +13,8 @@ class LoginSchema(Static):
 
 
 class RegisterSchema(Static):
+    __ERROR_ON_UNFOUND__ = False
+
     email = str
     password = str
     firstname = str
@@ -26,7 +28,7 @@ def login(data: LoginSchema, user=None):
         user or db.session.query(User).filter_by(email=data.email).first()
     )
     if not user:
-        raise InvalidRequest('Invalid email or password')
+        raise InvalidRequest("User not found")
     user.check_password(data.password)
     token = LoginToken.get_valid_for_user(user)
     db.session.commit()

@@ -33,9 +33,7 @@ class InternalServerError(HTTPException):
 
 class InvalidRequest(HTTPException):
     code = 422
-
-    def __init__(self, msg: str):
-        self.description = msg
+    description = 'Invalid request'
 
 
 class Unauthorized(HTTPException):

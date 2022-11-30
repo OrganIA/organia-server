@@ -28,15 +28,14 @@ class Person(TimedMixin, db.Base):
         POSITIVE = '+'
         NEGATIVE = '-'
 
-    first_name = sa.Column(sa.String, nullable=False)
-    last_name = sa.Column(sa.String, nullable=False)
-    birth_date = sa.Column(sa.Date, nullable=False)
+    first_name = sa.Column(sa.String)
+    last_name = sa.Column(sa.String)
+    birth_date = sa.Column(sa.Date)
     description = sa.Column(sa.String)
     user_id = sa.Column(sa.ForeignKey('users.id'), unique=True)
     gender = sa.Column(sa.Enum(Gender))
     abo = sa.Column(sa.Enum(ABO))
     rhesus = sa.Column(sa.Enum(Rhesus))
-
     user = orm.relationship('User', uselist=False, back_populates='person')
     staff = orm.relation('Staff', uselist=False, back_populates='person')
 
