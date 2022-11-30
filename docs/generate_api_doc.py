@@ -11,7 +11,7 @@ from pathlib import Path
 import requests
 
 target = Path('docs/api.md')
-server = 'http://localhost:5000'
+server = 'http://localhost:8000'
 prefix = '/api'
 
 
@@ -34,6 +34,7 @@ class Route:
     requests: list[dict] = field(default_factory=list)
     auth: bool = True
     admin: bool = False
+    show: bool = True
 
     method = None
     desc = None
@@ -146,13 +147,21 @@ user_login = {
     "email": f"user{random.randint(0, 1000)}@email.com",
     "password": "password",
 }
+user_login2 = {
+    "email": f"user{random.randint(0, 1000)}@email.com",
+    "password": "password",
+}
 user_register = dict(
     **user_login,
     firstname="prenom",
     lastname="nom",
     phone_number="+33123456789",
+)
+user_login_fail1 = {"email": "user@email.com", "password": "not-the-password"}
+user_login_fail2 = {
+    "email": user_login["email"],
+    "password": "not-the-password",
 }
-user_login_fail = {"email": "user@email.com", "password": "not-the-password"}
 
 calls = [
     # Information about the server, such as the version or the OS.
@@ -162,8 +171,13 @@ calls = [
     # Register a new user, response should be the same as login, so no need to
     # login after registering.
     Post('/auth/register', [user_register, user_register], auth=False),
+    Post('/auth/register', user_login2, auth=False, show=False),
     # Login and get a token.
-    Post('/auth/login', [user_login, user_login_fail], auth=False),
+    Post(
+        '/auth/login',
+        [user_login, user_login_fail1, user_login_fail2],
+        auth=False,
+    ),
     # List all users
     Get('/users'),
     # Get info about the current user
@@ -178,21 +192,21 @@ calls = [
     Get('/listings/1'),
     # Get the matching listings for an organ
     Get('/listings/1/matches'),
-    # Get all the users chats
+    # Create a new chat
+    Post('/chats', {"name": "Chat name", "users_ids": [1, 2]}),
+    # Get all the chats the current user is part of
     Get('/chats'),
     # Get a specific chat
     Get('/chats/1'),
-    # Create a new chat
-    Post('/chats', {"chat_name": "Chat name", "users_ids": [1, 2]}),
-    # Get all latest messages
-    Get('/chats/messages/latest'),
-    # Get all messages for a specific chat
-    Get('/chats/1/messages'),
     # Send a message
     Post(
         '/chats/1/messages',
-        {"content": "Hello world!", "sender_id": 1, "chat_id": 1},
+        {"content": "Hello world!"},
     ),
+    # Get all chats the current user is part of and the last message of each
+    Get('/chats/messages/latest'),
+    # Get all messages for a specific chat
+    Get('/chats/1/messages'),
     # Delete a chat
     Delete('/chats/1'),
 ]
@@ -206,8 +220,13 @@ if __name__ == '__main__':
             + '\n\n'
         )
         for call in calls:
+            if not call.show:
+                continue
             f.write(f'- [{call.title}](#{call.href})\n')
         f.write('\n\n')
         for call in calls:
+            if not call.show:
+                call.fetch()
+                continue
             f.write(call.to_markdown())
             f.write('\n\n')
