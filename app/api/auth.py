@@ -1,5 +1,6 @@
 from app import db
 from app.db.models import LoginToken, User
+from app.errors import InvalidRequest
 from app.utils.bp import Blueprint
 from app.utils.static import Static
 
@@ -12,6 +13,8 @@ class LoginSchema(Static):
 
 
 class RegisterSchema(Static):
+    __ERROR_ON_UNFOUND__ = False
+
     email = str
     password = str
     firstname = str
@@ -25,7 +28,7 @@ def login(data: LoginSchema, user=None):
         user or db.session.query(User).filter_by(email=data.email).first()
     )
     if not user:
-        raise Exception("User not found")
+        raise InvalidRequest("User not found")
     user.check_password(data.password)
     token = LoginToken.get_valid_for_user(user)
     db.session.commit()
