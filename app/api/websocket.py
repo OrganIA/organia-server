@@ -1,17 +1,13 @@
 from json import loads
-from typing import List
 
 from simple_websocket.ws import Server
 
 from app import db, sock
-from app.api.chats import MessageCreateSchema
-from app.db.models import ChatGroup, Message
-from app.errors import (
-    HTTPException,
-    InvalidRequest,
-    NotFoundError,
-    Unauthorized,
-)
+from app.api.chats import MessageCreateSchema, _get_chat
+from app.db.models import Message
+from app.db.models.chat import Chat
+from app.db.models.user import User
+from app.errors import HTTPException, InvalidRequest, Unauthorized
 from app.utils import websocket_manager
 
 manager = websocket_manager.ConnectionManager()
@@ -32,7 +28,7 @@ def websocket_route(websocket: Server, chat_id: int):
                     raise Unauthorized("No Bearer token given.")
                 manager.get_client(websocket).login(data["token"], chat_id)
                 if not check_if_user_in_chat(
-                    get_all_users_in_chat(chat_id),
+                    _get_chat(chat_id, manager.get_client(websocket).user),
                     manager.get_client(websocket).get_id(),
                 ):
                     raise Unauthorized("User is not in chat.")
@@ -41,13 +37,11 @@ def websocket_route(websocket: Server, chat_id: int):
             if data["event"] == "send_message":
                 if not manager.get_client(websocket).get_if_logged():
                     raise Unauthorized("You are not logged in.")
-                check_message(
-                    data, chat_id, manager.get_client(websocket).get_id()
-                )
+                check_message(data, chat_id, manager.get_client(websocket).user)
                 message = send_message(
                     chat_id=chat_id,
                     data=data,
-                    logged_user=manager.get_client(websocket).user,
+                    user=manager.get_client(websocket).user,
                 )
                 websocket.send(
                     {
@@ -74,39 +68,29 @@ def websocket_route(websocket: Server, chat_id: int):
             websocket.send({"status": 400, "event": "error", "error": e.args})
 
 
-def check_message(data: MessageCreateSchema, chat_id: int, user_id: int):
-    if not all(keys in data for keys in ("chat_id", "content", "sender_id")):
+def check_message(data: MessageCreateSchema, chat_id: int, user: User):
+    if not ("content" in data):
         raise Exception("Missing data.")
-    if data["chat_id"] != chat_id:
-        raise Exception("Wrong chat_id.")
-    if data["sender_id"] != user_id:
-        raise Exception("Wrong sender_id.")
-    if not check_if_user_in_chat(get_all_users_in_chat(chat_id), user_id):
+    if not check_if_user_in_chat(
+        _get_chat(
+            chat_id,
+        ),
+        user.id,
+    ):
         raise Exception("User is not in chat.")
     del data["event"]
 
 
-def check_if_user_in_chat(chats: List[ChatGroup], user_id: int):
-    for chat in chats:
-        if chat.user_id == user_id:
-            return True
-    return False
+def check_if_user_in_chat(chat: Chat, user_id: int):
+    if user_id in [user.id for user in chat.users]:
+        return True
+    else:
+        return False
 
 
-def get_all_users_in_chat(chat_id: int):
-    return db.session.query(ChatGroup).filter_by(chat_id=chat_id).all()
-
-
-def send_message(chat_id: int, data: MessageCreateSchema, logged_user=None):
-    chat = (
-        db.session.query(ChatGroup)
-        .filter_by(chat_id=chat_id, user_id=logged_user.id)
-        .all()
-    )
-    if not chat:
-        raise NotFoundError("No chat found for the user with this id.")
-    print(data)
-    message = Message(**data)
+def send_message(chat_id: int, data: MessageCreateSchema, user=None):
+    chat = _get_chat(chat_id, user)
+    message = Message(content=data.content, chat=chat, sender=user)
     if not message:
         raise InvalidRequest()
     db.session.add(message)

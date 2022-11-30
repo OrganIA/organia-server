@@ -23,8 +23,9 @@ class Chat(db.mixins.TimedMixin, db.Base):
     def to_dict(self):
         return {
             "id": self.id,
-            "chat_name": self.chat_name,
+            "name": self.name,
             "creator_id": self.creator_id,
             "created_at": self.created_at,
             "updated_at": self.updated_at,
+            "users": self.users,
         }

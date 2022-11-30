@@ -45,7 +45,7 @@ def get_roles():
 @bp.get('/<int:role_id>')
 @auth.route()
 def get_role(role_id: int):
-    return db.session.get(Role, role_id).to_dict()
+    return db.session.get(Role, role_id)
 
 
 @bp.post('/')
@@ -58,7 +58,7 @@ def create_role(data: RoleSchema, auth_user: User):
     role = Role(**data.dict)
     db.session.add(role)
     db.session.commit()
-    return role.to_dict()
+    return role
 
 
 @bp.post('/<int:role_id>')
@@ -75,7 +75,7 @@ def update_role(role_id: int, data: RoleUpdateSchema, auth_user: User):
         elif value is not None:
             setattr(role, key, value)
     db.session.commit()
-    return role.to_dict()
+    return role
 
 
 @bp.delete('/<int:role_id>')

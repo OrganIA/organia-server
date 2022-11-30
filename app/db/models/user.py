@@ -65,7 +65,6 @@ class User(TimedMixin, db.Base):
             'firstname': self.firstname,
             'lastname': self.lastname,
             'phone_number': self.phone_number,
-            'country_code': self.country_code,
             'role': self.role,
         }
 

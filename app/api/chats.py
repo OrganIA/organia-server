@@ -83,10 +83,10 @@ def create_chat(data: ChatCreateSchema, auth_user: User):
 def update_chat(data: dict, chat_id: int, auth_user: User):
     chat = _get_chat(chat_id, auth_user)
     if "users_ids" in data:
-        users = _create_users_list(data.users_ids, auth_user)
+        users = _create_users_list(data["users_ids"], auth_user)
         chat.users = users
     if "name" in data:
-        chat.name = data.name
+        chat.name = data["name"]
     db.session.commit()
     return chat
 
@@ -112,4 +112,4 @@ def send_message(chat_id: int, data: MessageCreateSchema, auth_user: User):
     message = Message(content=data.content, chat=chat, sender=auth_user)
     db.session.add(message)
     db.session.commit()
-    return message.to_dict()
+    return message
