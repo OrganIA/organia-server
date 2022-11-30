@@ -9,17 +9,22 @@ from app.db.models.chat import Chat
 from app.db.models.user import User
 from app.errors import HTTPException, InvalidRequest, Unauthorized
 from app.utils import websocket_manager
+from app.utils.colors import Colors
 
 manager = websocket_manager.ConnectionManager()
 
 
 @sock.route('/chats/ws/<int:chat_id>')
 def websocket_route(websocket: Server, chat_id: int):
-    print('Accepting client connection...')
+    Colors.print(
+        f"Websocket connected: {websocket.environ['REMOTE_ADDR']}",
+        Colors.Color.OKGREEN,
+    )
     manager.connect(websocket)
     while websocket.connected:
         try:
             data = loads(websocket.receive())
+            Colors.print(f"Received data: {data}", Colors.Color.WARNING)
             if "event" not in data:
                 websocket.send({"status": 404, "message": "No protocol found."})
                 continue
@@ -37,10 +42,12 @@ def websocket_route(websocket: Server, chat_id: int):
             if data["event"] == "send_message":
                 if not manager.get_client(websocket).get_if_logged():
                     raise Unauthorized("You are not logged in.")
-                check_message(data, chat_id, manager.get_client(websocket).user)
+                if "content" not in data["data"]:
+                    raise InvalidRequest("No content given.")
+                check_message(chat_id, manager.get_client(websocket).user)
                 message = send_message(
                     chat_id=chat_id,
-                    data=data,
+                    data=data["data"],
                     user=manager.get_client(websocket).user,
                 )
                 websocket.send(
@@ -68,17 +75,17 @@ def websocket_route(websocket: Server, chat_id: int):
             websocket.send({"status": 400, "event": "error", "error": e.args})
 
 
-def check_message(data: MessageCreateSchema, chat_id: int, user: User):
-    if not ("content" in data):
-        raise Exception("Missing data.")
+def check_message(chat_id: int, user: User) -> bool:
     if not check_if_user_in_chat(
         _get_chat(
             chat_id,
+            user,
         ),
         user.id,
     ):
         raise Exception("User is not in chat.")
-    del data["event"]
+    else:
+        return True
 
 
 def check_if_user_in_chat(chat: Chat, user_id: int):
@@ -88,9 +95,9 @@ def check_if_user_in_chat(chat: Chat, user_id: int):
         return False
 
 
-def send_message(chat_id: int, data: MessageCreateSchema, user=None):
+def send_message(chat_id: int, data: MessageCreateSchema, user=None) -> Message:
     chat = _get_chat(chat_id, user)
-    message = Message(content=data.content, chat=chat, sender=user)
+    message = Message(content=data["content"], chat=chat, sender=user)
     if not message:
         raise InvalidRequest()
     db.session.add(message)
