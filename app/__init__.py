@@ -1,9 +1,12 @@
 import flask
+from flask_sock import Sock
 from sqlalchemy.event import listens_for
 
 from app import db
 from app.application import App
 from app.db.models import Role
+
+sock = Sock()
 
 
 def create_app():
@@ -24,6 +27,7 @@ def create_app():
 
     register_error_handler(app)
 
+    sock.init_app(app)
     return app
 
 
