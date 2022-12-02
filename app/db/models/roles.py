@@ -40,3 +40,13 @@ class Role(db.Base):
         )
         db.session.add_all([admin, default])
         db.session.commit()
+
+    @classmethod
+    @property
+    def default(cls):
+        return db.session.query(cls).filter_by(name='default').first()
+
+    @classmethod
+    @property
+    def admin(cls):
+        return db.session.query(cls).filter_by(name='admin').first()
