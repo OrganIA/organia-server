@@ -11,6 +11,9 @@ from app.errors import AlreadyTakenError, InvalidRequest, PasswordMismatchError
 class User(TimedMixin, db.Base):
     """An entity that can login into the platform"""
 
+    __AUTO_DICT_EXCLUDE__ = ['password', 'role_id']
+    __AUTO_DICT_INCLUDE__ = ['role']
+
     email = sa.Column(sa.String, nullable=False, unique=True)
     password = sa.Column(sa.String)
     is_admin = sa.Column(sa.Boolean, default=False)

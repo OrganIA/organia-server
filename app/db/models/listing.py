@@ -8,6 +8,9 @@ from app.utils.enums import EnumStr
 
 
 class Listing(db.Base):
+    __AUTO_DICT_EXCLUDE__ = ['person_id']
+    __AUTO_DICT_INCLUDE__ = ['person']
+
     class Type(EnumStr):
         DONOR = enum.auto()
         PATIENT = enum.auto()

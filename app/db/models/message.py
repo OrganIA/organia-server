@@ -5,6 +5,8 @@ from app import db
 
 
 class Message(db.mixins.TimedMixin, db.Base):
+    __AUTO_DICT_EXCLUDE__ = ['sender_id', 'chat_id']
+    __AUTO_DICT_INCLUDE__ = ['sender', 'chat', 'user']
     content = sa.Column(sa.String, nullable=False)
     chat_id = sa.Column(sa.ForeignKey('chats.id'))
     sender_id = sa.Column(sa.ForeignKey('users.id'))
