@@ -7,7 +7,7 @@ class Result:
     created: bool = False
 
 
-def get_or_create(model, filter_cols=None, session=None, **kwargs):
+def get_or_create(model, filter_cols=None, session=None, commit=True, **kwargs):
     from app import db
 
     session = session or db.session
@@ -22,4 +22,6 @@ def get_or_create(model, filter_cols=None, session=None, **kwargs):
         return Result(obj)
     obj = model(**kwargs)
     session.add(obj)
+    if commit:
+        session.commit()
     return Result(obj, True)

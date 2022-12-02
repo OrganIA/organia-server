@@ -17,7 +17,7 @@ class User(TimedMixin, db.Base):
     firstname = sa.Column('first_name', sa.String)
     lastname = sa.Column('last_name', sa.String)
     phone_number = sa.Column(PhoneNumberType)
-    role_id = sa.Column(sa.ForeignKey('roles.id'), nullable=False, default=1)
+    role_id = sa.Column(sa.ForeignKey('roles.id'))
 
     person = orm.relationship('Person', uselist=False, back_populates='user')
     created_chats = orm.relationship('Chat', back_populates='creator')
@@ -32,17 +32,18 @@ class User(TimedMixin, db.Base):
     def __init__(self, **kwargs):
         if password := kwargs.pop('password', None):
             self.save_password(password)
+        if "role_id" not in kwargs and "role" not in kwargs:
+            from app.db.models import Role
+
+            kwargs["role"] = Role.admin
         super().__init__(**kwargs)
 
     @classmethod
     @property
     def admin(cls):
-        action = db.session.get_or_create(
+        return db.session.get_or_create(
             cls, filter_cols=['email'], email='admin@localhost', is_admin=True
-        )
-        if action.created:
-            db.session.commit()
-        return action.obj
+        ).obj
 
     @classmethod
     def check_email(cls, value, obj=None):
