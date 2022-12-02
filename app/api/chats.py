@@ -71,7 +71,6 @@ def _create_users_list(users_ids: list, auth_user: User):
 @bp.post('/')
 @auth.route()
 def create_chat(data: ChatCreateSchema, auth_user: User):
-    print("HERE")
     users = _create_users_list(data.users_ids, auth_user)
     chat = Chat(name=data.name, users=users, creator=auth_user)
     db.session.add(chat)

@@ -32,7 +32,7 @@ def login(data: LoginSchema, user=None):
     user.check_password(data.password)
     token = LoginToken.get_valid_for_user(user)
     db.session.commit()
-    return {'token': token.value, 'user': user()}
+    return {'token': token.value, 'user': user}
 
 
 @bp.post('/register', success=201)
