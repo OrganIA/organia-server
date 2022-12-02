@@ -1,0 +1,60 @@
+<!doctype html>
+
+<label for="token">Token</label>
+<input type="text" id="token" />
+
+<label for="url">URL</label>
+<input type="text" id="url" value="http://localhost:8000/api/listings/" />
+
+<button id="button">Call</button>
+
+<code id="result"></code>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        padding: 2em;
+        max-width: 500px;
+        margin: auto;
+    }
+
+    input,
+    button,
+    code {
+        display: block;
+        width: 100%;
+        padding: 1em;
+        margin: 1em 0;
+    }
+
+    #result {
+        border: 1px solid #ccc;
+        white-space: pre;
+    }
+</style>
+
+<script>
+    const result_box = document.getElementById("result");
+    document.getElementById("button").onclick = async function () {
+        let result = '';
+        try {
+            const response = await fetch(
+                document.getElementById("url").value,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + document.getElementById("token").value
+                    }
+                },
+            );
+            result = await response.json();
+        } catch (error) {
+            result = error;
+        }
+        result_box.innerHTML = JSON.stringify(result, null, 2);
+    };
+</script>
