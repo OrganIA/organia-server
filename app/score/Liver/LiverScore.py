@@ -1,6 +1,7 @@
 import math
 
-from app.score.Kidney.KidneyScore import getScoreHD, getScoreMG
+from app.geopy import get_distance
+from app.score.Kidney.KidneyScore import getScoreHD
 
 
 def alpha_fetoprotein_score(receiver_listing):
@@ -38,6 +39,11 @@ def meld_score(receiver_listing):
         + 0.6431
     )
     return meld
+
+
+def getScoreMG(hospital_1, hospital_2):
+    MG = get_distance(hospital_1, hospital_2)
+    return MG
 
 
 def final_score(receiver, donor, receiver_listing, donor_listing):
