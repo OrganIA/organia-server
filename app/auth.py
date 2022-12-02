@@ -31,6 +31,8 @@ def check(admin=False):
 
 
 def need_user(admin=False):
+    if flask.request.method == 'OPTIONS':
+        return None
     user = _retrieve_user()
     if admin and not user.is_admin:
         raise InsufficientPermissions(
