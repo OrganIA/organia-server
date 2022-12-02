@@ -24,7 +24,11 @@ class ConnectionManager:
 
     def broadcast(self, message: Union[str, dict], websocket: Server) -> None:
         for client in self.active_connections:
-            if client.websocket != websocket and client.get_if_logged():
+            if (
+                client.websocket != websocket
+                and client.is_logged()
+                and client.chat_id == self.get_client(websocket).chat_id
+            ):
                 self.send_client(message, client.websocket)
 
     def get_client(self, websocket: Server) -> WebSocketClient:

@@ -23,5 +23,5 @@ class WebSocketClient:
             return None
         return self.user.id
 
-    def get_if_logged(self) -> bool:
+    def is_logged(self) -> bool:
         return self.user is not None

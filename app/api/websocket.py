@@ -30,18 +30,18 @@ def websocket_route(websocket: Server, chat_id: int):
                 continue
             elif data["event"] == "login":
                 if "token" not in data:
-                    raise Unauthorized("No Bearer token given.")
+                    raise Unauthorized(description="No Bearer token given.")
                 manager.get_client(websocket).login(data["token"], chat_id)
                 if not check_if_user_in_chat(
                     _get_chat(chat_id, manager.get_client(websocket).user),
                     manager.get_client(websocket).get_id(),
                 ):
-                    raise Unauthorized("User is not in chat.")
+                    raise Unauthorized(description="User is not in chat.")
                 websocket.send({"status": 200, "message": "Login successful."})
                 continue
             if data["event"] == "send_message":
-                if not manager.get_client(websocket).get_if_logged():
-                    raise Unauthorized("You are not logged in.")
+                if not manager.get_client(websocket).is_logged():
+                    raise Unauthorized(description="You are not logged in.")
                 if "content" not in data["data"]:
                     raise InvalidRequest("No content given.")
                 check_message(chat_id, manager.get_client(websocket).user)
@@ -84,15 +84,11 @@ def check_message(chat_id: int, user: User) -> bool:
         user.id,
     ):
         raise Exception("User is not in chat.")
-    else:
-        return True
+    return True
 
 
 def check_if_user_in_chat(chat: Chat, user_id: int):
-    if user_id in [user.id for user in chat.users]:
-        return True
-    else:
-        return False
+    return user_id in [user.id for user in chat.users]
 
 
 def send_message(chat_id: int, data: MessageCreateSchema, user=None) -> Message:

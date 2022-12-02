@@ -38,16 +38,12 @@ class InvalidRequest(HTTPException):
 
 class Unauthorized(HTTPException):
     code = 401
-
-    def __init__(self, msg: str = "Unauthorized"):
-        self.description = msg
+    description = 'Unauthorized'
 
 
 class NotAcceptableError(HTTPException):
     code = 400
-
-    def __init__(self, msg: str = "Not acceptable"):
-        self.description = msg
+    description = 'Not acceptable'
 
 
 class PasswordMismatchError(InvalidRequest):

@@ -15,11 +15,3 @@ class Staff(db.Base):
 
     person = orm.relationship('Person', uselist=False, back_populates='staff')
     hospital = orm.relationship('Hospital', backref='staff')
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'person_id': self.person_id,
-            'hospital_id': self.hospital_id,
-            'notes': self.notes,
-        }

@@ -19,13 +19,3 @@ class Chat(db.mixins.TimedMixin, db.Base):
         "User", secondary="chat_members", back_populates="chats"
     )
     messages = orm.relationship("Message", back_populates="chat")
-
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "name": self.name,
-            "creator_id": self.creator_id,
-            "created_at": self.created_at,
-            "updated_at": self.updated_at,
-            "users": self.users,
-        }

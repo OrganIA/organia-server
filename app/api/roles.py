@@ -24,26 +24,16 @@ class RoleSchema(Static):
     can_invite = bool
 
 
-class RoleUpdateSchema(Static):
+class RoleUpdateSchema(RoleSchema):
     __ERROR_ON_UNFOUND__ = False
-    name = str
-    can_edit_users = bool
-    can_edit_hospitals = bool
-    can_edit_listings = bool
-    can_edit_staff = bool
-    can_edit_roles = bool
-    can_edit_persons = bool
-    can_invite = bool
 
 
 @bp.get('/')
-@auth.route()
 def get_roles():
     return db.session.query(Role).all()
 
 
 @bp.get('/<int:role_id>')
-@auth.route()
 def get_role(role_id: int):
     return db.session.get(Role, role_id)
 
@@ -80,16 +70,15 @@ def update_role(role_id: int, data: RoleUpdateSchema, auth_user: User):
 
 @bp.delete('/<int:role_id>')
 @auth.route()
-def delete_role(role_id: int, data: RoleUpdateSchema, auth_user: User):
+def delete_role(role_id: int, auth_user: User):
     if not auth_user.role.can_edit_roles:
         raise Unauthorized('You do not have permission to delete roles.')
     if not (role := db.session.query(Role).filter_by(id=role_id).first()):
         raise NotFoundError("No role found with this id.")
-    elif db.session.query(User).filter_by(role_id=role_id).all():
+    if db.session.query(User).filter_by(role_id=role_id).count() > 0:
         raise NotAcceptableError(
-            "Please remove or update all users who have this role before"
-            " removing it."
+            description="Please remove or update all users who have this role"
+            " before removing it."
         )
-    else:
-        db.session.delete(role)
-        db.session.commit()
+    db.session.delete(role)
+    db.session.commit()

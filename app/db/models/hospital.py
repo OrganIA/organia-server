@@ -18,14 +18,3 @@ class Hospital(db.Base):
         from app.db.models import Listing
 
         return db.session.query(Listing).filter_by(hospital=self).count()
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'city_id': self.city_id,
-            'name': self.name,
-            'phone_number': self.phone_number,
-            'latitude': self.latitude,
-            'longitude': self.longitude,
-            'patients_count': self.patients_count,
-        }

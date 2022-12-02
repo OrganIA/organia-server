@@ -12,7 +12,7 @@ def _get_chat(chat_id: int, auth_user: User):
     if not chat:
         raise NotFoundError("No chat found with this id.")
     if auth_user not in chat.users:
-        raise Unauthorized("You are not in this chat.")
+        raise Unauthorized(description="You are not in this chat.")
     return chat
 
 
@@ -96,7 +96,7 @@ def update_chat(data: dict, chat_id: int, auth_user: User):
 def delete_chat(chat_id: int, auth_user: User):
     chat = _get_chat(chat_id, auth_user)
     if chat.creator != auth_user:
-        raise Unauthorized("You are not the creator of this chat.")
+        raise Unauthorized(description="You are not the creator of this chat.")
     db.session.delete(chat)
     db.session.commit()
 

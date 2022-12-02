@@ -54,16 +54,3 @@ class Person(TimedMixin, db.Base):
         )
         age = now.year - self.birth_date.year - (1 if aged_this_year else 0)
         return age
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'first_name': self.first_name,
-            'last_name': self.last_name,
-            'birth_date': self.birth_date.isoformat(),
-            'description': self.description,
-            'user_id': self.user_id,
-            'gender': self.gender,
-            'blood_type': self.blood_type,
-            'age': self.age,
-        }

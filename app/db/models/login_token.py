@@ -38,8 +38,8 @@ class LoginToken(TimedMixin, db.Base):
         id = token.split('-')[0]
         try:
             id = int(id)
-        except ValueError:
-            raise Unauthorized('Malformed token, ID field is corrupted')
+        except ValueError as e:
+            raise Unauthorized('Malformed token, ID field is corrupted') from e
         result = db.session.get(cls, id)
         if not result:
             raise Unauthorized('No token exist for this token ID')

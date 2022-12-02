@@ -13,5 +13,5 @@ class Colors:
         BOLD = '\033[1m'
         UNDERLINE = '\033[4m'
 
-    def print(text: any, color: Color):
+    def print(text, color: Color):
         print(f"{color.value}{text}{Colors.Color.ENDC.value}")

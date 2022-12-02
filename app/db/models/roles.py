@@ -14,17 +14,29 @@ class Role(db.Base):
     can_invite = sa.Column(sa.Boolean, default=False)
     name = sa.Column(sa.String, nullable=False, unique=True)
 
-    user = orm.relationship('User', back_populates='role')
+    users = orm.relationship('User', back_populates='role')
 
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'can_edit_users': self.can_edit_users,
-            'can_edit_hospitals': self.can_edit_hospitals,
-            'can_edit_listings': self.can_edit_listings,
-            'can_edit_staff': self.can_edit_staff,
-            'can_edit_roles': self.can_edit_roles,
-            'can_edit_persons': self.can_edit_persons,
-            'can_invite': self.can_invite,
-        }
+    @staticmethod
+    def init_table():
+        admin = Role(
+            can_edit_users=True,
+            can_edit_hospitals=True,
+            can_edit_listings=True,
+            can_edit_staff=True,
+            can_edit_roles=True,
+            can_edit_persons=True,
+            can_invite=True,
+            name='admin',
+        )
+        default = Role(
+            can_edit_users=False,
+            can_edit_hospitals=False,
+            can_edit_listings=False,
+            can_edit_staff=False,
+            can_edit_roles=False,
+            can_edit_persons=False,
+            can_invite=False,
+            name='default',
+        )
+        db.session.add_all([admin, default])
+        db.session.commit()

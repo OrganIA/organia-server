@@ -25,7 +25,7 @@ class User(TimedMixin, db.Base):
         'Chat', secondary='chat_members', back_populates='users'
     )
     messages = orm.relationship('Message', back_populates='sender')
-    role = orm.relationship('Role', back_populates='user')
+    role = orm.relationship('Role', back_populates='users')
 
     # TODO: Use getter/setter for password instead of save_password
 
@@ -57,16 +57,6 @@ class User(TimedMixin, db.Base):
             raise AlreadyTakenError('email', value)
 
         return value
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'email': self.email,
-            'firstname': self.firstname,
-            'lastname': self.lastname,
-            'phone_number': self.phone_number,
-            'role': self.role,
-        }
 
     def save_password(self, value):
         self.password = security.generate_password_hash(value)
