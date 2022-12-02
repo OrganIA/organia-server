@@ -24,12 +24,11 @@ class PersonSchema(Static):
 
 
 def update(person, data):
-    person.first_name = data.first_name
-    person.last_name = data.last_name
-    person.description = data.description
-    person.abo = data.abo
-    person.rhesus = data.rhesus
-    person.gender = data.gender
+    for key, value in data.dict.items():
+        if value == 'null':
+            setattr(person, key, None)
+        elif value is not None:
+            setattr(person, key, value)
     return person
 
 

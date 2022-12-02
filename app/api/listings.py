@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from app import db
-from app.db.models import Listing
+from app.db.models import Listing, Liver
 from app.errors import NotFoundError
 from app.utils.bp import Blueprint
 from app.utils.static import Static
@@ -50,6 +50,18 @@ class ListingSchema(Static):
     hospital_id = int
 
 
+def create_organ(data):
+    # Update this function when an organ is implemented
+    listing = db.session.query(Listing).order_by(Listing.id.desc()).first()
+    organ = {}
+    if listing.organ.value == "LIVER":
+        organ = Liver()
+        organ = update(organ, data)
+    organ.listing_id = listing.id
+    organ.score = 0.0
+    return organ
+
+
 def update(listing, data):
     for key, value in data.dict.items():
         if value == 'null':
@@ -74,10 +86,11 @@ def get_listing(id):
 
 @bp.post('/')
 def create_listing(data: ListingSchema):
-    person = Listing(**data.dict)
-    db.session.add(person)
+    listing = Listing(**data.dict)
+    db.session.add(listing)
     db.session.commit()
-    return get_listing(person.id)
+    create_organ(data)
+    return get_listing(listing.id)
 
 
 @bp.post('/<int:id>')

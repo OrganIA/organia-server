@@ -16,6 +16,7 @@ class Listing(db.Base):
         HEART = enum.auto()
         KIDNEY = enum.auto()
         LUNG = enum.auto()
+        LIVER = enum.auto()
 
     # fields
 
