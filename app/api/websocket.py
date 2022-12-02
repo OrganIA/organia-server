@@ -47,7 +47,7 @@ def websocket_route(websocket: Server, chat_id: int):
                 check_message(chat_id, manager.get_client(websocket).user)
                 message = send_message(
                     chat_id=chat_id,
-                    data=data["data"],
+                    data=MessageCreateSchema(data["data"]),
                     user=manager.get_client(websocket).user,
                 )
                 websocket.send(
@@ -93,7 +93,7 @@ def check_if_user_in_chat(chat: Chat, user_id: int):
 
 def send_message(chat_id: int, data: MessageCreateSchema, user=None) -> Message:
     chat = _get_chat(chat_id, user)
-    message = Message(content=data["content"], chat=chat, sender=user)
+    message = Message(content=data.content, chat=chat, sender=user)
     if not message:
         raise InvalidRequest()
     db.session.add(message)
