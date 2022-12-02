@@ -31,7 +31,7 @@ def alpha_fetoprotein_score(receiver_listing):
     return alpha_fetoprotein_score
 
 
-def meld_score(receiver_listing):
+def meld_score():
     meld = (
         10 * (0.957 * math.log(4))
         + (0.378 * math.log(0.0113))
