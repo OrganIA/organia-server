@@ -6,7 +6,7 @@ from app.errors import NotFoundError
 from app.utils.bp import Blueprint
 from app.utils.static import Static
 
-bp = Blueprint('listings', auth=True)
+bp = Blueprint(__name__)
 
 
 class ListingSchema(Static):
@@ -54,12 +54,27 @@ def create_organ(data):
     # Update this function when an organ is implemented
     listing = db.session.query(Listing).order_by(Listing.id.desc()).first()
     organ = {}
-    if listing.organ.value == "LIVER":
+    if listing.organ == Listing.Organ.LIVER:
         organ = Liver()
         organ = update(organ, data)
-    organ.listing_id = listing.id
-    organ.score = 0.0
+        organ.listing_id = listing.id
+        organ.score = 0.0
     return organ
+
+
+def update_organ(data, id):
+    organ = {}
+    if data.organ == Listing.Organ.LIVER:
+        organ = db.session.query(Liver).filter_by(listing_id=id)
+        organ = update(organ, data)
+    return organ
+
+
+def delete_organ(listing, id):
+    if listing.organ == Listing.Organ.LIVER:
+        organ = db.session.query(Liver).filter_by(listing_id=id)
+        db.session.delete(organ)
+        db.session.commit()
 
 
 def update(listing, data):
@@ -96,13 +111,16 @@ def create_listing(data: ListingSchema):
 @bp.post('/<int:id>')
 def update_listing(id, data: ListingSchema):
     listing = db.session.get(Listing, id)
+    listing = update(listing, data)
+    update_organ(data, id)
     db.session.commit()
-    return update(listing, data)
+    return listing
 
 
 @bp.delete('/<int:id>')
 def delete_listing(id: int):
     listing = get_listing(id)
+    delete_organ(listing, id)
     db.session.delete(listing)
     db.session.commit()
 

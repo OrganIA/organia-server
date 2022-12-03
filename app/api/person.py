@@ -6,7 +6,7 @@ from app.errors import NotFoundError
 from app.utils.bp import Blueprint
 from app.utils.static import Static
 
-bp = Blueprint('persons', auth=True)
+bp = Blueprint(__name__)
 
 
 class PersonSchema(Static):

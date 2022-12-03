@@ -1,16 +1,13 @@
-# from pydantic import BaseModel
-
 from app import db
 from app.db.models import Liver
 from app.errors import NotFoundError
 from app.utils.bp import Blueprint
 from app.utils.static import Static
 
-bp = Blueprint('livers', auth=False)
+bp = Blueprint(__name__)
 
 
 class LiverSchema(Static):
-
     listing_id = int
     tumors_number = int
     biggest_tumor_size = int

@@ -1,7 +1,7 @@
 import math
 
 from app.geopy import get_distance
-from app.score.Kidney.KidneyScore import getScoreHD
+from app.score.kidney.kidney_score import get_score_HD
 
 
 def alpha_fetoprotein_score(receiver_listing):
@@ -41,7 +41,7 @@ def meld_score():
     return meld
 
 
-def getScoreMG(hospital_1, hospital_2):
+def get_score_mg(hospital_1, hospital_2):
     MG = get_distance(hospital_1, hospital_2)
     return MG
 
@@ -51,11 +51,11 @@ def final_score(receiver, donor, receiver_listing, donor_listing):
         return (
             alpha_fetoprotein_score(receiver_listing)
             * meld_score(receiver_listing)
-            * getScoreHD(receiver, donor, receiver_listing, donor_listing)
+            * get_score_HD(receiver, donor, receiver_listing, donor_listing)
         )
     else:
         return (
             alpha_fetoprotein_score(receiver_listing)
             * meld_score(receiver_listing)
-            * getScoreHD(receiver, donor, receiver_listing, donor_listing)
-        ) / getScoreMG("PARIS", "MARSEILLE")
+            * get_score_HD(receiver, donor, receiver_listing, donor_listing)
+        ) / get_score_mg("PARIS", "MARSEILLE")
