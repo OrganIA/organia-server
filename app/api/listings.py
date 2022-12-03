@@ -53,28 +53,26 @@ class ListingSchema(Static):
 def create_organ(data):
     # Update this function when an organ is implemented
     listing = db.session.query(Listing).order_by(Listing.id.desc()).first()
+    if not listing:
+        raise NotFoundError
     organ = {}
     if listing.organ == Listing.Organ.LIVER:
         organ = Liver()
         organ = update(organ, data)
         organ.listing_id = listing.id
         organ.score = 0.0
+        db.session.add(organ)
+        db.session.commit()
     return organ
 
 
 def update_organ(data, id):
     organ = {}
     if data.organ == Listing.Organ.LIVER:
-        organ = db.session.query(Liver).filter_by(listing_id=id)
+        organ = db.session.query(Liver).filter_by(listing_id=id).first()
         organ = update(organ, data)
-    return organ
-
-
-def delete_organ(listing, id):
-    if listing.organ == Listing.Organ.LIVER:
-        organ = db.session.query(Liver).filter_by(listing_id=id)
-        db.session.delete(organ)
         db.session.commit()
+    return organ
 
 
 def update(listing, data):
@@ -111,6 +109,8 @@ def create_listing(data: ListingSchema):
 @bp.post('/<int:id>')
 def update_listing(id, data: ListingSchema):
     listing = db.session.get(Listing, id)
+    if not listing:
+        raise NotFoundError
     listing = update(listing, data)
     update_organ(data, id)
     db.session.commit()
@@ -120,7 +120,6 @@ def update_listing(id, data: ListingSchema):
 @bp.delete('/<int:id>')
 def delete_listing(id: int):
     listing = get_listing(id)
-    delete_organ(listing, id)
     db.session.delete(listing)
     db.session.commit()
 
