@@ -6,10 +6,9 @@ geolocator = Nominatim(user_agent="NewOrganiaa")
 
 def get_coordinates(address):
     location = geolocator.geocode(address)
-    print(location)
     if not location:
-        return None
-    position = (location.latitude, location.longitude)
+        return []
+    position = [location.latitude, location.longitude]
     return position
 
 
