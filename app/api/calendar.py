@@ -61,6 +61,8 @@ def update_event(
     if event.author_id != auth_user.id:
         raise Unauthorized
     for key, value in data.items():
+        if key == 'start_date' or key == 'end_date':
+            value = datetime.fromisoformat(value).date()
         setattr(event, key, value)
     db.session.commit()
     return event
