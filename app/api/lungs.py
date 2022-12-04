@@ -1,6 +1,8 @@
 from app import db
+from app.api.person import get_person
 from app.db.models import Listing, Lung
-from app.errors import InvalidRequest, NotFoundError
+from app.errors import NotFoundError
+from app.score.lungs.LungsScore import lungs_final_score
 from app.utils.bp import Blueprint
 from app.utils.static import Static
 
@@ -32,60 +34,41 @@ class LungUpdateScoreSchema(Static):
     score = int
 
 
-@bp.get('/<int:listing_id', success=201)
-async def get_lungs(listing_id: int):
+@bp.get('/<int:listing_id>', success=201)
+def get_lungs(listing_id: int):
     query = db.session.query(Lung).filter_by(listing_id=listing_id).first()
     if not query:
         raise NotFoundError('No Listing found')
     return query
 
 
-@bp.post('/<int:listing_id>', success=201)
-async def update_lungs_variables(listing_id: int, data: LungCreateSchema):
+def update_lungs_score(listing_id: int, score: LungUpdateScoreSchema):
     listing = db.session.query(Listing).filter_by(id=listing_id).first()
     if listing == None:
         raise NotFoundError('Listing not found')
-    listing_lung = db.session.query(Lung).filter_by(
-        listing_id=listing_id).first()
-    if listing_lung != None:
-        raise InvalidRequest('A listing with this id already exists')
-
-    data.listing_id = listing_id
-    data = data.dict(exclude_unset=True)
-    lungs = db.add(Lung, data)
-    return lungs
-
-
-@bp.post('/<int:listing_id>/score', success=201)
-async def update_lungs_score(listing_id: int, score: LungUpdateScoreSchema):
-    listing = db.session.query(Listing).filter_by(id=listing_id).first()
-    if listing == None:
-        raise NotFoundError('Listing not found')
-    lung = await get_lungs(listing_id)
-    lung.score = score.score
+    lung = get_lungs(listing_id)
+    lung.score = score
     db.session.commit()
     return lung
 
 
 @bp.get('/<int:listing_id>/score_del', success=201)
-async def delete_lungs_score(listing_id: int):
+def delete_lungs_score(listing_id: int):
     listing = db.session.query(Listing).filter_by(id=listing_id).first()
     if listing == None:
         raise NotFoundError('listing_id', listing_id,
                             'doesn\'t refer to an existing listing')
-    lung = await get_lungs(listing_id)
+    lung = get_lungs(listing_id)
     lung.score = 0.0
     db.session.commit()
     return
 
-@bp.get('<int:listing_id>/matches', success=201)
-async def compute_matches(listing_id: int):
-    return []
-    # listing_lungs_receivers = db.session.query(Listing).filter(
-    #     Listing.id != listing_id, Listing.donor == False, Listing.organ == "LUNG").all()
-    # listing_lungs_receiver_ids = []
-    # for listing_lungs_receiver in listing_lungs_receivers:
-    #     listing_lungs_receiver_ids.append(listing_lungs_receiver.id)
-    #     person_receiver = await get_person(listing_lungs_receiver.person_id)
-    #     await update_lungs_score(listing_lungs_receiver.id, lungs_final_score(person_receiver, None, listing_lungs_receiver))
-    # return db.session.query(Lung).filter(Lung.listing_id.in_(listing_lungs_receiver_ids)).order_by(Lung.score.desc()).all()
+def compute_matches(listing_id: int):
+    listing_lungs_receivers = db.session.query(Listing).filter(
+        Listing.id != listing_id, Listing.type == "PATIENT", Listing.organ == "LUNG").all()
+    listing_lungs_receiver_ids = []
+    for listing_lungs_receiver in listing_lungs_receivers:
+        listing_lungs_receiver_ids.append(listing_lungs_receiver.id)
+        person_receiver =  get_person(listing_lungs_receiver.person_id)
+        update_lungs_score(listing_lungs_receiver.id, lungs_final_score(person_receiver, None, listing_lungs_receiver))
+    return db.session.query(Lung).filter(Lung.listing_id.in_(listing_lungs_receiver_ids)).order_by(Lung.score.desc()).all()

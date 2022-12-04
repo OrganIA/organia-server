@@ -1,7 +1,8 @@
 from datetime import datetime
 
 from app import db
-from app.db.models import Listing, Liver
+from app.api.lungs import compute_matches
+from app.db.models import Listing, Liver, Lung
 from app.errors import NotFoundError
 from app.utils.bp import Blueprint
 from app.utils.static import Static
@@ -62,6 +63,12 @@ def create_organ(data):
         organ.listing_id = listing.id
         db.session.add(organ)
         db.session.commit()
+    if listing.organ == Listing.Organ.LUNG:
+        organ = Lung()
+        organ = update(organ, data)
+        organ.listing_id = listing.id
+        db.session.add(organ)
+        db.session.commit()
     return organ
 
 
@@ -69,6 +76,11 @@ def update_organ(data, id):
     organ = {}
     if data.organ == Listing.Organ.LIVER:
         organ = db.session.query(Liver).filter_by(listing_id=id).first()
+        print("ORGAN: ", organ)
+        organ = update(organ, data)
+        db.session.commit()
+    if data.organ == Listing.Organ.LUNG:
+        organ = db.session.query(Lung).filter_by(listing_id=id).first()
         print("ORGAN: ", organ)
         organ = update(organ, data)
         db.session.commit()
@@ -133,6 +145,12 @@ def get_listing_matches(id):
         if organ is None:
             raise NotFoundError.r("L'organe n'a pas été trouvé")
         score = organ.score
+    if listing.organ == Listing.Organ.LUNG:
+        compute_matches(id)
+        organ = db.session.query(Lung).filter(Listing.id != id, Listing.type == "PATIENT", Listing.organ == "LUNG").all()
+        if organ is None:
+            raise NotFoundError.r("L'organe n'a pas été trouvé")
+        score = organ.score
 
     def schemaify(listing: Listing):
         return {
@@ -147,10 +165,10 @@ def get_listing_matches(id):
     return sorted(
         [
             {
-                "listing": schemaify(l),
+                "listing": schemaify(listing),
                 "score": score,
             }
-            for listing in db.session.query(Listing)
+            for listing in db.session.query(Listing).filter_by(organ=listing.organ)
         ],
         key=lambda x: x['score'],
         reverse=True,
