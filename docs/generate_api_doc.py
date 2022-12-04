@@ -11,7 +11,7 @@ from pathlib import Path
 import requests
 
 target = Path('docs/api.md')
-server = 'http://localhost:5000'
+server = 'http://localhost:8000'
 prefix = '/api'
 
 
@@ -21,8 +21,9 @@ AUTH_NOTE = (
 )
 
 ADMIN_NOTE = (
-    '> :police_car: This request requires admin privileges. An user must be'
-    ' authenticated via a token and have the `is_admin` flag set to `True`.'
+    '> :police_car: This request requires specific permissions. An user must be'
+    ' authenticated via a token and their role must have the permissions'
+    ' {perms} to access this route.'
 )
 
 file = inspect.getsourcelines(sys.modules[__name__])[0]
@@ -34,6 +35,8 @@ class Route:
     requests: list[dict] = field(default_factory=list)
     auth: bool = True
     admin: bool = False
+    show: bool = True
+    perms: list[str] = field(default_factory=list)
 
     method = None
     desc = None
@@ -56,7 +59,6 @@ class Route:
             desc = line[2:] + '\n' + desc
             lineno -= 1
         self.desc = desc
-        print(self.desc)
 
     def __post_init__(self):
         self._extract_desc()
@@ -75,6 +77,7 @@ class Route:
             params = request.get(
                 'params', request if self.method == 'get' else {}
             )
+            print(self.method.upper(), self.path)
             self.responses.append(
                 {
                     'request': request,
@@ -83,6 +86,7 @@ class Route:
                     ),
                 }
             )
+            print(self.responses[-1]['response'].status_code)
 
     @property
     def href(self):
@@ -108,25 +112,25 @@ class Route:
 
         lines = []
 
-        def l(*args):
+        def line(*args):
             for arg in args:
                 if not arg:
                     continue
                 lines.append(arg)
 
-        l(f'## {self.title}')
-        l(self.desc)
-        if self.admin:
-            l(ADMIN_NOTE)
+        line(f'## {self.title}')
+        line(self.desc)
+        if self.perms:
+            line(ADMIN_NOTE.format(perms=', '.join(self.perms)))
         elif self.auth:
-            l(AUTH_NOTE)
+            line(AUTH_NOTE)
         for response in self.responses:
             if response.get('request'):
-                l('### Request')
-                l(format_json(response['request']))
-            l('### Response')
-            l(format_json(response['response'].content))
-            l(f'**Status:** {response["response"].status_code}')
+                line('### Request')
+                line(format_json(response['request']))
+            line('### Response')
+            line(format_json(response['response'].content))
+            line(f'**Status:** {response["response"].status_code}')
         return '\n'.join(lines)
 
 
@@ -142,11 +146,24 @@ class Delete(Route):
     method = 'delete'
 
 
-user_login = {"email": "user@email.com", "password": "password"}
-user_login_fail = {"email": "user@email.com", "password": "no-the-password"}
-user_login_random = {
+user_login = {
     "email": f"user{random.randint(0, 1000)}@email.com",
     "password": "password",
+}
+user_login2 = {
+    "email": f"user{random.randint(0, 1000)}@email.com",
+    "password": "password",
+}
+user_register = dict(
+    **user_login,
+    firstname="prenom",
+    lastname="nom",
+    phone_number="+33123456789",
+)
+user_login_fail1 = {"email": "user@email.com", "password": "not-the-password"}
+user_login_fail2 = {
+    "email": user_login["email"],
+    "password": "not-the-password",
 }
 
 calls = [
@@ -154,11 +171,16 @@ calls = [
     # Useful to check if the server is up, or to check if it is running
     # the latest version.
     Get('/', auth=False),
-    # Login and get a token.
-    Post('/auth/login', [user_login, user_login_fail], auth=False),
     # Register a new user, response should be the same as login, so no need to
     # login after registering.
-    Post('/auth/register', [user_login_random, user_login], auth=False),
+    Post('/auth/register', [user_register, user_register], auth=False),
+    Post('/auth/register', user_login2, auth=False, show=False),
+    # Login and get a token.
+    Post(
+        '/auth/login',
+        [user_login, user_login_fail1, user_login_fail2],
+        auth=False,
+    ),
     # List all users
     Get('/users'),
     # Get info about the current user
@@ -166,13 +188,52 @@ calls = [
     # Get info about a specific user
     Get('/users/1'),
     # Delete a user
-    Delete('/users/3', admin=True),
+    Delete('/users/3', perms=['edit_users']),
     # Get the list of listings
     Get('/listings', [{}, {'page': 2, 'per_page': 10}, {'search': 'jean'}]),
     # Get a specific listing
     Get('/listings/1'),
     # Get the matching listings for an organ
     Get('/listings/1/matches'),
+    # Create a new chat
+    Post('/chats', {"name": "Chat name", "users_ids": [1, 2]}),
+    # Get all the chats the current user is part of
+    Get('/chats'),
+    # Get a specific chat
+    Get('/chats/1'),
+    # Send a message
+    Post(
+        '/chats/1/messages',
+        {"content": "Hello world!"},
+    ),
+    # Get all chats the current user is part of and the last message of each
+    Get('/chats/messages/latest'),
+    # Get all messages for a specific chat
+    Get('/chats/1/messages'),
+    # Delete a chat
+    Delete('/chats/1'),
+    # Lists all user roles
+    Get('/roles'),
+    # Get a specific role
+    Get('/roles/1'),
+    # Create a new role
+    Post(
+        '/roles',
+        {
+            "name": "New role",
+            "can_edit_users": False,
+            "can_edit_hospitals": False,
+            "can_edit_listings": False,
+            "can_edit_staff": False,
+            "can_edit_roles": False,
+            "can_edit_persons": False,
+        },
+        perms=['edit_roles'],
+    ),
+    # Update a role
+    Post('/roles/3', {"name": "Updated role"}, perms=['edit_roles']),
+    # Delete a role
+    Delete('/roles/3', perms=['edit_roles']),
 ]
 
 
@@ -184,8 +245,13 @@ if __name__ == '__main__':
             + '\n\n'
         )
         for call in calls:
+            if not call.show:
+                continue
             f.write(f'- [{call.title}](#{call.href})\n')
         f.write('\n\n')
         for call in calls:
+            if not call.show:
+                call.fetch()
+                continue
             f.write(call.to_markdown())
             f.write('\n\n')

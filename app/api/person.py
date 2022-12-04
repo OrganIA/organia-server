@@ -6,7 +6,7 @@ from app.errors import NotFoundError
 from app.utils.bp import Blueprint
 from app.utils.static import Static
 
-bp = Blueprint('persons', auth=True)
+bp = Blueprint(__name__)
 
 
 class PersonSchema(Static):
@@ -24,15 +24,11 @@ class PersonSchema(Static):
 
 
 def update(person, data):
-    if data["rhesus"] == '+':
-        person.rhesus = Person.Rhesus.POSITIVE
-    else:
-        person.rhesus = Person.Rhesus.NEGATIVE
-    person.first_name = data["first_name"]
-    person.last_name = data["last_name"]
-    person.description = data["description"]
-    person.abo = data["abo"]
-    person.gender = data["gender"]
+    for key, value in data.dict.items():
+        if value == 'null':
+            setattr(person, key, None)
+        elif value is not None:
+            setattr(person, key, value)
     return person
 
 
@@ -58,10 +54,11 @@ def create_person(data: PersonSchema):
 
 
 @bp.post('/<int:id>')
-def update_person(id, data):
-    person = update(get_person(id), data)
+def update_person(id, data: PersonSchema):
+    person = db.session.get(Person, id)
+    person_update = update(person, data)
     db.session.commit()
-    return person
+    return person_update
 
 
 @bp.delete('/<int:id>')

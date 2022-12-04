@@ -29,7 +29,8 @@ Base.query = session.query_property()
 def init_db():
     from app.db import models as models
 
-    Base.metadata.create_all(bind=engine)
+    if config.AUTO_CREATE_DB:
+        Base.metadata.create_all(engine)
 
 
 def teardown(exception=None):

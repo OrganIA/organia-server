@@ -26,37 +26,40 @@ def _retrieve_user():
     return user
 
 
-def check(admin=False):
-    need_user(admin=admin)
+def check(**perms):
+    need_user(**perms)
 
 
-def need_user(admin=False):
+def need_user(**perms):
+    if flask.request.method == 'OPTIONS':
+        return None
     user = _retrieve_user()
-    if admin and not user.is_admin:
-        raise InsufficientPermissions(
-            "You must be an admin to access this route"
-        )
+    for perm in perms:
+        if not getattr(user.role, f"can_{perm}"):
+            raise InsufficientPermissions(
+                f"You need the permission {perm} to access this route"
+            )
     return user
 
 
-def route(admin=False):
+def route(**perms):
     """
     Decorator to require authentication on a route.
 
     Use `@auth.route()` to simply require a valid auth token.
-    Use `@auth.route(admin=True)` to also validate against admin perms.
+    Use `@auth.route(perm1=True, perm2=True)` to also validate against perms.
 
     If the route has a parameter named `auth_user`, the current user will be
     injected as this parameter.
 
     ```
     @app.get('/')
-    @auth.route()
+    @auth.routeui()
     def index():
         ...
 
     @app.get('/admin')
-    @auth.route(admin=True)
+    @auth.route(edit_users=True)
     def admin(auth_user: User):
         print(f"{auth_user} just accessed the admin page!")
     ```
@@ -65,7 +68,7 @@ def route(admin=False):
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            user = need_user(admin=admin)
+            user = need_user(**perms)
             sig = inspect.signature(func)
             if 'auth_user' in sig.parameters:
                 kwargs.setdefault('auth_user', user)

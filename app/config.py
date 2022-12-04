@@ -45,6 +45,8 @@ LOG_SQL = env('LOG_SQL', False)
 # Identifies as admin if no authorization header is provided
 FORCE_LOGIN = env('FORCE_LOGIN', False)
 
+AUTO_CREATE_DB = env('AUTO_CREATE_DB', True)
+
 
 def load_file():
     if not PATH.is_file():

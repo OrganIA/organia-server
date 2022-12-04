@@ -33,11 +33,17 @@ class InternalServerError(HTTPException):
 
 class InvalidRequest(HTTPException):
     code = 422
+    description = 'Invalid request'
 
 
 class Unauthorized(HTTPException):
     code = 401
     description = 'Unauthorized'
+
+
+class NotAcceptableError(HTTPException):
+    code = 400
+    description = 'Not acceptable'
 
 
 class PasswordMismatchError(InvalidRequest):
@@ -80,7 +86,3 @@ class AlreadyTakenError(HTTPException):
 class NotFoundError(HTTPException):
     code = 404
     description = 'The requested resource was not found'
-
-
-class PasswordMismatchError(Unauthorized):
-    description = 'Password mismatch'
