@@ -65,7 +65,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"toto@toto.com\",\n    \"password\": \"saber\"\n}",
+							"raw": "{\n    \"email\": \"test@test.fr\",\n    \"password\": \"saber\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -810,7 +810,20 @@
 					"name": "Get a listing",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/listings/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"listings",
+								"1"
+							]
+						}
 					},
 					"response": []
 				},
@@ -850,7 +863,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"person_id\": 1,\n    \"notes\": \"\",\n    \"type\": \"PATIENT\",\n    \"organ\": \"HEART\",\n    \"tumors_number\": \"5\",\n    \"hospital_id\": \"4\",\n    \"biggest_tumor_size\": \"0\",\n    \"alpha_fetoprotein\": \"0\",\n    \"is_under_dialysis\": \"false\",\n    \"dialysis_start_date\": \"2021-09-15\",\n    \"dialysis_end_date\": \"2021-09-15\",\n    \"is_retransplantation\": \"true\",\n    \"arf_date\": \"2021-09-15\",\n    \"transplantation_date\": \"2021-09-15\",\n    \"re_registration_date\": \"2021-09-15\",\n    \"A\": \"0\",\n    \"B\": \"4\",\n    \"DR\": \"0\",\n    \"DQ\": \"0\"\n}",
+							"raw": "{\n    \"person_id\": 2,\n    \"notes\": \"\",\n    \"type\": \"PATIENT\",\n    \"organ\": \"LIVER\",\n    \"tumors_number\": \"5\",\n    \"hospital_id\": \"1\",\n    \"biggest_tumor_size\": \"9\",\n    \"alpha_fetoprotein\": \"1900\",\n    \"is_under_dialysis\": \"false\",\n    \"dialysis_start_date\": \"2021-09-15\",\n    \"dialysis_end_date\": \"2021-09-15\",\n    \"is_retransplantation\": \"true\",\n    \"arf_date\": \"2021-09-15\",\n    \"transplantation_date\": \"2021-09-15\",\n    \"re_registration_date\": \"2021-09-15\",\n    \"A\": \"0\",\n    \"B\": \"4\",\n    \"DR\": \"0\",\n    \"DQ\": \"0\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -878,7 +891,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8000/api/listings/4",
+							"raw": "localhost:8000/api/listings/1",
 							"host": [
 								"localhost"
 							],
@@ -886,7 +899,28 @@
 							"path": [
 								"api",
 								"listings",
-								"4"
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get listing matches",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8000/api/listings/1/matches",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"listings",
+								"1",
+								"matches"
 							]
 						}
 					},
@@ -921,7 +955,20 @@
 					"name": "Get all livers",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/livers/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"livers",
+								""
+							]
+						}
 					},
 					"response": []
 				},
@@ -961,6 +1008,16 @@
 				{
 					"name": "Create a liver",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {

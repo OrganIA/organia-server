@@ -30,4 +30,5 @@ class Liver(TimedMixin, db.Base):
             alpha_fetoprotein_score += 2
         elif self.alpha_fetoprotein > 1000:
             alpha_fetoprotein_score += 3
-        return alpha_fetoprotein_score
+        self.score = alpha_fetoprotein_score
+        return self.score

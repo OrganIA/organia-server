@@ -60,7 +60,6 @@ def create_organ(data):
         organ = Liver()
         organ = update(organ, data)
         organ.listing_id = listing.id
-        organ.score = 0.0
         db.session.add(organ)
         db.session.commit()
     return organ
@@ -70,6 +69,7 @@ def update_organ(data, id):
     organ = {}
     if data.organ == Listing.Organ.LIVER:
         organ = db.session.query(Liver).filter_by(listing_id=id).first()
+        print("ORGAN: ", organ)
         organ = update(organ, data)
         db.session.commit()
     return organ
@@ -126,8 +126,13 @@ def delete_listing(id: int):
 
 @bp.get('/<int:id>/matches')
 def get_listing_matches(id):
-    # TODO
-    import random
+    listing = get_listing(id)
+    score = 0
+    if listing.organ == Listing.Organ.LIVER:
+        organ = db.session.query(Liver).filter_by(listing_id=id).first()
+        if organ is None:
+            raise NotFoundError.r("L'organe n'a pas été trouvé")
+        score = organ.score
 
     def schemaify(listing: Listing):
         return {
@@ -142,8 +147,8 @@ def get_listing_matches(id):
     return sorted(
         [
             {
-                "listing": schemaify(listing),
-                "score": random.random(),
+                "listing": schemaify(l),
+                "score": score,
             }
             for listing in db.session.query(Listing)
         ],
