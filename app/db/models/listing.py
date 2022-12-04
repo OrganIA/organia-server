@@ -19,6 +19,7 @@ class Listing(db.Base):
         HEART = enum.auto()
         KIDNEY = enum.auto()
         LUNG = enum.auto()
+        LIVER = enum.auto()
 
     # fields
 
@@ -56,6 +57,9 @@ class Listing(db.Base):
 
     person = orm.relationship('Person', backref='listings')
     hospital = orm.relationship('Hospital', backref='listings')
+    liver = orm.relationship(
+        'Liver', cascade='all,delete', backref='listing', uselist=False
+    )
 
     @property
     def alpha_fetoprotein_score(self):

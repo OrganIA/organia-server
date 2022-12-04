@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "735a3c1b-af46-4194-81c6-15238175cbdc",
+		"_postman_id": "d4d8633d-4f9e-4d50-8672-e5739c3e9db5",
 		"name": "OrganIA",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -23,7 +23,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8000/api/users",
+							"raw": "http://localhost:8000/api/auth/register",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -31,7 +31,8 @@
 							"port": "8000",
 							"path": [
 								"api",
-								"users"
+								"auth",
+								"register"
 							]
 						}
 					},
@@ -44,7 +45,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"saber@saber.com\",\n    \"password\": \"saber\"\n}",
+							"raw": "{\n    \"email\": \"test@test.fr\",\n    \"password\": \"test\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -52,14 +53,15 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8000/api/auth",
+							"raw": "localhost:8000/api/auth/login",
 							"host": [
 								"localhost"
 							],
 							"port": "8000",
 							"path": [
 								"api",
-								"auth"
+								"auth",
+								"login"
 							]
 						}
 					},
@@ -73,6 +75,16 @@
 				{
 					"name": "Get a user",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -295,12 +307,70 @@
 			"name": "Persons",
 			"item": [
 				{
+					"name": "Get a person",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
 					"name": "Get all persons",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8000/api/persons/",
+							"raw": "http://localhost:8000/api/persons",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"persons"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a person",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"first_name\": \"string\",\r\n  \"last_name\": \"string\",\r\n  \"birth_date\": \"2021-09-15\",\r\n  \"description\": \"string\",\r\n  \"abo\": \"A\",\r\n  \"rhesus\": \"+\",\r\n  \"gender\": \"MALE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/persons/",
+							"protocol": "http",
 							"host": [
 								"localhost"
 							],
@@ -315,13 +385,23 @@
 					"response": []
 				},
 				{
-					"name": "Create a person",
+					"name": "Update a person",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"first_name\": \"string\",\r\n  \"last_name\": \"string\",\r\n  \"birthday\": \"2021-09-15\",\r\n  \"description\": \"string\",\r\n  \"abo\": \"A\",\r\n  \"rhesus\": \"+\",\r\n  \"gender\": \"MALE\"\r\n}",
+							"raw": "{\n  \"first_name\": \"toto\",\n  \"last_name\": \"toto\",\n  \"birth_date\": \"2021-09-15\",\n  \"description\": \"toto\",\n  \"abo\": \"B\",\n  \"rhesus\": \"-\",\n  \"gender\": \"FEMALE\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -329,7 +409,8 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8000/api/persons/",
+							"raw": "http://localhost:8000/api/persons/1",
+							"protocol": "http",
 							"host": [
 								"localhost"
 							],
@@ -337,11 +418,62 @@
 							"path": [
 								"api",
 								"persons",
-								""
+								"1"
 							]
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Delete a person",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/persons/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"persons",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
 				}
 			]
 		},
@@ -523,6 +655,128 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Listings",
+			"item": [
+				{
+					"name": "Get all listings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/listings/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"listings",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a listing",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Create a listing",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"person_id\": 1,\n    \"notes\": \"\",\n    \"type\": \"DONOR\",\n    \"donor\": \"true\",\n    \"organ\": \"HEART\",\n    \"tumors_number\": \"0\",\n    \"biggest_tumor_size\": \"0\",\n    \"alpha_fetoprotein\": \"0\",\n    \"is_under_dialysis\": \"false\",\n    \"dialyse_start_date\": \"2021-09-15\",\n    \"dialyse_end_date\": \"2021-09-15\",\n    \"is_retransplantation\": \"false\",\n    \"arf_date\": \"2021-09-15\",\n    \"transplantation_date\": \"2021-09-15\",\n    \"re_registration_date\": \"2021-09-15\",\n    \"A\": \"0\",\n    \"B\": \"0\",\n    \"DR\": \"0\",\n    \"DQ\": \"0\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/api/listings/",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"listings",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a listing",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"person_id\": 1,\n    \"notes\": \"\",\n    \"type\": \"PATIENT\",\n    \"organ\": \"HEART\",\n    \"tumors_number\": \"1\",\n    \"hospital_id\": \"4\",\n    \"biggest_tumor_size\": \"0\",\n    \"alpha_fetoprotein\": \"0\",\n    \"is_under_dialysis\": \"false\",\n    \"dialysis_start_date\": \"2021-09-15\",\n    \"dialysis_end_date\": \"2021-09-15\",\n    \"is_retransplantation\": \"false\",\n    \"arf_date\": \"2021-09-15\",\n    \"transplantation_date\": \"2021-09-15\",\n    \"re_registration_date\": \"2021-09-15\",\n    \"A\": \"0\",\n    \"B\": \"4\",\n    \"DR\": \"0\",\n    \"DQ\": \"0\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/api/listings/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"listings",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a listing",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8000/api/listings/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"listings",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {
@@ -530,7 +784,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "1-1-d9ff781d1daac7c2fefd8cafa6d14312b4f5c4f03f72128c9c527e8d09c8d12b",
+				"value": "",
 				"type": "string"
 			}
 		]
