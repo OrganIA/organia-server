@@ -21,8 +21,9 @@ AUTH_NOTE = (
 )
 
 ADMIN_NOTE = (
-    '> :police_car: This request requires admin privileges. An user must be'
-    ' authenticated via a token and have the `is_admin` flag set to `True`.'
+    '> :police_car: This request requires specific permissions. An user must be'
+    ' authenticated via a token and their role must have the permissions'
+    ' {perms} to access this route.'
 )
 
 file = inspect.getsourcelines(sys.modules[__name__])[0]
@@ -35,6 +36,7 @@ class Route:
     auth: bool = True
     admin: bool = False
     show: bool = True
+    perms: list[str] = field(default_factory=list)
 
     method = None
     desc = None
@@ -57,7 +59,6 @@ class Route:
             desc = line[2:] + '\n' + desc
             lineno -= 1
         self.desc = desc
-        print(self.desc)
 
     def __post_init__(self):
         self._extract_desc()
@@ -76,6 +77,7 @@ class Route:
             params = request.get(
                 'params', request if self.method == 'get' else {}
             )
+            print(self.method.upper(), self.path)
             self.responses.append(
                 {
                     'request': request,
@@ -84,6 +86,7 @@ class Route:
                     ),
                 }
             )
+            print(self.responses[-1]['response'].status_code)
 
     @property
     def href(self):
@@ -117,8 +120,8 @@ class Route:
 
         line(f'## {self.title}')
         line(self.desc)
-        if self.admin:
-            line(ADMIN_NOTE)
+        if self.perms:
+            line(ADMIN_NOTE.format(perms=', '.join(self.perms)))
         elif self.auth:
             line(AUTH_NOTE)
         for response in self.responses:
@@ -185,7 +188,7 @@ calls = [
     # Get info about a specific user
     Get('/users/1'),
     # Delete a user
-    Delete('/users/3', admin=True),
+    Delete('/users/3', perms=['edit_users']),
     # Get the list of listings
     Get('/listings', [{}, {'page': 2, 'per_page': 10}, {'search': 'jean'}]),
     # Get a specific listing
@@ -209,6 +212,28 @@ calls = [
     Get('/chats/1/messages'),
     # Delete a chat
     Delete('/chats/1'),
+    # Lists all user roles
+    Get('/roles'),
+    # Get a specific role
+    Get('/roles/1'),
+    # Create a new role
+    Post(
+        '/roles',
+        {
+            "name": "New role",
+            "can_edit_users": False,
+            "can_edit_hospitals": False,
+            "can_edit_listings": False,
+            "can_edit_staff": False,
+            "can_edit_roles": False,
+            "can_edit_persons": False,
+        },
+        perms=['edit_roles'],
+    ),
+    # Update a role
+    Post('/roles/3', {"name": "Updated role"}, perms=['edit_roles']),
+    # Delete a role
+    Delete('/roles/3', perms=['edit_roles']),
 ]
 
 

@@ -1,12 +1,13 @@
 # isort: off
 # Generated, do not modify manually
 
-from .hospital import Hospital as Hospital
 from .city import City as City
-from .login_token import LoginToken as LoginToken
-from .message import Message as Message
-from .chat import Chat as Chat, ChatMember as ChatMember
+from .user import User as User
 from .staff import Staff as Staff
 from .person import Person as Person
-from .user import User as User
+from .roles import Role as Role
+from .message import Message as Message
 from .listing import Listing as Listing
+from .chat import ChatMember as ChatMember, Chat as Chat
+from .login_token import LoginToken as LoginToken
+from .hospital import Hospital as Hospital

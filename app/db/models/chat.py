@@ -11,6 +11,9 @@ class ChatMember(db.Base):
 
 
 class Chat(db.mixins.TimedMixin, db.Base):
+    __AUTO_DICT_EXCLUDE__ = ['creator_id']
+    __AUTO_DICT_INCLUDE__ = ['users', 'creator']
+
     name = sa.Column(sa.String, default="Nouvelle conversation", nullable=False)
     creator_id = sa.Column(sa.ForeignKey('users.id'))
 
