@@ -19,7 +19,9 @@
     {
       "label": "Setup formatters",
       "type": "shell",
-      "dependsOn": ["Setup venv"],
+      "dependsOn": [
+        "Setup venv"
+      ],
       "command": "./.venv/bin/pip install 'docformatter[tomli]' black autoflake flake8 pep8-naming",
       "windows": {
         "command": ".\\venv\\Scripts\\pip install docformatter[tomli] black autoflake flake8 pep8-naming"
@@ -31,7 +33,24 @@
       "windows": {
         "command": "${workspaceFolder}/scripts/run.ps1"
       },
-      "dependsOn": ["Setup venv"]
+      "dependsOn": [
+        "Setup venv"
+      ]
+    },
+    {
+      "label": "Run app (force login)",
+      "command": "${workspaceFolder}/scripts/run.sh",
+      "options": {
+        "env": {
+          "FORCE_LOGIN": "1"
+        }
+      },
+      "windows": {
+        "command": "${workspaceFolder}/scripts/run.ps1"
+      },
+      "dependsOn": [
+        "Setup venv"
+      ]
     },
     {
       "label": "Run app (docker)",

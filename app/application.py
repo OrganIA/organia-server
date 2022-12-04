@@ -60,7 +60,7 @@ class App(Flask):
 
     def __init__(self):
         super().__init__(__name__.split('.')[0])
-        CORS(self)
+        CORS(self, send_wildcard=True)
         config.load_file()
         self.config['JSONIFY_MIMETYPE'] = 'application/json'
         db.init_db()
