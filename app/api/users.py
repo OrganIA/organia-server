@@ -1,6 +1,6 @@
 from app import auth, db
 from app.db.models import User
-from app.errors import NotFoundError
+from app.errors import NotFoundError, Unauthorized
 from app.utils.bp import Blueprint
 
 bp = Blueprint(__name__)
@@ -25,15 +25,16 @@ def get_user(user_id: int):
     return db.session.get(User, user_id)
 
 
-# @bp.post('/{user_id}', response_model=UserSchema)
-# def update_user(
-#     user_id: int, data: UserUpdateSchema, logged_user=logged_user
-# ):
-#     user = get_user(user_id)
-#     permissions.users.can_edit(logged_user, user)
-#     user.update(data)
-#     db.session.commit()
-#     return user
+@bp.post('/<int:user_id>')
+@auth.route()
+def update_user(user_id: int, data: dict, auth_user: User):
+    if (auth_user.role.can_edit_users or auth_user.id == user_id) is False:
+        raise Unauthorized
+    user = get_user(user_id)
+    for key, value in data.items():
+        setattr(user, key, value)
+    db.session.commit()
+    return user
 
 
 @bp.delete('/<int:user_id>')

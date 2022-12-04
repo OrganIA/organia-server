@@ -13,11 +13,11 @@ class CalendarEventSchema(Static):
     @staticmethod
     def start_date(d):
         start_date = Static._get(d, 'start_date')
-        return datetime.fromisoformat(start_date).date()
+        return datetime.fromisoformat(start_date)
 
     def end_date(d):
         end_date = Static._get(d, 'end_date')
-        return datetime.fromisoformat(end_date).date()
+        return datetime.fromisoformat(end_date)
 
     title = str
     description = str
@@ -61,6 +61,9 @@ def update_event(
     if event.author_id != auth_user.id:
         raise Unauthorized
     for key, value in data.items():
+        if key == 'start_date' or key == 'end_date':
+            value = datetime.fromisoformat(value)
+            print(value)
         setattr(event, key, value)
     db.session.commit()
     return event
