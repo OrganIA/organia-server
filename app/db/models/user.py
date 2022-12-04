@@ -28,6 +28,7 @@ class User(TimedMixin, db.Base):
     )
     messages = orm.relationship('Message', back_populates='sender')
     role = orm.relationship('Role', back_populates='users')
+    calendar_events = orm.relationship('CalendarEvent', back_populates='author')
 
     # TODO: Use getter/setter for password instead of save_password
 

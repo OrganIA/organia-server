@@ -1,6 +1,7 @@
 # isort: off
 # Generated, do not modify manually
 
+from .calendar import CalendarEvent as CalendarEvent
 from .chat import Chat as Chat, ChatMember as ChatMember
 from .city import City as City
 from .hospital import Hospital as Hospital
