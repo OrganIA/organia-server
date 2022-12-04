@@ -40,12 +40,10 @@ def update(obj, data):
     return obj
 
 
-def create_hospitals(hospital, data):
-    hospital.city_id = data["city_id"]
+def create_hospitals(hospital, city, data):
+    hospital.city_id = city.id
     hospital.name = data["name"]
     hospital.phone_number = data["phone_number"]
-    hospital.latitude = data["latitude"]
-    hospital.longitude = data["longitude"]
     position = geopy.get_coordinates(hospital.name)
     if position:
         hospital.latitude = position[0]
@@ -76,9 +74,9 @@ def get_hospital(hospital_id):
 @bp.post('/')
 def create_hospital(data):
     city_data = data.pop('city')
-    create_city(city_data)
+    city = create_city(city_data)
     hospital = Hospital()
-    hospital = create_hospitals(hospital, data)
+    hospital = create_hospitals(hospital, city, data)
     db.session.add(hospital)
     db.session.commit()
     return get_hospital(hospital.id)
@@ -88,4 +86,19 @@ def create_hospital(data):
 def delete_listing(id: int):
     hospital = get_hospital(id)
     db.session.delete(hospital)
+    db.session.commit()
+
+
+@bp.post('/<int:id>')
+def update_hospital(id: int, data: dict):
+    hospital = get_hospital(id)
+    for key, value in data.items():
+        if value == 'null':
+            setattr(hospital, key, None)
+        elif value is not None:
+            if key == 'city':
+                city = create_city(value)
+                setattr(hospital, 'city_id', city.id)
+            else:
+                setattr(hospital, key, value)
     db.session.commit()
