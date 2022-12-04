@@ -134,14 +134,14 @@ def get_listing_matches(id):
             raise NotFoundError.r("L'organe n'a pas été trouvé")
         score = organ.score
 
-    def schemaify(l: Listing):
+    def schemaify(listing: Listing):
         return {
-            'id': l.id,
-            'type': l.type,
-            'notes': l.notes,
-            'organ': l.organ,
-            'person_id': l.person_id,
-            'hospital_id': l.hospital_id,
+            'id': listing.id,
+            'type': listing.type,
+            'notes': listing.notes,
+            'organ': listing.organ,
+            'person_id': listing.person_id,
+            'hospital_id': listing.hospital_id,
         }
 
     return sorted(
@@ -150,7 +150,7 @@ def get_listing_matches(id):
                 "listing": schemaify(l),
                 "score": score,
             }
-            for l in db.session.query(Listing)
+            for listing in db.session.query(Listing)
         ],
         key=lambda x: x['score'],
         reverse=True,

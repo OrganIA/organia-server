@@ -1,46 +1,57 @@
 import sqlalchemy as sa
 from sqlalchemy import orm
+from sqlalchemy_utils import PhoneNumberType
 from werkzeug import security
 
 from app import db
 from app.db.mixins import TimedMixin
 from app.errors import AlreadyTakenError, InvalidRequest, PasswordMismatchError
-from sqlalchemy_utils import PhoneNumber
 
 
 class User(TimedMixin, db.Base):
     """An entity that can login into the platform"""
 
+    __AUTO_DICT_EXCLUDE__ = ['password', 'role_id']
+    __AUTO_DICT_INCLUDE__ = ['role']
+
     email = sa.Column(sa.String, nullable=False, unique=True)
     password = sa.Column(sa.String)
-    is_admin = sa.Column(sa.Boolean, default=False)
-    firstname = sa.Column(sa.String, nullable=False)
-    lastname = sa.Column(sa.String, nullable=False)
-    phone_number = sa.Column(sa.Unicode(20), nullable=False)
-    country_code = sa.Column(sa.Unicode(8), nullable=False, default="FR")
+    firstname = sa.Column('first_name', sa.String)
+    lastname = sa.Column('last_name', sa.String)
+    phone_number = sa.Column(PhoneNumberType)
+    role_id = sa.Column(sa.ForeignKey('roles.id'))
 
-    _phone_number = sa.orm.composite(PhoneNumber, phone_number, country_code)
     person = orm.relationship('Person', uselist=False, back_populates='user')
-    groups = orm.relationship('ChatGroup', back_populates='user')
-    chats = orm.relationship('Chat', back_populates='creator')
+    created_chats = orm.relationship('Chat', back_populates='creator')
+    chats = orm.relationship(
+        'Chat', secondary='chat_members', back_populates='users'
+    )
     messages = orm.relationship('Message', back_populates='sender')
+    role = orm.relationship('Role', back_populates='users')
+    calendar_events = orm.relationship('CalendarEvent', back_populates='author')
 
     # TODO: Use getter/setter for password instead of save_password
 
     def __init__(self, **kwargs):
         if password := kwargs.pop('password', None):
             self.save_password(password)
+        if "role_id" not in kwargs and "role" not in kwargs:
+            from app.db.models import Role
+
+            kwargs["role"] = Role.admin
         super().__init__(**kwargs)
 
     @classmethod
     @property
     def admin(cls):
-        action = db.session.get_or_create(
-            cls, filter_cols=['email'], email='admin@localhost', is_admin=True
-        )
-        if action.created:
-            db.session.commit()
-        return action.obj
+        from app.db.models import Role
+
+        user = db.session.get_or_create(
+            cls, filter_cols=['email'], email='admin@localhost'
+        ).obj
+        user.role = Role.admin
+        db.session.commit()
+        return user
 
     @classmethod
     def check_email(cls, value, obj=None):

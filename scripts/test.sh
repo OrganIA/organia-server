@@ -7,20 +7,20 @@ code=0
 export PYTHONPATH=.
 
 
-pip install pytest pytest-cov requests >/dev/null
-echo
-echo Running pytest
-echo
-DB_URL='sqlite://' pytest tests --cov=app --cov-fail-under=90
-last=$?
+# pip install pytest pytest-cov requests >/dev/null
+# echo
+# echo Running pytest
+# echo
+# DB_URL='sqlite://' pytest tests --cov=app --cov-fail-under=90
+# last=$?
 
-echo -n "Unit tests + coverage: "
-if [ $last == 0 ]; then
-	echo OK
-else
-	code=1
-	echo FAIL
-fi
+# echo -n "Unit tests + coverage: "
+# if [ $last == 0 ]; then
+# 	echo OK
+# else
+# 	code=1
+# 	echo FAIL
+# fi
 
 
 pip install flake8 >/dev/null
