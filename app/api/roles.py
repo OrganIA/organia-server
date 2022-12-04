@@ -24,8 +24,16 @@ class RoleSchema(Static):
     can_invite = bool
 
 
-class RoleUpdateSchema(RoleSchema):
+class RoleUpdateSchema(Static):
     __ERROR_ON_UNFOUND__ = False
+    name = str
+    can_edit_users = bool
+    can_edit_hospitals = bool
+    can_edit_listings = bool
+    can_edit_staff = bool
+    can_edit_roles = bool
+    can_edit_persons = bool
+    can_invite = bool
 
 
 @bp.get('/')

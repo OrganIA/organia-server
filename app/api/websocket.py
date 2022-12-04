@@ -1,4 +1,4 @@
-from json import loads
+from json import dumps, loads
 
 from simple_websocket.ws import Server
 
@@ -14,7 +14,7 @@ from app.utils.colors import Colors
 manager = websocket_manager.ConnectionManager()
 
 
-@sock.route('/chats/ws/<int:chat_id>')
+@sock.route('/api/chats/ws/<int:chat_id>')
 def websocket_route(websocket: Server, chat_id: int):
     Colors.print(
         f"Websocket connected: {websocket.environ['REMOTE_ADDR']}",
@@ -26,7 +26,9 @@ def websocket_route(websocket: Server, chat_id: int):
             data = loads(websocket.receive())
             Colors.print(f"Received data: {data}", Colors.Color.WARNING)
             if "event" not in data:
-                websocket.send({"status": 404, "message": "No protocol found."})
+                websocket.send(
+                    dumps({"status": 404, "message": "No protocol found."})
+                )
                 continue
             elif data["event"] == "login":
                 if "token" not in data:
@@ -37,7 +39,9 @@ def websocket_route(websocket: Server, chat_id: int):
                     manager.get_client(websocket).get_id(),
                 ):
                     raise Unauthorized(description="User is not in chat.")
-                websocket.send({"status": 200, "message": "Login successful."})
+                websocket.send(
+                    dumps({"status": 200, "message": "Login successful."})
+                )
                 continue
             if data["event"] == "send_message":
                 if not manager.get_client(websocket).is_logged():
@@ -45,34 +49,46 @@ def websocket_route(websocket: Server, chat_id: int):
                 if "content" not in data["data"]:
                     raise InvalidRequest("No content given.")
                 check_message(chat_id, manager.get_client(websocket).user)
+                client = manager.get_client(websocket)
                 message = send_message(
                     chat_id=chat_id,
                     data=MessageCreateSchema(data["data"]),
-                    user=manager.get_client(websocket).user,
+                    user=client.user,
                 )
-                websocket.send(
-                    {
-                        "status": 200,
-                        "event": "message_sent",
-                        "data": message.to_dict(),
-                    }
+                manager.send_client(
+                    dumps(
+                        {
+                            "status": 200,
+                            "event": "message_sent",
+                            "data": message.to_dict(),
+                        },
+                        default=str,
+                    ),
+                    client,
                 )
                 manager.broadcast(
-                    {
-                        "status": 200,
-                        "event": "message_received",
-                        "data": message.to_dict(),
-                    },
-                    websocket,
+                    dumps(
+                        {
+                            "status": 200,
+                            "event": "message_received",
+                            "data": message.to_dict(),
+                        },
+                        default=str,
+                    ),
+                    client,
                 )
                 continue
             raise InvalidRequest("Invalid event.")
         except HTTPException as e:
             websocket.send(
-                {"status": e.code, "event": "error", "error": e.description}
+                dumps(
+                    {"status": e.code, "event": "error", "error": e.description}
+                )
             )
         except Exception as e:
-            websocket.send({"status": 400, "event": "error", "error": e.args})
+            websocket.send(
+                dumps({"status": 400, "event": "error", "error": e.args})
+            )
 
 
 def check_message(chat_id: int, user: User) -> bool:

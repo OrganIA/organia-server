@@ -25,3 +25,6 @@ class WebSocketClient:
 
     def is_logged(self) -> bool:
         return self.user is not None
+
+    def __str__(self):
+        return f"WebSocketClient(user={self.user}, chat_id={self.chat_id})"
