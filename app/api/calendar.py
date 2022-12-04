@@ -27,9 +27,7 @@ class CalendarEventSchema(Static):
 @bp.get('/')
 @auth.route()
 def get_events(auth_user: User):
-    return (
-        db.session.query(CalendarEvent).filter_by(author_id=auth_user.id).all()
-    )
+    return db.session.query(CalendarEvent).filter_by(author=auth_user)
 
 
 @bp.get('/<int:event_id>')
@@ -46,7 +44,7 @@ def get_event(event_id: int, auth_user):
 @bp.post('/')
 @auth.route()
 def create_event(data: CalendarEventSchema, auth_user: User):
-    event = CalendarEvent(**data.dict, author_id=auth_user.id)
+    event = CalendarEvent(**data.dict, author=auth_user)
     db.session.add(event)
     db.session.commit()
     return event
