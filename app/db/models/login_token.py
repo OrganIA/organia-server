@@ -5,6 +5,7 @@ from sqlalchemy import orm
 
 from app import config, db, security
 from app.db.mixins import TimedMixin
+from app.errors import Unauthorized
 
 
 class LoginToken(TimedMixin, db.Base):
@@ -38,12 +39,12 @@ class LoginToken(TimedMixin, db.Base):
         try:
             id = int(id)
         except ValueError as e:
-            raise Exception('Malformed token, ID field is corrupted') from e
+            raise Unauthorized('Malformed token, ID field is corrupted') from e
         result = db.session.get(cls, id)
         if not result:
-            raise Exception('No token exist for this token ID')
+            raise Unauthorized('No token exist for this token ID')
         if result.value != token:
-            raise Exception('Mismatching token value')
+            raise Unauthorized('Mismatching token value')
         return result
 
     @staticmethod

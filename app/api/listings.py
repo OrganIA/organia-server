@@ -126,25 +126,26 @@ def delete_listing(id: int):
 
 @bp.get('/<int:id>/matches')
 def get_listing_matches(id):
+    # TODO
     import random
 
-    def schemaify(l: Listing):
+    def schemaify(listing: Listing):
         return {
-            'id': l.id,
-            'type': l.type,
-            'notes': l.notes,
-            'organ': l.organ,
-            'person_id': l.person_id,
-            'hospital_id': l.hospital_id,
+            'id': listing.id,
+            'type': listing.type,
+            'notes': listing.notes,
+            'organ': listing.organ,
+            'person_id': listing.person_id,
+            'hospital_id': listing.hospital_id,
         }
 
     return sorted(
         [
             {
-                "listing": schemaify(l),
+                "listing": schemaify(listing),
                 "score": random.random(),
             }
-            for l in db.session.query(Listing)
+            for listing in db.session.query(Listing)
         ],
         key=lambda x: x['score'],
         reverse=True,

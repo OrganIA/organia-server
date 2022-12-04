@@ -37,7 +37,7 @@ def get_user(user_id: int):
 
 
 @bp.delete('/<int:user_id>')
-@auth.route(admin=True)
+@auth.route(edit_users=True)
 def delete_user(user_id: int, auth_user: User):
     user = db.session.get(User, user_id)
     if not user:
