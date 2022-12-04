@@ -147,7 +147,7 @@ def get_listing_matches(id):
     return sorted(
         [
             {
-                "listing": schemaify(l),
+                "listing": schemaify(listing),
                 "score": score,
             }
             for listing in db.session.query(Listing)
