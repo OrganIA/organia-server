@@ -11,6 +11,7 @@ phonenumbers
 flask
 flask-cors
 passlib[bcrypt]
+flask-sock
 
 # yaml support for config files etc
 pyyaml
