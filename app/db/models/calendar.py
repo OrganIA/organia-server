@@ -16,4 +16,4 @@ class CalendarEvent(TimedMixin, db.Base):
     event_type = sa.Column(sa.String, nullable=False)
     author_id = sa.Column(sa.ForeignKey('users.id'))
 
-    author = orm.relationship('User', backpopulates='calendar_events')
+    author = orm.relationship('User', back_populates='calendar_events')

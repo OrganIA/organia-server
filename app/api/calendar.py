@@ -10,8 +10,15 @@ bp = Blueprint(__name__)
 
 
 class CalendarEventSchema(Static):
-    start_date = datetime
-    end_date = datetime
+    @staticmethod
+    def start_date(d):
+        start_date = Static._get(d, 'start_date')
+        return datetime.fromisoformat(start_date).date()
+
+    def end_date(d):
+        end_date = Static._get(d, 'end_date')
+        return datetime.fromisoformat(end_date).date()
+
     title = str
     description = str
     event_type = str
@@ -28,7 +35,7 @@ def get_events(auth_user: User):
 @bp.get('/<int:event_id>')
 @auth.route()
 def get_event(event_id: int, auth_user):
-    event = db.get(CalendarEvent, event_id)
+    event = db.session.get(CalendarEvent, event_id)
     if not event:
         raise NotFoundError
     if event.author_id != auth_user.id:
@@ -39,7 +46,7 @@ def get_event(event_id: int, auth_user):
 @bp.post('/')
 @auth.route()
 def create_event(data: CalendarEventSchema, auth_user: User):
-    event = CalendarEvent(**data.dict(), author=auth_user)
+    event = CalendarEvent(**data.dict, author_id=auth_user.id)
     db.session.add(event)
     db.session.commit()
     return event
@@ -49,7 +56,7 @@ def create_event(data: CalendarEventSchema, auth_user: User):
 @auth.route()
 def update_event(
     event_id: int,
-    data: CalendarEventSchema,
+    data: dict,
     auth_user: id,
 ):
     event = db.session.get(CalendarEvent, event_id)
