@@ -4,6 +4,7 @@
 from .calendar import CalendarEvent as CalendarEvent
 from .chat import Chat as Chat, ChatMember as ChatMember
 from .city import City as City
+from .heart import Heart as Heart
 from .hospital import Hospital as Hospital
 from .listing import Listing as Listing
 from .liver import Liver as Liver

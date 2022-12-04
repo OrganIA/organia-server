@@ -11,7 +11,7 @@ from app import db
 from app.helpers.enums import EnumStr
 
 
-class HeartScore(db.TimedMixin, db.Base):
+class Heart(db.TimedMixin, db.Base):
     class URGENCE(EnumStr):
         XPCA = enum.auto()
         XPCP1 = enum.auto()
@@ -21,7 +21,7 @@ class HeartScore(db.TimedMixin, db.Base):
     listing_id = sa.Column(sa.ForeignKey('listings.id'))
     taille_D = sa.Column(sa.Float, nullable=True)
     poids_D = sa.Column(sa.Float, nullable=True)
-    ABOD = sa.Column(sa.String, nullable=True)
+    ABO_D = sa.Column(sa.String, nullable=True)
     sex_D = sa.Column(sa.String, nullable=True)
     R_D_NAI = sa.Column(sa.Date, nullable=True)
     D_INSC = sa.Column(sa.Date, nullable=True)
@@ -171,14 +171,14 @@ class HeartScore(db.TimedMixin, db.Base):
             dif_age = 1
         return dif_age
 
-    def get_ABO(self, ABOD, ABOR):
+    def get_ABO(self, ABO_D, ABOR):
         if (
-            (ABOD == ABOR)
-            or (ABOD == 'A' and ABOR == 'AB')
-            or (ABOD == 'O' and ABOR == 'B')
+            (ABO_D == ABOR)
+            or (ABO_D == 'A' and ABOR == 'AB')
+            or (ABO_D == 'O' and ABOR == 'B')
         ):
             return 1
-        elif ABOD == 'O' and ABOR == 'AB':
+        elif ABO_D == 'O' and ABOR == 'AB':
             return 0.1
         else:
             return 0
@@ -316,7 +316,7 @@ class HeartScore(db.TimedMixin, db.Base):
             fage_R, fage_D, f_MAL, LnBili, LnDFG, sex_RD
         )
         dif_age = self.get_dif_age(self.age_R, self.age_D)
-        ABO = self.get_ABO(self.ABOD, self.ABOR)
+        ABO = self.get_ABO(self.ABO_D, self.ABOR)
         SC = self.get_SC(
             self.taille_D,
             self.taille_R,
