@@ -11,7 +11,7 @@ from app.errors import AlreadyTakenError, InvalidRequest, PasswordMismatchError
 class User(TimedMixin, db.Base):
     """An entity that can login into the platform"""
 
-    __AUTO_DICT_EXCLUDE__ = ['password', 'role_id']
+    __AUTO_DICT_EXCLUDE__ = ['password', 'role_id', 'calendar_events']
     __AUTO_DICT_INCLUDE__ = ['role']
 
     email = sa.Column(sa.String, nullable=False, unique=True)
@@ -28,6 +28,7 @@ class User(TimedMixin, db.Base):
     )
     messages = orm.relationship('Message', back_populates='sender')
     role = orm.relationship('Role', back_populates='users')
+    calendar_events = orm.relationship('CalendarEvent', back_populates='author')
 
     # TODO: Use getter/setter for password instead of save_password
 

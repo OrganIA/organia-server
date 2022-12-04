@@ -8,6 +8,7 @@ from .person import Person as Person
 from .roles import Role as Role
 from .message import Message as Message
 from .listing import Listing as Listing
+from .calendar import CalendarEvent as CalendarEvent
 from .chat import ChatMember as ChatMember, Chat as Chat
 from .login_token import LoginToken as LoginToken
 from .hospital import Hospital as Hospital
