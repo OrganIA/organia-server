@@ -1,11 +1,10 @@
 from app import db, geopy
-from app.db.actions.get_or_create import get_or_create as _get_or_create
 from app.db.models import City, Hospital
 from app.errors import NotFoundError
 from app.utils.bp import Blueprint
 from app.utils.static import Static
 
-bp = Blueprint("hospitals", auth=False)
+bp = Blueprint(__name__)
 
 
 class HospitalSchema(Static):

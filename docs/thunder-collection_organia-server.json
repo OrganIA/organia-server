@@ -11,11 +11,21 @@
 				{
 					"name": "Register",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"firstname\": \"saber\",\n    \"lastname\": \"saber\",\n    \"email\": \"saber@saber.com\",\n    \"password\": \"saber\",\n    \"phone_number\": \"0660203526\"\n}",
+							"raw": "{\n    \"firstname\": \"saber\",\n    \"lastname\": \"saber\",\n    \"email\": \"test@test.fr\",\n    \"password\": \"saber\",\n    \"phone_number\": \"0660203526\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -41,11 +51,21 @@
 				{
 					"name": "Login",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"test@test.fr\",\n    \"password\": \"test\"\n}",
+							"raw": "{\n    \"email\": \"toto@toto.com\",\n    \"password\": \"saber\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -191,9 +211,6 @@
 					"response": []
 				}
 			],
-			"auth": {
-				"type": "bearer"
-			},
 			"event": [
 				{
 					"listen": "prerequest",
@@ -388,7 +405,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/api/persons/2",
+							"raw": "http://localhost:8000/api/person/2",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -396,7 +413,7 @@
 							"port": "8000",
 							"path": [
 								"api",
-								"persons",
+								"person",
 								"2"
 							]
 						}
@@ -406,20 +423,10 @@
 				{
 					"name": "Get all persons",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/api/persons",
+							"raw": "http://localhost:8000/api/person/",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -427,7 +434,8 @@
 							"port": "8000",
 							"path": [
 								"api",
-								"persons"
+								"person",
+								""
 							]
 						}
 					},
@@ -436,16 +444,6 @@
 				{
 					"name": "Create a person",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -458,7 +456,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8000/api/persons/",
+							"raw": "http://localhost:8000/api/person/",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -466,7 +464,7 @@
 							"port": "8000",
 							"path": [
 								"api",
-								"persons",
+								"person",
 								""
 							]
 						}
@@ -476,16 +474,6 @@
 				{
 					"name": "Update a person",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -498,7 +486,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8000/api/persons/1",
+							"raw": "http://localhost:8000/api/person/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -506,7 +494,7 @@
 							"port": "8000",
 							"path": [
 								"api",
-								"persons",
+								"person",
 								"1"
 							]
 						}
@@ -519,7 +507,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/api/persons/1",
+							"raw": "http://localhost:8000/api/person/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -527,7 +515,7 @@
 							"port": "8000",
 							"path": [
 								"api",
-								"persons",
+								"person",
 								"1"
 							]
 						}
@@ -540,7 +528,7 @@
 				"bearer": [
 					{
 						"key": "token",
-						"value": "",
+						"value": "3-3-11481b1fd97ad555006d39663958cf2a395e05e4038a2918c2bd0c454e1fed4b",
 						"type": "string"
 					}
 				]
@@ -703,7 +691,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"city\": {\r\n    \"name\": \"plaisir\",\r\n    \"department_code\": \"78370\"\r\n  },\r\n  \"name\": \"Test\"\r\n}",
+							"raw": "{\r\n    \"city\": {\r\n        \"name\": \"Aulnay-sous-Bois\",\r\n        \"department_code\": \"93600\"\r\n    },\r\n    \"city_id\": 1,\r\n    \"name\": \"Hopital Robert Ballanger\",\r\n    \"phone_number\": \"0660203526\",\r\n    \"latitude\": 0.0,\r\n    \"longitude\": 0.0\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -728,32 +716,51 @@
 					"name": "Get all hospitals",
 					"request": {
 						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a hospital",
+					"request": {
+						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8000/api/hospitals",
+							"raw": "localhost:8000/api/hospitals/1",
 							"host": [
 								"localhost"
 							],
 							"port": "8000",
 							"path": [
 								"api",
-								"hospitals"
+								"hospitals",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a hospital",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8000/api/hospitals/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"hospitals",
+								"1"
 							]
 						}
 					},
 					"response": []
 				}
 			],
-			"auth": {
-				"type": "bearer",
-				"bearer": [
-					{
-						"key": "token",
-						"value": "",
-						"type": "string"
-					}
-				]
-			},
 			"event": [
 				{
 					"listen": "prerequest",
@@ -781,16 +788,6 @@
 				{
 					"name": "Get all listings",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -812,16 +809,6 @@
 				{
 					"name": "Get a listing",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": []
 					},
@@ -830,21 +817,11 @@
 				{
 					"name": "Create a listing",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"person_id\": 14,\n    \"notes\": \"a\",\n    \"type\": \"DONOR\",\n    \"organ\": \"LIVER\",\n    \"tumors_number\": \"0\",\n    \"biggest_tumor_size\": \"0\",\n    \"alpha_fetoprotein\": \"0\",\n    \"is_under_dialysis\": \"false\",\n    \"dialysis_start_date\": \"2021-09-15\",\n    \"dialysis_end_date\": \"2021-09-15\",\n    \"is_retransplantation\": \"false\",\n    \"arf_date\": \"2021-09-15\",\n    \"transplantation_date\": \"2021-09-15\",\n    \"re_registration_date\": \"2021-09-15\",\n    \"A\": \"0\",\n    \"B\": \"0\",\n    \"DR\": \"0\",\n    \"DQ\": \"0\",\n    \"hospital_id\": \"0\"\n}",
+							"raw": "{\n    \"person_id\": 1,\n    \"notes\": \"a\",\n    \"type\": \"DONOR\",\n    \"organ\": \"LIVER\",\n    \"tumors_number\": \"0\",\n    \"biggest_tumor_size\": \"0\",\n    \"alpha_fetoprotein\": \"0\",\n    \"is_under_dialysis\": \"false\",\n    \"dialysis_start_date\": \"2021-09-15\",\n    \"dialysis_end_date\": \"2021-09-15\",\n    \"is_retransplantation\": \"false\",\n    \"arf_date\": \"2021-09-15\",\n    \"transplantation_date\": \"2021-09-15\",\n    \"re_registration_date\": \"2021-09-15\",\n    \"A\": \"0\",\n    \"B\": \"0\",\n    \"DR\": \"0\",\n    \"DQ\": \"0\",\n    \"hospital_id\": \"0\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -869,21 +846,11 @@
 				{
 					"name": "Update a listing",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"person_id\": 1,\n    \"notes\": \"\",\n    \"type\": \"PATIENT\",\n    \"organ\": \"HEART\",\n    \"tumors_number\": \"1\",\n    \"hospital_id\": \"4\",\n    \"biggest_tumor_size\": \"0\",\n    \"alpha_fetoprotein\": \"0\",\n    \"is_under_dialysis\": \"false\",\n    \"dialysis_start_date\": \"2021-09-15\",\n    \"dialysis_end_date\": \"2021-09-15\",\n    \"is_retransplantation\": \"false\",\n    \"arf_date\": \"2021-09-15\",\n    \"transplantation_date\": \"2021-09-15\",\n    \"re_registration_date\": \"2021-09-15\",\n    \"A\": \"0\",\n    \"B\": \"4\",\n    \"DR\": \"0\",\n    \"DQ\": \"0\"\n}",
+							"raw": "{\n    \"person_id\": 1,\n    \"notes\": \"\",\n    \"type\": \"PATIENT\",\n    \"organ\": \"HEART\",\n    \"tumors_number\": \"5\",\n    \"hospital_id\": \"4\",\n    \"biggest_tumor_size\": \"0\",\n    \"alpha_fetoprotein\": \"0\",\n    \"is_under_dialysis\": \"false\",\n    \"dialysis_start_date\": \"2021-09-15\",\n    \"dialysis_end_date\": \"2021-09-15\",\n    \"is_retransplantation\": \"true\",\n    \"arf_date\": \"2021-09-15\",\n    \"transplantation_date\": \"2021-09-15\",\n    \"re_registration_date\": \"2021-09-15\",\n    \"A\": \"0\",\n    \"B\": \"4\",\n    \"DR\": \"0\",\n    \"DQ\": \"0\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -891,7 +858,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8000/api/listings/2",
+							"raw": "localhost:8000/api/listings/1",
 							"host": [
 								"localhost"
 							],
@@ -899,7 +866,7 @@
 							"path": [
 								"api",
 								"listings",
-								"2"
+								"1"
 							]
 						}
 					},
@@ -908,20 +875,10 @@
 				{
 					"name": "Delete a listing",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "",
-									"type": "string"
-								}
-							]
-						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8000/api/listings/2",
+							"raw": "localhost:8000/api/listings/4",
 							"host": [
 								"localhost"
 							],
@@ -929,23 +886,13 @@
 							"path": [
 								"api",
 								"listings",
-								"2"
+								"4"
 							]
 						}
 					},
 					"response": []
 				}
 			],
-			"auth": {
-				"type": "bearer",
-				"bearer": [
-					{
-						"key": "token",
-						"value": "",
-						"type": "string"
-					}
-				]
-			},
 			"event": [
 				{
 					"listen": "prerequest",
@@ -973,16 +920,6 @@
 				{
 					"name": "Get all livers",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": []
 					},
@@ -1024,16 +961,6 @@
 				{
 					"name": "Create a liver",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -1070,9 +997,6 @@
 					"response": []
 				}
 			],
-			"auth": {
-				"type": "bearer"
-			},
 			"event": [
 				{
 					"listen": "prerequest",
@@ -1095,6 +1019,16 @@
 			]
 		}
 	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "",
+				"type": "string"
+			}
+		]
+	},
 	"event": [
 		{
 			"listen": "prerequest",
