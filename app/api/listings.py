@@ -138,19 +138,6 @@ def delete_listing(id: int):
 
 @bp.get('/<int:id>/matches')
 def get_listing_matches(id):
-    listing = get_listing(id)
-    score = 0
-    if listing.organ == Listing.Organ.LIVER:
-        organ = db.session.query(Liver).filter_by(listing_id=id).first()
-        if organ is None:
-            raise NotFoundError.r("L'organe n'a pas été trouvé")
-        score = organ.score
-    if listing.organ == Listing.Organ.LUNG:
-        compute_matches(id)
-        organ = db.session.query(Lung).filter(Listing.id != id, Listing.type == "PATIENT", Listing.organ == "LUNG").all()
-        if organ is None:
-            raise NotFoundError.r("L'organe n'a pas été trouvé")
-        score = organ.score
 
     def schemaify(listing: Listing):
         return {
@@ -161,6 +148,35 @@ def get_listing_matches(id):
             'person_id': listing.person_id,
             'hospital_id': listing.hospital_id,
         }
+
+    listing = get_listing(id)
+    score = 0
+    if listing.organ == Listing.Organ.LIVER:
+        organ = db.session.query(Liver).filter_by(listing_id=id).first()
+        if organ is None:
+            raise NotFoundError.r("L'organe n'a pas été trouvé")
+        score = organ.score
+    if listing.organ == Listing.Organ.LUNG:
+        compute_matches(id)
+        listings = db.session.query(Listing).filter(Listing.id != id, Listing.type == "PATIENT", Listing.organ == "LUNG").all()
+        if listings is None:
+            raise NotFoundError("L'organe n'a pas été trouvé")
+        res_listings = []
+        for listing in listings:
+            listing_organ = db.session.query(Lung).filter_by(listing_id = listing.id).first()
+            res_listings.append([listing, listing_organ.score])
+
+        return sorted(
+            [
+                {
+                    "listing": schemaify(res_listing[0]),
+                    "score": res_listing[1],
+                }
+                for res_listing in res_listings
+            ],
+            key=lambda x: x['score'],
+            reverse=True,
+        )
 
     return sorted(
         [

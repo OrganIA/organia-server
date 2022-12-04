@@ -69,6 +69,6 @@ def compute_matches(listing_id: int):
     listing_lungs_receiver_ids = []
     for listing_lungs_receiver in listing_lungs_receivers:
         listing_lungs_receiver_ids.append(listing_lungs_receiver.id)
-        person_receiver =  get_person(listing_lungs_receiver.person_id)
+        person_receiver = get_person(listing_lungs_receiver.person_id)
         update_lungs_score(listing_lungs_receiver.id, lungs_final_score(person_receiver, None, listing_lungs_receiver))
     return db.session.query(Lung).filter(Lung.listing_id.in_(listing_lungs_receiver_ids)).order_by(Lung.score.desc()).all()
