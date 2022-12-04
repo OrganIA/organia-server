@@ -1,12 +1,11 @@
 # isort: off
 # Generated, do not modify manually
 
+from .calendar import CalendarEvent as CalendarEvent
 from .chat import Chat as Chat, ChatMember as ChatMember
 from .city import City as City
 from .hospital import Hospital as Hospital
 from .listing import Listing as Listing
-from .calendar import CalendarEvent as CalendarEvent
-from .chat import ChatMember as ChatMember, Chat as Chat
 from .login_token import LoginToken as LoginToken
 from .message import Message as Message
 from .person import Person as Person
