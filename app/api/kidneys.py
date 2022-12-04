@@ -1,8 +1,10 @@
 from datetime import datetime
 
 from app import db
+from app.api.person import get_person
 from app.db.models import Kidney, Listing
 from app.errors import InvalidRequest, NotFoundError
+from app.score.kidney.kidney_score import get_score_NAP
 from app.utils.bp import Blueprint
 from app.utils.static import Static
 
@@ -59,7 +61,6 @@ def create_kidney_entry(listing_id, data: KidneyCreateSchema):
     return kidney
 
 
-@bp.post('/<int:listing_id>/score', success=201)
 async def update_kidney_score(listing_id: int, data: KidneyUpdateScoreSchema):
     listing = db.session.query(Listing).filter_by(id=listing_id).first()
     if listing == None:
@@ -84,25 +85,24 @@ async def delete_kidney_score(listing_id: int):
 
 @bp.get('/<int:listing_id>/matches', status_code=201) #UNCOMMENT WHEN PERSONS IMPLEMENTED
 async def compute_matches(listing_id: int):
-    return []
-    # donor_listing = db.session.query(
-    #     Listing).filter(listing_id == Listing.id).first()
-    # if donor_listing == None:
-    #     raise NotFoundError(
-    #         'Id provided doest not refer to an existing listing')
-    # if donor_listing.donor == False:
-    #     raise InvalidRequest('This listing is a receiver not a donor')
-    # receivers_listings = db.session.query(Listing).filter(
-    #     Listing.id != listing_id, Listing.donor == False, Listing.organ == "KIDNEY").all()
-    # donor_person = await get_person(listing_id)
-    # listings_ids = []
-    # for receiver in receivers_listings:
-    #     hasKidneyData = db.session.query(Kidney).filter(
-    #         Kidney.listing_id == receiver.id).all()
-    #     if hasKidneyData == []:
-    #         continue
-    #     listings_ids.append(receiver.id)
-    #     receiver_listing_person = await get_person(receiver.person_id)
-    #     score = getScoreNAP(receiver_listing_person, donor_person, receiver)
-    #     await update_kidney_score(receiver.id, score)
-    # return db.session.query(Kidney).filter(Kidney.listing_id.in_(listings_ids)).order_by(Kidney.score.desc()).all()
+    donor_listing = db.session.query(
+        Listing).filter(listing_id == Listing.id).first()
+    if donor_listing == None:
+        raise NotFoundError(
+            'Id provided doest not refer to an existing listing')
+    if donor_listing.donor == False:
+        raise InvalidRequest('This listing is a receiver not a donor')
+    receivers_listings = db.session.query(Listing).filter(
+        Listing.id != listing_id, Listing.donor == False, Listing.organ == "KIDNEY").all()
+    donor_person = await get_person(listing_id)
+    listings_ids = []
+    for receiver in receivers_listings:
+        hasKidneyData = db.session.query(Kidney).filter(
+            Kidney.listing_id == receiver.id).all()
+        if hasKidneyData == []:
+            continue
+        listings_ids.append(receiver.id)
+        receiver_listing_person = await get_person(receiver.person_id)
+        score = get_score_NAP(receiver_listing_person, donor_person, receiver)
+        await update_kidney_score(receiver.id, score)
+    return db.session.query(Kidney).filter(Kidney.listing_id.in_(listings_ids)).order_by(Kidney.score.desc()).all()
