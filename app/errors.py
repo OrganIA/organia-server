@@ -41,6 +41,11 @@ class Unauthorized(HTTPException):
     description = 'Unauthorized'
 
 
+class NotAcceptableError(HTTPException):
+    code = 400
+    description = 'Not acceptable'
+
+
 class PasswordMismatchError(InvalidRequest):
     description = 'Password mismatch'
 

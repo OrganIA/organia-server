@@ -11,12 +11,15 @@ from app.errors import AlreadyTakenError, InvalidRequest, PasswordMismatchError
 class User(TimedMixin, db.Base):
     """An entity that can login into the platform"""
 
+    __AUTO_DICT_EXCLUDE__ = ['password', 'role_id']
+    __AUTO_DICT_INCLUDE__ = ['role']
+
     email = sa.Column(sa.String, nullable=False, unique=True)
     password = sa.Column(sa.String)
-    is_admin = sa.Column(sa.Boolean, default=False)
     firstname = sa.Column('first_name', sa.String)
     lastname = sa.Column('last_name', sa.String)
     phone_number = sa.Column(PhoneNumberType)
+    role_id = sa.Column(sa.ForeignKey('roles.id'))
 
     person = orm.relationship('Person', uselist=False, back_populates='user')
     created_chats = orm.relationship('Chat', back_populates='creator')
@@ -24,23 +27,30 @@ class User(TimedMixin, db.Base):
         'Chat', secondary='chat_members', back_populates='users'
     )
     messages = orm.relationship('Message', back_populates='sender')
+    role = orm.relationship('Role', back_populates='users')
 
     # TODO: Use getter/setter for password instead of save_password
 
     def __init__(self, **kwargs):
         if password := kwargs.pop('password', None):
             self.save_password(password)
+        if "role_id" not in kwargs and "role" not in kwargs:
+            from app.db.models import Role
+
+            kwargs["role"] = Role.admin
         super().__init__(**kwargs)
 
     @classmethod
     @property
     def admin(cls):
-        action = db.session.get_or_create(
-            cls, filter_cols=['email'], email='admin@localhost', is_admin=True
-        )
-        if action.created:
-            db.session.commit()
-        return action.obj
+        from app.db.models import Role
+
+        user = db.session.get_or_create(
+            cls, filter_cols=['email'], email='admin@localhost'
+        ).obj
+        user.role = Role.admin
+        db.session.commit()
+        return user
 
     @classmethod
     def check_email(cls, value, obj=None):

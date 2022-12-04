@@ -6,7 +6,11 @@ from app.utils import str_format
 
 class Base:
     __AUTO_DICT__ = True
-    __AUTO_DICT_EXCLUDE__ = ['password']
+    # __AUTO_DICT_EXCLUDE__ = ['password', 'role_id', 'sender_id']
+    # __AUTO_DICT_INCLUDE__ = ['role', 'sender', 'chat', 'user', 'city',
+    # 'person']
+    __AUTO_DICT_EXCLUDE__ = []
+    __AUTO_DICT_INCLUDE__ = []
 
     @orm.declared_attr
     def __tablename__(cls):
@@ -33,8 +37,12 @@ class Base:
         if not self.__AUTO_DICT__:
             raise NotImplementedError
         inst = sa.inspect(self)
-        return {
+        tab = {
             c.key: getattr(self, c.key)
             for c in inst.mapper.column_attrs
             if c.key not in self.__AUTO_DICT_EXCLUDE__
         }
+        for key in self.__AUTO_DICT_INCLUDE__:
+            if hasattr(self, key):
+                tab[key] = getattr(self, key)
+        return tab

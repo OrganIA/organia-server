@@ -32,14 +32,14 @@ def main():
                 classes.add(line.split()[1].split('(')[0])
         if classes:
             module_name = get_module_name(file)
-            files[module_name] = classes
+            files[module_name] = sorted(classes)
     print('Detected', files)
 
     text = '\n'.join(
         f'from .{file} import {", ".join(f"{x} as {x}" for x in classes)}'
-        for file, classes in files.items()
+        for file, classes in sorted(files.items())
     )
-    text = '# isort: off\n# Generated, do not modify manually\n\n' + text
+    text = '# isort: off\n# Generated, do not modify manually\n\n' + text + '\n'
     n = target.write_text(text)
     print('Wrote', n, 'bytes to', target)
 
