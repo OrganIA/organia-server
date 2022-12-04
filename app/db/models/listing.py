@@ -29,25 +29,25 @@ class Listing(db.Base):
     # algo fields
 
     tumors_number = sa.Column(sa.Integer, default=0, nullable=False)
-    biggest_tumor_size = sa.Column(sa.Integer, nullable=True)
-    alpha_fetoprotein = sa.Column(sa.Integer, nullable=True)
+    biggest_tumor_size = sa.Column(sa.Integer)
+    alpha_fetoprotein = sa.Column(sa.Integer)
     # specific to kidneys?
-    is_under_dialysis = sa.Column(sa.Boolean, default=False, nullable=True)
+    is_under_dialysis = sa.Column(sa.Boolean, default=False)
     # can only have one dialysis report?
-    dialysis_start_date = sa.Column(sa.Date, nullable=True)
-    dialysis_end_date = sa.Column(sa.Date, nullable=True)
-    is_retransplantation = sa.Column(sa.Boolean, default=False, nullable=True)
+    dialysis_start_date = sa.Column(sa.Date)
+    dialysis_end_date = sa.Column(sa.Date)
+    is_retransplantation = sa.Column(sa.Boolean, default=False)
     # what does ARF mean?
-    arf_date = sa.Column(sa.Date, nullable=True)
+    arf_date = sa.Column(sa.Date)
     # isn't this the same as end_date?
-    transplantation_date = sa.Column(sa.Date, nullable=True)
+    transplantation_date = sa.Column(sa.Date)
     # isn't this just having 2 listings?
-    re_registration_date = sa.Column(sa.Date, nullable=True)
+    re_registration_date = sa.Column(sa.Date)
     # no idea what this is, should be more specific
-    A = sa.Column(sa.Integer, default=0, nullable=True)
-    B = sa.Column(sa.Integer, default=0, nullable=True)
-    DR = sa.Column(sa.Integer, default=0, nullable=True)
-    DQ = sa.Column(sa.Integer, default=0, nullable=True)
+    A = sa.Column(sa.Integer, default=0)
+    B = sa.Column(sa.Integer, default=0)
+    DR = sa.Column(sa.Integer, default=0)
+    DQ = sa.Column(sa.Integer, default=0)
 
     # relationships
 

@@ -3,7 +3,7 @@ from json import dumps, loads
 from simple_websocket.ws import Server
 
 from app import db, sock
-from app.api.chats import MessageCreateSchema, _get_chat
+from app.api.chats import MessageCreateSchema, get_chat
 from app.db.models import Message
 from app.db.models.chat import Chat
 from app.db.models.user import User
@@ -32,20 +32,20 @@ def websocket_route(websocket: Server, chat_id: int):
                 continue
             elif data["event"] == "login":
                 if "token" not in data:
-                    raise Unauthorized(description="No Bearer token given.")
+                    raise Unauthorized("No Bearer token given.")
                 manager.get_client(websocket).login(data["token"], chat_id)
                 if not check_if_user_in_chat(
-                    _get_chat(chat_id, manager.get_client(websocket).user),
+                    get_chat(chat_id, manager.get_client(websocket).user),
                     manager.get_client(websocket).get_id(),
                 ):
-                    raise Unauthorized(description="User is not in chat.")
+                    raise Unauthorized("User is not in chat.")
                 websocket.send(
                     dumps({"status": 200, "message": "Login successful."})
                 )
                 continue
             if data["event"] == "send_message":
                 if not manager.get_client(websocket).is_logged():
-                    raise Unauthorized(description="You are not logged in.")
+                    raise Unauthorized("You are not logged in.")
                 if "content" not in data["data"]:
                     raise InvalidRequest("No content given.")
                 check_message(chat_id, manager.get_client(websocket).user)
@@ -93,7 +93,7 @@ def websocket_route(websocket: Server, chat_id: int):
 
 def check_message(chat_id: int, user: User) -> bool:
     if not check_if_user_in_chat(
-        _get_chat(
+        get_chat(
             chat_id,
             user,
         ),
@@ -108,7 +108,7 @@ def check_if_user_in_chat(chat: Chat, user_id: int):
 
 
 def send_message(chat_id: int, data: MessageCreateSchema, user=None) -> Message:
-    chat = _get_chat(chat_id, user)
+    chat = get_chat(chat_id, user)
     message = Message(content=data.content, chat=chat, sender=user)
     if not message:
         raise InvalidRequest()

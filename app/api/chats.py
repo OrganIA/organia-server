@@ -7,12 +7,12 @@ from app.utils.static import Static
 bp = Blueprint(__name__)
 
 
-def _get_chat(chat_id: int, auth_user: User):
+def get_chat(chat_id: int, auth_user: User):
     chat = db.session.get(Chat, chat_id)
     if not chat:
         raise NotFoundError("No chat found with this id.")
     if auth_user not in chat.users:
-        raise Unauthorized(description="You are not in this chat.")
+        raise Unauthorized("You are not in this chat.")
     return chat
 
 
@@ -25,7 +25,7 @@ def get_users_chats(auth_user: User):
 @bp.get('/<int:chat_id>')
 @auth.route()
 def get_chat_by_id(chat_id: int, auth_user: User):
-    return _get_chat(chat_id, auth_user)
+    return get_chat(chat_id, auth_user)
 
 
 @bp.get('/messages/latest')
@@ -47,7 +47,7 @@ def get_latest_message_chat(auth_user: User):
 @bp.get('/<int:chat_id>/messages')
 @auth.route()
 def get_chat_messages(chat_id: int, auth_user: User):
-    chat = _get_chat(chat_id, auth_user)
+    chat = get_chat(chat_id, auth_user)
     return chat.messages
 
 
@@ -81,7 +81,7 @@ def create_chat(data: ChatCreateSchema, auth_user: User):
 @bp.post('/<int:chat_id>')
 @auth.route()
 def update_chat(data: dict, chat_id: int, auth_user: User):
-    chat = _get_chat(chat_id, auth_user)
+    chat = get_chat(chat_id, auth_user)
     if "users_ids" in data:
         users = _create_users_list(data["users_ids"], auth_user)
         chat.users = users
@@ -94,9 +94,9 @@ def update_chat(data: dict, chat_id: int, auth_user: User):
 @bp.delete('/<int:chat_id>')
 @auth.route()
 def delete_chat(chat_id: int, auth_user: User):
-    chat = _get_chat(chat_id, auth_user)
+    chat = get_chat(chat_id, auth_user)
     if chat.creator != auth_user:
-        raise Unauthorized(description="You are not the creator of this chat.")
+        raise Unauthorized("You are not the creator of this chat.")
     db.session.delete(chat)
     db.session.commit()
 
@@ -108,7 +108,7 @@ class MessageCreateSchema(Static):
 @bp.post('/<int:chat_id>/messages')
 @auth.route()
 def send_message(chat_id: int, data: MessageCreateSchema, auth_user: User):
-    chat = _get_chat(chat_id, auth_user)
+    chat = get_chat(chat_id, auth_user)
     message = Message(content=data.content, chat=chat, sender=auth_user)
     db.session.add(message)
     db.session.commit()

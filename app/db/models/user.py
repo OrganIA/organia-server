@@ -16,7 +16,6 @@ class User(TimedMixin, db.Base):
 
     email = sa.Column(sa.String, nullable=False, unique=True)
     password = sa.Column(sa.String)
-    is_admin = sa.Column(sa.Boolean, default=False)
     firstname = sa.Column('first_name', sa.String)
     lastname = sa.Column('last_name', sa.String)
     phone_number = sa.Column(PhoneNumberType)
@@ -44,9 +43,14 @@ class User(TimedMixin, db.Base):
     @classmethod
     @property
     def admin(cls):
-        return db.session.get_or_create(
-            cls, filter_cols=['email'], email='admin@localhost', is_admin=True
+        from app.db.models import Role
+
+        user = db.session.get_or_create(
+            cls, filter_cols=['email'], email='admin@localhost'
         ).obj
+        user.role = Role.admin
+        db.session.commit()
+        return user
 
     @classmethod
     def check_email(cls, value, obj=None):

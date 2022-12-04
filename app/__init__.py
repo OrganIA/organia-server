@@ -1,10 +1,8 @@
 import flask
 from flask_sock import Sock
-from sqlalchemy.event import listens_for
 
-from app import db
-from app.application import App
-from app.db.models import Role
+from . import db
+from .application import App
 
 sock = Sock()
 
@@ -29,8 +27,3 @@ def create_app():
 
     sock.init_app(app)
     return app
-
-
-@listens_for(Role.__table__, "after_create")
-def roles_table_created(*args, **kwargs):
-    Role.init_table()

@@ -1,12 +1,7 @@
 from app import auth, db
 from app.db.models import Role
 from app.db.models.user import User
-from app.errors import (
-    AlreadyTakenError,
-    NotAcceptableError,
-    NotFoundError,
-    Unauthorized,
-)
+from app.errors import AlreadyTakenError, NotAcceptableError, NotFoundError
 from app.utils.bp import Blueprint
 from app.utils.static import Static
 
@@ -21,7 +16,6 @@ class RoleSchema(Static):
     can_edit_staff = bool
     can_edit_roles = bool
     can_edit_persons = bool
-    can_invite = bool
 
 
 class RoleUpdateSchema(Static):
@@ -33,24 +27,24 @@ class RoleUpdateSchema(Static):
     can_edit_staff = bool
     can_edit_roles = bool
     can_edit_persons = bool
-    can_invite = bool
 
 
 @bp.get('/')
 def get_roles():
-    return db.session.query(Role).all()
+    return db.session.query(Role)
 
 
 @bp.get('/<int:role_id>')
 def get_role(role_id: int):
-    return db.session.get(Role, role_id)
+    role = db.session.get(Role, role_id)
+    if not role:
+        raise NotFoundError("No role found with this id.")
+    return role
 
 
 @bp.post('/')
-@auth.route()
+@auth.route(edit_roles=True)
 def create_role(data: RoleSchema, auth_user: User):
-    if not auth_user.role.can_edit_roles:
-        raise Unauthorized('You do not have permission to create roles.')
     if db.session.query(Role).filter_by(name=data.name).first():
         raise AlreadyTakenError("name", data.name)
     role = Role(**data.dict)
@@ -60,13 +54,11 @@ def create_role(data: RoleSchema, auth_user: User):
 
 
 @bp.post('/<int:role_id>')
-@auth.route()
+@auth.route(edit_roles=True)
 def update_role(role_id: int, data: RoleUpdateSchema, auth_user: User):
-    if not auth_user.role.can_edit_roles:
-        raise Unauthorized('You do not have permission to update roles.')
     if db.session.query(Role).filter_by(name=data.name).first():
         raise AlreadyTakenError("name", data.name)
-    role = db.session.get(Role, role_id)
+    role = get_role(role_id)
     for key, value in data.dict.items():
         if value == 'null':
             setattr(role, key, None)
@@ -77,16 +69,14 @@ def update_role(role_id: int, data: RoleUpdateSchema, auth_user: User):
 
 
 @bp.delete('/<int:role_id>')
-@auth.route()
+@auth.route(edit_roles=True)
 def delete_role(role_id: int, auth_user: User):
-    if not auth_user.role.can_edit_roles:
-        raise Unauthorized('You do not have permission to delete roles.')
     if not (role := db.session.query(Role).filter_by(id=role_id).first()):
         raise NotFoundError("No role found with this id.")
-    if db.session.query(User).filter_by(role_id=role_id).count() > 0:
+    if db.session.query(User).filter_by(role=role).count() > 0:
         raise NotAcceptableError(
-            description="Please remove or update all users who have this role"
-            " before removing it."
+            "Please remove or update all users who have this role before"
+            " removing it."
         )
     db.session.delete(role)
     db.session.commit()
