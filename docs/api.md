@@ -1,5 +1,5 @@
 # API Documentation
-Generated on: 2022-12-04 at 11:46:14
+Generated on: 2022-12-05 at 21:54:01
 
 - [GET /api/](#get--api-)
 - [POST /api/auth/register](#post--api-auth-register)
@@ -33,9 +33,9 @@ the latest version.
 ### Response
 ```json
 {
-  "version": "aface1b",
-  "time": 1670147174.411562,
-  "datetime": "2022-12-04 10:46:14.411562",
+  "version": "6b66575",
+  "time": 1670270041.266853,
+  "datetime": "2022-12-05 20:54:01.266853",
   "software": {
     "flask": "2.2.2",
     "python": "3.10.7",
@@ -58,7 +58,7 @@ login after registering.
 ### Request
 ```json
 {
-  "email": "user938@email.com",
+  "email": "user332@email.com",
   "password": "password",
   "firstname": "prenom",
   "lastname": "nom",
@@ -69,14 +69,14 @@ login after registering.
 ### Response
 ```json
 {
-  "token": "4-4-e6c561f900af8979c24b94f9011c6edacfc9227e420f3c081355d536e69a47dd",
+  "token": "1-1-db1cc437be1e17bacb66791db831c53455f62036dca9f04eca75408cfed2e7ef",
   "user": {
     "firstname": "prenom",
     "lastname": "nom",
-    "id": 4,
-    "created_at": "2022-12-04 10:46:14.621480",
+    "id": 1,
+    "created_at": "2022-12-05 20:54:01.496917",
     "updated_at": null,
-    "email": "user938@email.com",
+    "email": "user332@email.com",
     "phone_number": "01 23 45 67 89",
     "role": {
       "id": 1,
@@ -96,7 +96,7 @@ login after registering.
 ### Request
 ```json
 {
-  "email": "user938@email.com",
+  "email": "user332@email.com",
   "password": "password",
   "firstname": "prenom",
   "lastname": "nom",
@@ -107,7 +107,7 @@ login after registering.
 ### Response
 ```json
 {
-  "msg": "email \"user938@email.com\" is already taken."
+  "msg": "email \"user332@email.com\" is already taken."
 }
 ```
 
@@ -119,7 +119,7 @@ Login and get a token.
 ### Request
 ```json
 {
-  "email": "user938@email.com",
+  "email": "user332@email.com",
   "password": "password"
 }
 ```
@@ -127,14 +127,14 @@ Login and get a token.
 ### Response
 ```json
 {
-  "token": "6-4-fcabcdd8e41386b980d79f4f1555645dfd2a2299d63714455c72adbf9829c794",
+  "token": "3-1-411f88df741dc9415fc1afa11d97d0ae4a26889fd2ffc2f7a91aae7c4bebacfd",
   "user": {
     "firstname": "prenom",
     "lastname": "nom",
-    "id": 4,
-    "created_at": "2022-12-04 10:46:14.621480",
+    "id": 1,
+    "created_at": "2022-12-05 20:54:01.496917",
     "updated_at": null,
-    "email": "user938@email.com",
+    "email": "user332@email.com",
     "phone_number": "01 23 45 67 89",
     "role": {
       "id": 1,
@@ -170,7 +170,7 @@ Login and get a token.
 ### Request
 ```json
 {
-  "email": "user938@email.com",
+  "email": "user332@email.com",
   "password": "not-the-password"
 }
 ```
@@ -195,9 +195,9 @@ List all users
     "firstname": "prenom",
     "lastname": "nom",
     "id": 1,
-    "created_at": "2022-12-04 10:44:13.856884",
+    "created_at": "2022-12-05 20:54:01.496917",
     "updated_at": null,
-    "email": "user553@email.com",
+    "email": "user332@email.com",
     "phone_number": "01 23 45 67 89",
     "role": {
       "id": 1,
@@ -214,9 +214,9 @@ List all users
     "firstname": null,
     "lastname": null,
     "id": 2,
-    "created_at": "2022-12-04 10:44:14.224069",
+    "created_at": "2022-12-05 20:54:01.867631",
     "updated_at": null,
-    "email": "user779@email.com",
+    "email": "user430@email.com",
     "phone_number": null,
     "role": {
       "id": 1,
@@ -233,47 +233,9 @@ List all users
     "firstname": null,
     "lastname": null,
     "id": 3,
-    "created_at": "2022-12-04 10:44:14.819896",
-    "updated_at": "2022-12-04 10:44:14.827150",
+    "created_at": "2022-12-05 20:54:02.406667",
+    "updated_at": "2022-12-05 20:54:02.416297",
     "email": "admin@localhost",
-    "phone_number": null,
-    "role": {
-      "id": 1,
-      "can_edit_users": true,
-      "can_edit_hospitals": true,
-      "can_edit_listings": true,
-      "can_edit_staff": true,
-      "can_edit_roles": true,
-      "can_edit_persons": true,
-      "name": "admin"
-    }
-  },
-  {
-    "firstname": "prenom",
-    "lastname": "nom",
-    "id": 4,
-    "created_at": "2022-12-04 10:46:14.621480",
-    "updated_at": null,
-    "email": "user938@email.com",
-    "phone_number": "01 23 45 67 89",
-    "role": {
-      "id": 1,
-      "can_edit_users": true,
-      "can_edit_hospitals": true,
-      "can_edit_listings": true,
-      "can_edit_staff": true,
-      "can_edit_roles": true,
-      "can_edit_persons": true,
-      "name": "admin"
-    }
-  },
-  {
-    "firstname": null,
-    "lastname": null,
-    "id": 5,
-    "created_at": "2022-12-04 10:46:15.007342",
-    "updated_at": null,
-    "email": "user43@email.com",
     "phone_number": null,
     "role": {
       "id": 1,
@@ -301,8 +263,8 @@ Get info about the current user
   "firstname": null,
   "lastname": null,
   "id": 3,
-  "created_at": "2022-12-04 10:44:14.819896",
-  "updated_at": "2022-12-04 10:44:14.827150",
+  "created_at": "2022-12-05 20:54:02.406667",
+  "updated_at": "2022-12-05 20:54:02.416297",
   "email": "admin@localhost",
   "phone_number": null,
   "role": {
@@ -330,9 +292,9 @@ Get info about a specific user
   "firstname": "prenom",
   "lastname": "nom",
   "id": 1,
-  "created_at": "2022-12-04 10:44:13.856884",
+  "created_at": "2022-12-05 20:54:01.496917",
   "updated_at": null,
-  "email": "user553@email.com",
+  "email": "user332@email.com",
   "phone_number": "01 23 45 67 89",
   "role": {
     "id": 1,
@@ -412,7 +374,13 @@ Get the matching listings for an organ
 
 > :lock: This request requires authentication. Pass `Bearer: the-token` in the `Authorization` header.
 ### Response
-**Status:** 200
+```json
+{
+  "msg": "The requested resource was not found"
+}
+```
+
+**Status:** 404
 
 ## POST /api/chats
 Create a new chat
@@ -433,7 +401,7 @@ Create a new chat
 ```json
 {
   "id": 1,
-  "created_at": "2022-12-04 10:46:15.703849",
+  "created_at": "2022-12-05 20:54:02.552608",
   "updated_at": null,
   "name": "Chat name",
   "users": [
@@ -441,9 +409,9 @@ Create a new chat
       "firstname": "prenom",
       "lastname": "nom",
       "id": 1,
-      "created_at": "2022-12-04 10:44:13.856884",
+      "created_at": "2022-12-05 20:54:01.496917",
       "updated_at": null,
-      "email": "user553@email.com",
+      "email": "user332@email.com",
       "phone_number": "01 23 45 67 89",
       "role": {
         "id": 1,
@@ -460,9 +428,9 @@ Create a new chat
       "firstname": null,
       "lastname": null,
       "id": 2,
-      "created_at": "2022-12-04 10:44:14.224069",
+      "created_at": "2022-12-05 20:54:01.867631",
       "updated_at": null,
-      "email": "user779@email.com",
+      "email": "user430@email.com",
       "phone_number": null,
       "role": {
         "id": 1,
@@ -478,9 +446,9 @@ Create a new chat
     {
       "firstname": null,
       "lastname": null,
-      "id": 6,
-      "created_at": "2022-12-04 10:46:15.618315",
-      "updated_at": "2022-12-04 10:46:15.628322",
+      "id": 3,
+      "created_at": "2022-12-05 20:54:02.481233",
+      "updated_at": "2022-12-05 20:54:02.487779",
       "email": "admin@localhost",
       "phone_number": null,
       "role": {
@@ -498,9 +466,9 @@ Create a new chat
   "creator": {
     "firstname": null,
     "lastname": null,
-    "id": 6,
-    "created_at": "2022-12-04 10:46:15.618315",
-    "updated_at": "2022-12-04 10:46:15.628322",
+    "id": 3,
+    "created_at": "2022-12-05 20:54:02.481233",
+    "updated_at": "2022-12-05 20:54:02.487779",
     "email": "admin@localhost",
     "phone_number": null,
     "role": {
@@ -528,7 +496,7 @@ Get all the chats the current user is part of
 [
   {
     "id": 1,
-    "created_at": "2022-12-04 10:46:15.703849",
+    "created_at": "2022-12-05 20:54:02.552608",
     "updated_at": null,
     "name": "Chat name",
     "users": [
@@ -536,9 +504,9 @@ Get all the chats the current user is part of
         "firstname": "prenom",
         "lastname": "nom",
         "id": 1,
-        "created_at": "2022-12-04 10:44:13.856884",
+        "created_at": "2022-12-05 20:54:01.496917",
         "updated_at": null,
-        "email": "user553@email.com",
+        "email": "user332@email.com",
         "phone_number": "01 23 45 67 89",
         "role": {
           "id": 1,
@@ -555,9 +523,9 @@ Get all the chats the current user is part of
         "firstname": null,
         "lastname": null,
         "id": 2,
-        "created_at": "2022-12-04 10:44:14.224069",
+        "created_at": "2022-12-05 20:54:01.867631",
         "updated_at": null,
-        "email": "user779@email.com",
+        "email": "user430@email.com",
         "phone_number": null,
         "role": {
           "id": 1,
@@ -573,9 +541,9 @@ Get all the chats the current user is part of
       {
         "firstname": null,
         "lastname": null,
-        "id": 6,
-        "created_at": "2022-12-04 10:46:15.618315",
-        "updated_at": "2022-12-04 10:46:15.628322",
+        "id": 3,
+        "created_at": "2022-12-05 20:54:02.481233",
+        "updated_at": "2022-12-05 20:54:02.487779",
         "email": "admin@localhost",
         "phone_number": null,
         "role": {
@@ -593,9 +561,9 @@ Get all the chats the current user is part of
     "creator": {
       "firstname": null,
       "lastname": null,
-      "id": 6,
-      "created_at": "2022-12-04 10:46:15.618315",
-      "updated_at": "2022-12-04 10:46:15.628322",
+      "id": 3,
+      "created_at": "2022-12-05 20:54:02.481233",
+      "updated_at": "2022-12-05 20:54:02.487779",
       "email": "admin@localhost",
       "phone_number": null,
       "role": {
@@ -623,7 +591,7 @@ Get a specific chat
 ```json
 {
   "id": 1,
-  "created_at": "2022-12-04 10:46:15.703849",
+  "created_at": "2022-12-05 20:54:02.552608",
   "updated_at": null,
   "name": "Chat name",
   "users": [
@@ -631,9 +599,9 @@ Get a specific chat
       "firstname": "prenom",
       "lastname": "nom",
       "id": 1,
-      "created_at": "2022-12-04 10:44:13.856884",
+      "created_at": "2022-12-05 20:54:01.496917",
       "updated_at": null,
-      "email": "user553@email.com",
+      "email": "user332@email.com",
       "phone_number": "01 23 45 67 89",
       "role": {
         "id": 1,
@@ -650,9 +618,9 @@ Get a specific chat
       "firstname": null,
       "lastname": null,
       "id": 2,
-      "created_at": "2022-12-04 10:44:14.224069",
+      "created_at": "2022-12-05 20:54:01.867631",
       "updated_at": null,
-      "email": "user779@email.com",
+      "email": "user430@email.com",
       "phone_number": null,
       "role": {
         "id": 1,
@@ -668,9 +636,9 @@ Get a specific chat
     {
       "firstname": null,
       "lastname": null,
-      "id": 6,
-      "created_at": "2022-12-04 10:46:15.618315",
-      "updated_at": "2022-12-04 10:46:15.628322",
+      "id": 3,
+      "created_at": "2022-12-05 20:54:02.481233",
+      "updated_at": "2022-12-05 20:54:02.487779",
       "email": "admin@localhost",
       "phone_number": null,
       "role": {
@@ -688,9 +656,9 @@ Get a specific chat
   "creator": {
     "firstname": null,
     "lastname": null,
-    "id": 6,
-    "created_at": "2022-12-04 10:46:15.618315",
-    "updated_at": "2022-12-04 10:46:15.628322",
+    "id": 3,
+    "created_at": "2022-12-05 20:54:02.481233",
+    "updated_at": "2022-12-05 20:54:02.487779",
     "email": "admin@localhost",
     "phone_number": null,
     "role": {
@@ -723,32 +691,10 @@ Send a message
 ### Response
 ```json
 {
-  "id": 2,
-  "created_at": "2022-12-04 10:46:15.765023",
-  "updated_at": null,
   "content": "Hello world!",
-  "sender": {
-    "firstname": null,
-    "lastname": null,
-    "id": 6,
-    "created_at": "2022-12-04 10:46:15.618315",
-    "updated_at": "2022-12-04 10:46:15.628322",
-    "email": "admin@localhost",
-    "phone_number": null,
-    "role": {
-      "id": 1,
-      "can_edit_users": true,
-      "can_edit_hospitals": true,
-      "can_edit_listings": true,
-      "can_edit_staff": true,
-      "can_edit_roles": true,
-      "can_edit_persons": true,
-      "name": "admin"
-    }
-  },
   "chat": {
     "id": 1,
-    "created_at": "2022-12-04 10:46:15.703849",
+    "created_at": "2022-12-05 20:54:02.552608",
     "updated_at": null,
     "name": "Chat name",
     "users": [
@@ -756,9 +702,9 @@ Send a message
         "firstname": "prenom",
         "lastname": "nom",
         "id": 1,
-        "created_at": "2022-12-04 10:44:13.856884",
+        "created_at": "2022-12-05 20:54:01.496917",
         "updated_at": null,
-        "email": "user553@email.com",
+        "email": "user332@email.com",
         "phone_number": "01 23 45 67 89",
         "role": {
           "id": 1,
@@ -775,9 +721,9 @@ Send a message
         "firstname": null,
         "lastname": null,
         "id": 2,
-        "created_at": "2022-12-04 10:44:14.224069",
+        "created_at": "2022-12-05 20:54:01.867631",
         "updated_at": null,
-        "email": "user779@email.com",
+        "email": "user430@email.com",
         "phone_number": null,
         "role": {
           "id": 1,
@@ -793,9 +739,9 @@ Send a message
       {
         "firstname": null,
         "lastname": null,
-        "id": 6,
-        "created_at": "2022-12-04 10:46:15.618315",
-        "updated_at": "2022-12-04 10:46:15.628322",
+        "id": 3,
+        "created_at": "2022-12-05 20:54:02.481233",
+        "updated_at": "2022-12-05 20:54:02.487779",
         "email": "admin@localhost",
         "phone_number": null,
         "role": {
@@ -813,9 +759,9 @@ Send a message
     "creator": {
       "firstname": null,
       "lastname": null,
-      "id": 6,
-      "created_at": "2022-12-04 10:46:15.618315",
-      "updated_at": "2022-12-04 10:46:15.628322",
+      "id": 3,
+      "created_at": "2022-12-05 20:54:02.481233",
+      "updated_at": "2022-12-05 20:54:02.487779",
       "email": "admin@localhost",
       "phone_number": null,
       "role": {
@@ -829,7 +775,27 @@ Send a message
         "name": "admin"
       }
     }
-  }
+  },
+  "sender": {
+    "firstname": null,
+    "lastname": null,
+    "id": 3,
+    "created_at": "2022-12-05 20:54:02.481233",
+    "updated_at": "2022-12-05 20:54:02.487779",
+    "email": "admin@localhost",
+    "phone_number": null,
+    "role": {
+      "id": 1,
+      "can_edit_users": true,
+      "can_edit_hospitals": true,
+      "can_edit_listings": true,
+      "can_edit_staff": true,
+      "can_edit_roles": true,
+      "can_edit_persons": true,
+      "name": "admin"
+    }
+  },
+  "id": 1
 }
 ```
 
@@ -845,7 +811,7 @@ Get all chats the current user is part of and the last message of each
   {
     "chat": {
       "id": 1,
-      "created_at": "2022-12-04 10:46:15.703849",
+      "created_at": "2022-12-05 20:54:02.552608",
       "updated_at": null,
       "name": "Chat name",
       "users": [
@@ -853,9 +819,9 @@ Get all chats the current user is part of and the last message of each
           "firstname": "prenom",
           "lastname": "nom",
           "id": 1,
-          "created_at": "2022-12-04 10:44:13.856884",
+          "created_at": "2022-12-05 20:54:01.496917",
           "updated_at": null,
-          "email": "user553@email.com",
+          "email": "user332@email.com",
           "phone_number": "01 23 45 67 89",
           "role": {
             "id": 1,
@@ -872,9 +838,9 @@ Get all chats the current user is part of and the last message of each
           "firstname": null,
           "lastname": null,
           "id": 2,
-          "created_at": "2022-12-04 10:44:14.224069",
+          "created_at": "2022-12-05 20:54:01.867631",
           "updated_at": null,
-          "email": "user779@email.com",
+          "email": "user430@email.com",
           "phone_number": null,
           "role": {
             "id": 1,
@@ -890,9 +856,9 @@ Get all chats the current user is part of and the last message of each
         {
           "firstname": null,
           "lastname": null,
-          "id": 6,
-          "created_at": "2022-12-04 10:46:15.618315",
-          "updated_at": "2022-12-04 10:46:15.628322",
+          "id": 3,
+          "created_at": "2022-12-05 20:54:02.481233",
+          "updated_at": "2022-12-05 20:54:02.487779",
           "email": "admin@localhost",
           "phone_number": null,
           "role": {
@@ -910,9 +876,9 @@ Get all chats the current user is part of and the last message of each
       "creator": {
         "firstname": null,
         "lastname": null,
-        "id": 6,
-        "created_at": "2022-12-04 10:46:15.618315",
-        "updated_at": "2022-12-04 10:46:15.628322",
+        "id": 3,
+        "created_at": "2022-12-05 20:54:02.481233",
+        "updated_at": "2022-12-05 20:54:02.487779",
         "email": "admin@localhost",
         "phone_number": null,
         "role": {
@@ -928,32 +894,10 @@ Get all chats the current user is part of and the last message of each
       }
     },
     "last_message": {
-      "id": 2,
-      "created_at": "2022-12-04 10:46:15.765023",
-      "updated_at": null,
       "content": "Hello world!",
-      "sender": {
-        "firstname": null,
-        "lastname": null,
-        "id": 6,
-        "created_at": "2022-12-04 10:46:15.618315",
-        "updated_at": "2022-12-04 10:46:15.628322",
-        "email": "admin@localhost",
-        "phone_number": null,
-        "role": {
-          "id": 1,
-          "can_edit_users": true,
-          "can_edit_hospitals": true,
-          "can_edit_listings": true,
-          "can_edit_staff": true,
-          "can_edit_roles": true,
-          "can_edit_persons": true,
-          "name": "admin"
-        }
-      },
       "chat": {
         "id": 1,
-        "created_at": "2022-12-04 10:46:15.703849",
+        "created_at": "2022-12-05 20:54:02.552608",
         "updated_at": null,
         "name": "Chat name",
         "users": [
@@ -961,9 +905,9 @@ Get all chats the current user is part of and the last message of each
             "firstname": "prenom",
             "lastname": "nom",
             "id": 1,
-            "created_at": "2022-12-04 10:44:13.856884",
+            "created_at": "2022-12-05 20:54:01.496917",
             "updated_at": null,
-            "email": "user553@email.com",
+            "email": "user332@email.com",
             "phone_number": "01 23 45 67 89",
             "role": {
               "id": 1,
@@ -980,9 +924,9 @@ Get all chats the current user is part of and the last message of each
             "firstname": null,
             "lastname": null,
             "id": 2,
-            "created_at": "2022-12-04 10:44:14.224069",
+            "created_at": "2022-12-05 20:54:01.867631",
             "updated_at": null,
-            "email": "user779@email.com",
+            "email": "user430@email.com",
             "phone_number": null,
             "role": {
               "id": 1,
@@ -998,9 +942,9 @@ Get all chats the current user is part of and the last message of each
           {
             "firstname": null,
             "lastname": null,
-            "id": 6,
-            "created_at": "2022-12-04 10:46:15.618315",
-            "updated_at": "2022-12-04 10:46:15.628322",
+            "id": 3,
+            "created_at": "2022-12-05 20:54:02.481233",
+            "updated_at": "2022-12-05 20:54:02.487779",
             "email": "admin@localhost",
             "phone_number": null,
             "role": {
@@ -1018,9 +962,9 @@ Get all chats the current user is part of and the last message of each
         "creator": {
           "firstname": null,
           "lastname": null,
-          "id": 6,
-          "created_at": "2022-12-04 10:46:15.618315",
-          "updated_at": "2022-12-04 10:46:15.628322",
+          "id": 3,
+          "created_at": "2022-12-05 20:54:02.481233",
+          "updated_at": "2022-12-05 20:54:02.487779",
           "email": "admin@localhost",
           "phone_number": null,
           "role": {
@@ -1034,7 +978,27 @@ Get all chats the current user is part of and the last message of each
             "name": "admin"
           }
         }
-      }
+      },
+      "sender": {
+        "firstname": null,
+        "lastname": null,
+        "id": 3,
+        "created_at": "2022-12-05 20:54:02.481233",
+        "updated_at": "2022-12-05 20:54:02.487779",
+        "email": "admin@localhost",
+        "phone_number": null,
+        "role": {
+          "id": 1,
+          "can_edit_users": true,
+          "can_edit_hospitals": true,
+          "can_edit_listings": true,
+          "can_edit_staff": true,
+          "can_edit_roles": true,
+          "can_edit_persons": true,
+          "name": "admin"
+        }
+      },
+      "id": 1
     }
   }
 ]
@@ -1050,32 +1014,10 @@ Get all messages for a specific chat
 ```json
 [
   {
-    "id": 2,
-    "created_at": "2022-12-04 10:46:15.765023",
-    "updated_at": null,
     "content": "Hello world!",
-    "sender": {
-      "firstname": null,
-      "lastname": null,
-      "id": 6,
-      "created_at": "2022-12-04 10:46:15.618315",
-      "updated_at": "2022-12-04 10:46:15.628322",
-      "email": "admin@localhost",
-      "phone_number": null,
-      "role": {
-        "id": 1,
-        "can_edit_users": true,
-        "can_edit_hospitals": true,
-        "can_edit_listings": true,
-        "can_edit_staff": true,
-        "can_edit_roles": true,
-        "can_edit_persons": true,
-        "name": "admin"
-      }
-    },
     "chat": {
       "id": 1,
-      "created_at": "2022-12-04 10:46:15.703849",
+      "created_at": "2022-12-05 20:54:02.552608",
       "updated_at": null,
       "name": "Chat name",
       "users": [
@@ -1083,9 +1025,9 @@ Get all messages for a specific chat
           "firstname": "prenom",
           "lastname": "nom",
           "id": 1,
-          "created_at": "2022-12-04 10:44:13.856884",
+          "created_at": "2022-12-05 20:54:01.496917",
           "updated_at": null,
-          "email": "user553@email.com",
+          "email": "user332@email.com",
           "phone_number": "01 23 45 67 89",
           "role": {
             "id": 1,
@@ -1102,9 +1044,9 @@ Get all messages for a specific chat
           "firstname": null,
           "lastname": null,
           "id": 2,
-          "created_at": "2022-12-04 10:44:14.224069",
+          "created_at": "2022-12-05 20:54:01.867631",
           "updated_at": null,
-          "email": "user779@email.com",
+          "email": "user430@email.com",
           "phone_number": null,
           "role": {
             "id": 1,
@@ -1120,9 +1062,9 @@ Get all messages for a specific chat
         {
           "firstname": null,
           "lastname": null,
-          "id": 6,
-          "created_at": "2022-12-04 10:46:15.618315",
-          "updated_at": "2022-12-04 10:46:15.628322",
+          "id": 3,
+          "created_at": "2022-12-05 20:54:02.481233",
+          "updated_at": "2022-12-05 20:54:02.487779",
           "email": "admin@localhost",
           "phone_number": null,
           "role": {
@@ -1140,9 +1082,9 @@ Get all messages for a specific chat
       "creator": {
         "firstname": null,
         "lastname": null,
-        "id": 6,
-        "created_at": "2022-12-04 10:46:15.618315",
-        "updated_at": "2022-12-04 10:46:15.628322",
+        "id": 3,
+        "created_at": "2022-12-05 20:54:02.481233",
+        "updated_at": "2022-12-05 20:54:02.487779",
         "email": "admin@localhost",
         "phone_number": null,
         "role": {
@@ -1156,7 +1098,27 @@ Get all messages for a specific chat
           "name": "admin"
         }
       }
-    }
+    },
+    "sender": {
+      "firstname": null,
+      "lastname": null,
+      "id": 3,
+      "created_at": "2022-12-05 20:54:02.481233",
+      "updated_at": "2022-12-05 20:54:02.487779",
+      "email": "admin@localhost",
+      "phone_number": null,
+      "role": {
+        "id": 1,
+        "can_edit_users": true,
+        "can_edit_hospitals": true,
+        "can_edit_listings": true,
+        "can_edit_staff": true,
+        "can_edit_roles": true,
+        "can_edit_persons": true,
+        "name": "admin"
+      }
+    },
+    "id": 1
   }
 ]
 ```

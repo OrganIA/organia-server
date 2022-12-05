@@ -1,34 +1,35 @@
-from datetime import date, datetime
+from datetime import date
+
+from pydantic import BaseModel
 
 from app import db
 from app.db.models import Listing, Liver
 from app.errors import NotFoundError
 from app.utils.bp import Blueprint
-from app.utils.static import Static
 
 bp = Blueprint(__name__)
 
 
-class ListingSchema(Static):
-    hospital_id = int
-    notes = str
-    organ = Listing.Organ
-    person_id = int
-    type = Listing.Type
+class ListingSchema(BaseModel):
+    hospital_id: int
+    notes: str
+    organ: Listing.Organ
+    person_id: int
+    type: Listing.Type
 
-    is_under_dialysis = bool
-    re_registration_date = date
-    transplantation_date = date
-    dialysis_end_date = date
-    dialysis_start_date = date
-    alpha_fetoprotein = int
-    arf_date = date
-    biggest_tumor_size = int
-    tumors_number = int
-    A = int
-    B = int
-    DQ = int
-    DR = int
+    is_under_dialysis: bool
+    re_registration_date: date
+    transplantation_date: date
+    dialysis_end_date: date
+    dialysis_start_date: date
+    alpha_fetoprotein: int
+    arf_date: date
+    biggest_tumor_size: int
+    tumors_number: int
+    A: int
+    B: int
+    DQ: int
+    DR: int
 
 
 def create_organ(data):
@@ -56,7 +57,7 @@ def update_organ(data, id):
 
 
 def update(listing, data):
-    for key, value in data.dict.items():
+    for key, value in data.dict().items():
         if value == 'null':
             setattr(listing, key, None)
         elif value is not None:
@@ -79,7 +80,7 @@ def get_listing(id):
 
 @bp.post('/')
 def create_listing(data: ListingSchema):
-    listing = Listing(**data.dict)
+    listing = Listing(**data.dict())
     db.session.add(listing)
     db.session.commit()
     create_organ(data)

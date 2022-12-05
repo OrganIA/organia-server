@@ -1,20 +1,21 @@
 from datetime import datetime
 
+from pydantic import BaseModel
+
 from app import auth, db
 from app.db.models import CalendarEvent, User
 from app.errors import NotFoundError, Unauthorized
 from app.utils.bp import Blueprint
-from app.utils.static import Static
 
 bp = Blueprint(__name__)
 
 
-class CalendarEventSchema(Static):
-    title = str
-    description = str
-    event_type = str
-    start_date = datetime
-    end_date = datetime
+class CalendarEventSchema(BaseModel):
+    title: str
+    description: str
+    event_type: str
+    start_date: datetime
+    end_date: datetime
 
 
 @bp.get('/')
@@ -37,7 +38,7 @@ def get_event(event_id: int, auth_user):
 @bp.post('/')
 @auth.route()
 def create_event(data: CalendarEventSchema, auth_user: User):
-    event = CalendarEvent(**data.dict, author=auth_user)
+    event = CalendarEvent(**data.dict(), author=auth_user)
     db.session.add(event)
     db.session.commit()
     return event
@@ -45,11 +46,7 @@ def create_event(data: CalendarEventSchema, auth_user: User):
 
 @bp.post('/<int:event_id>')
 @auth.route()
-def update_event(
-    event_id: int,
-    data: dict,
-    auth_user: id,
-):
+def update_event(event_id: int, data: dict, auth_user: id):
     event = db.session.get(CalendarEvent, event_id)
     if event.author_id != auth_user.id:
         raise Unauthorized

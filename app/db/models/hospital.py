@@ -7,6 +7,7 @@ from app import db
 class Hospital(db.Base):
     __AUTO_DICT_EXCLUDE__ = ['city_id']
     __AUTO_DICT_INCLUDE__ = ['city']
+    
     city_id = sa.Column(sa.ForeignKey('cities.id'), nullable=False)
     name = sa.Column(sa.String, nullable=False)
     phone_number = sa.Column(sa.String)
