@@ -4,7 +4,6 @@ from app import db
 from app.db.models.lung import Lung
 from app.errors import NotFoundError
 
-
 def fetch_baseline_values(file):
     with open(file, 'r') as f:
         data = json.load(f)
@@ -96,7 +95,7 @@ def next_year_survival_chance(receiver, receiver_listing, listing_lung):
         receiver, receiver_listing, listing_lung
     )
     baseline_values = fetch_baseline_values(
-        'lungs_data/BaselineWaitingListSurvival.json'
+        './lungs_data/BaselineWaitingListSurvival.json'
     )
     for baseline_value in baseline_values:
         score.append(baseline_value**exponent)
@@ -155,7 +154,7 @@ def post_transplant_survival_chance(receiver, receiver_listing, listing_lung):
         receiver, receiver_listing, listing_lung
     )
     baseline_values = fetch_baseline_values(
-        'lungs_data/BaselinePostTransplantSurvival.json'
+        './lungs_data/BaselinePostTransplantSurvival.json'
     )
     for baseline_value in baseline_values:
         score.append(baseline_value**exponent)

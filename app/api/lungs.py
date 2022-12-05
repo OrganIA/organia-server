@@ -29,6 +29,25 @@ class LungCreateSchema(Static):
     creatinine_at_transplant = float
     ADL_required = bool
     PCW_over_20_mmHg = bool
+    
+class LungSchema(Static):
+    diagnosis_group = str
+    detailed_diagnosis = str
+    body_mass_index = float
+    diabetes = bool
+    assistance_required = bool
+    FVC_percentage = float
+    PA_systolic = float
+    oxygen_requirement = float
+    six_minutes_walk_distance_over_150_feet = bool
+    continuous_mech_ventilation = bool
+    PCO2 = float
+    PCO2_increase_superior_to_15_percent = bool
+
+    age_at_transplant = int
+    creatinine_at_transplant = float
+    ADL_required = bool
+    PCW_over_20_mmHg = bool
 
 
 class LungUpdateScoreSchema(Static):
@@ -40,16 +59,6 @@ def get_lungs(listing_id: int):
     lung = db.session.query(Lung).filter_by(listing_id=listing_id).first()
     if not lung:
         raise NotFoundError('No Listing found')
-    return lung
-
-
-def update_lungs_score(listing_id: int, score: LungUpdateScoreSchema):
-    listing = db.session.query(Listing).filter_by(id=listing_id).first()
-    if not listing:
-        raise NotFoundError('Listing not found')
-    lung = get_lungs(listing_id)
-    lung.score = score
-    db.session.commit()
     return lung
 
 
@@ -76,17 +85,8 @@ def compute_matches(listing_id: int):
         )
         .all()
     )
-    listing_lungs_receiver_ids = []
+    result_listing = []
     for listing_lungs_receiver in listing_lungs_receivers:
-        listing_lungs_receiver_ids.append(listing_lungs_receiver.id)
         person_receiver = get_person(listing_lungs_receiver.person_id)
-        update_lungs_score(
-            listing_lungs_receiver.id,
-            lungs_final_score(person_receiver, None, listing_lungs_receiver),
-        )
-    return (
-        db.session.query(Lung)
-        .filter(Lung.listing_id.in_(listing_lungs_receiver_ids))
-        .order_by(Lung.score.desc())
-        .all()
-    )
+        result_listing.append([listing_lungs_receiver, lungs_final_score(person_receiver, None, listing_lungs_receiver)])
+    return result_listing

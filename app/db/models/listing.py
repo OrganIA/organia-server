@@ -61,6 +61,7 @@ class Listing(db.Base):
         'Liver', cascade='all,delete', backref='listing', uselist=False
     )
 
+
     @property
     def alpha_fetoprotein_score(self):
         if (

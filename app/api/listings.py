@@ -1,8 +1,9 @@
 from datetime import datetime
 
 from app import db
-from app.api.lungs import compute_matches
+from app.api.lungs import LungSchema, compute_matches
 from app.db.models import Listing, Liver, Lung
+from app.db.models.person import Person
 from app.errors import NotFoundError
 from app.utils.bp import Blueprint
 from app.utils.static import Static
@@ -50,6 +51,9 @@ class ListingSchema(Static):
     person_id = int
     hospital_id = int
 
+    lung = LungSchema
+
+
 
 def create_organ(data):
     # Update this function when an organ is implemented
@@ -64,6 +68,8 @@ def create_organ(data):
         db.session.add(organ)
         db.session.commit()
     if listing.organ == Listing.Organ.LUNG:
+        print('-----------------------')
+        print(data)
         organ = Lung()
         organ = update(organ, data)
         organ.listing_id = listing.id
@@ -157,7 +163,7 @@ def get_listing_matches(id):
             raise NotFoundError.r("L'organe n'a pas été trouvé")
         score = organ.score
     if listing.organ == Listing.Organ.LUNG:
-        compute_matches(id)
+        results = compute_matches(id)
         listings = db.session.query(Listing).filter(Listing.id != id, Listing.type == "PATIENT", Listing.organ == "LUNG").all()
         if listings is None:
             raise NotFoundError("L'organe n'a pas été trouvé")
@@ -169,10 +175,10 @@ def get_listing_matches(id):
         return sorted(
             [
                 {
-                    "listing": schemaify(res_listing[0]),
-                    "score": res_listing[1],
+                    "listing": schemaify(result[0]),
+                    "score": result[1],
                 }
-                for res_listing in res_listings
+                for result in results
             ],
             key=lambda x: x['score'],
             reverse=True,

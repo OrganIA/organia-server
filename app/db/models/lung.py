@@ -40,6 +40,6 @@ class Lung(db.Base):
     ADL_required = sa.Column(sa.Boolean, default=False)
     PCW_over_20_mmHg = sa.Column(sa.Boolean, default=False)
 
-    listing = orm.relationship('Listing', backref="listings", uselist=False)
+    listing = orm.relationship('Listing', backref="lung", uselist=False)
 
     score = sa.Column(sa.Float, default=0)
