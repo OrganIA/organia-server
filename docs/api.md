@@ -1,5 +1,5 @@
 # API Documentation
-Generated on: 2022-12-05 at 21:54:01
+Generated on: 2022-12-05 at 22:05:08
 
 - [GET /api/](#get--api-)
 - [POST /api/auth/register](#post--api-auth-register)
@@ -11,6 +11,8 @@ Generated on: 2022-12-05 at 21:54:01
 - [GET /api/listings](#get--api-listings)
 - [GET /api/listings/1](#get--api-listings-1)
 - [GET /api/listings/1/matches](#get--api-listings-1-matches)
+- [GET /api/listings/?type=donor](#get--api-listings-?type=donor)
+- [GET /api/listings/?type=receiver](#get--api-listings-?type=receiver)
 - [POST /api/chats](#post--api-chats)
 - [GET /api/chats](#get--api-chats)
 - [GET /api/chats/1](#get--api-chats-1)
@@ -33,9 +35,9 @@ the latest version.
 ### Response
 ```json
 {
-  "version": "6b66575",
-  "time": 1670270041.266853,
-  "datetime": "2022-12-05 20:54:01.266853",
+  "version": "69eb879",
+  "time": 1670270708.621748,
+  "datetime": "2022-12-05 21:05:08.621748",
   "software": {
     "flask": "2.2.2",
     "python": "3.10.7",
@@ -58,7 +60,7 @@ login after registering.
 ### Request
 ```json
 {
-  "email": "user332@email.com",
+  "email": "user824@email.com",
   "password": "password",
   "firstname": "prenom",
   "lastname": "nom",
@@ -69,14 +71,14 @@ login after registering.
 ### Response
 ```json
 {
-  "token": "1-1-db1cc437be1e17bacb66791db831c53455f62036dca9f04eca75408cfed2e7ef",
+  "token": "4-4-0eb63171d94bf2ec89b1ea1882c03bb9d10e0f09ff7358992cd48923bdff8fcd",
   "user": {
     "firstname": "prenom",
     "lastname": "nom",
-    "id": 1,
-    "created_at": "2022-12-05 20:54:01.496917",
+    "id": 4,
+    "created_at": "2022-12-05 21:05:08.849093",
     "updated_at": null,
-    "email": "user332@email.com",
+    "email": "user824@email.com",
     "phone_number": "01 23 45 67 89",
     "role": {
       "id": 1,
@@ -96,7 +98,7 @@ login after registering.
 ### Request
 ```json
 {
-  "email": "user332@email.com",
+  "email": "user824@email.com",
   "password": "password",
   "firstname": "prenom",
   "lastname": "nom",
@@ -107,7 +109,7 @@ login after registering.
 ### Response
 ```json
 {
-  "msg": "email \"user332@email.com\" is already taken."
+  "msg": "email \"user824@email.com\" is already taken."
 }
 ```
 
@@ -119,7 +121,7 @@ Login and get a token.
 ### Request
 ```json
 {
-  "email": "user332@email.com",
+  "email": "user824@email.com",
   "password": "password"
 }
 ```
@@ -127,14 +129,14 @@ Login and get a token.
 ### Response
 ```json
 {
-  "token": "3-1-411f88df741dc9415fc1afa11d97d0ae4a26889fd2ffc2f7a91aae7c4bebacfd",
+  "token": "6-4-29aa543c7decd9519528837ee5f923fa83c4a9d2d1b41733e534f3e905360787",
   "user": {
     "firstname": "prenom",
     "lastname": "nom",
-    "id": 1,
-    "created_at": "2022-12-05 20:54:01.496917",
+    "id": 4,
+    "created_at": "2022-12-05 21:05:08.849093",
     "updated_at": null,
-    "email": "user332@email.com",
+    "email": "user824@email.com",
     "phone_number": "01 23 45 67 89",
     "role": {
       "id": 1,
@@ -170,7 +172,7 @@ Login and get a token.
 ### Request
 ```json
 {
-  "email": "user332@email.com",
+  "email": "user824@email.com",
   "password": "not-the-password"
 }
 ```
@@ -233,9 +235,47 @@ List all users
     "firstname": null,
     "lastname": null,
     "id": 3,
-    "created_at": "2022-12-05 20:54:02.406667",
-    "updated_at": "2022-12-05 20:54:02.416297",
+    "created_at": "2022-12-05 20:54:02.481233",
+    "updated_at": "2022-12-05 20:54:02.487779",
     "email": "admin@localhost",
+    "phone_number": null,
+    "role": {
+      "id": 1,
+      "can_edit_users": true,
+      "can_edit_hospitals": true,
+      "can_edit_listings": true,
+      "can_edit_staff": true,
+      "can_edit_roles": true,
+      "can_edit_persons": true,
+      "name": "admin"
+    }
+  },
+  {
+    "firstname": "prenom",
+    "lastname": "nom",
+    "id": 4,
+    "created_at": "2022-12-05 21:05:08.849093",
+    "updated_at": null,
+    "email": "user824@email.com",
+    "phone_number": "01 23 45 67 89",
+    "role": {
+      "id": 1,
+      "can_edit_users": true,
+      "can_edit_hospitals": true,
+      "can_edit_listings": true,
+      "can_edit_staff": true,
+      "can_edit_roles": true,
+      "can_edit_persons": true,
+      "name": "admin"
+    }
+  },
+  {
+    "firstname": null,
+    "lastname": null,
+    "id": 5,
+    "created_at": "2022-12-05 21:05:09.217390",
+    "updated_at": null,
+    "email": "user175@email.com",
     "phone_number": null,
     "role": {
       "id": 1,
@@ -263,8 +303,8 @@ Get info about the current user
   "firstname": null,
   "lastname": null,
   "id": 3,
-  "created_at": "2022-12-05 20:54:02.406667",
-  "updated_at": "2022-12-05 20:54:02.416297",
+  "created_at": "2022-12-05 20:54:02.481233",
+  "updated_at": "2022-12-05 20:54:02.487779",
   "email": "admin@localhost",
   "phone_number": null,
   "role": {
@@ -382,6 +422,28 @@ Get the matching listings for an organ
 
 **Status:** 404
 
+## GET /api/listings/?type=donor
+Only get donor listings
+
+> :lock: This request requires authentication. Pass `Bearer: the-token` in the `Authorization` header.
+### Response
+```json
+[]
+```
+
+**Status:** 200
+
+## GET /api/listings/?type=receiver
+Only get receiver listings
+
+> :lock: This request requires authentication. Pass `Bearer: the-token` in the `Authorization` header.
+### Response
+```json
+[]
+```
+
+**Status:** 200
+
 ## POST /api/chats
 Create a new chat
 
@@ -400,8 +462,8 @@ Create a new chat
 ### Response
 ```json
 {
-  "id": 1,
-  "created_at": "2022-12-05 20:54:02.552608",
+  "id": 2,
+  "created_at": "2022-12-05 21:05:09.915599",
   "updated_at": null,
   "name": "Chat name",
   "users": [
@@ -446,9 +508,9 @@ Create a new chat
     {
       "firstname": null,
       "lastname": null,
-      "id": 3,
-      "created_at": "2022-12-05 20:54:02.481233",
-      "updated_at": "2022-12-05 20:54:02.487779",
+      "id": 6,
+      "created_at": "2022-12-05 21:05:09.824488",
+      "updated_at": "2022-12-05 21:05:09.832028",
       "email": "admin@localhost",
       "phone_number": null,
       "role": {
@@ -466,9 +528,9 @@ Create a new chat
   "creator": {
     "firstname": null,
     "lastname": null,
-    "id": 3,
-    "created_at": "2022-12-05 20:54:02.481233",
-    "updated_at": "2022-12-05 20:54:02.487779",
+    "id": 6,
+    "created_at": "2022-12-05 21:05:09.824488",
+    "updated_at": "2022-12-05 21:05:09.832028",
     "email": "admin@localhost",
     "phone_number": null,
     "role": {
@@ -495,8 +557,8 @@ Get all the chats the current user is part of
 ```json
 [
   {
-    "id": 1,
-    "created_at": "2022-12-05 20:54:02.552608",
+    "id": 2,
+    "created_at": "2022-12-05 21:05:09.915599",
     "updated_at": null,
     "name": "Chat name",
     "users": [
@@ -541,9 +603,9 @@ Get all the chats the current user is part of
       {
         "firstname": null,
         "lastname": null,
-        "id": 3,
-        "created_at": "2022-12-05 20:54:02.481233",
-        "updated_at": "2022-12-05 20:54:02.487779",
+        "id": 6,
+        "created_at": "2022-12-05 21:05:09.824488",
+        "updated_at": "2022-12-05 21:05:09.832028",
         "email": "admin@localhost",
         "phone_number": null,
         "role": {
@@ -561,9 +623,9 @@ Get all the chats the current user is part of
     "creator": {
       "firstname": null,
       "lastname": null,
-      "id": 3,
-      "created_at": "2022-12-05 20:54:02.481233",
-      "updated_at": "2022-12-05 20:54:02.487779",
+      "id": 6,
+      "created_at": "2022-12-05 21:05:09.824488",
+      "updated_at": "2022-12-05 21:05:09.832028",
       "email": "admin@localhost",
       "phone_number": null,
       "role": {
@@ -590,92 +652,11 @@ Get a specific chat
 ### Response
 ```json
 {
-  "id": 1,
-  "created_at": "2022-12-05 20:54:02.552608",
-  "updated_at": null,
-  "name": "Chat name",
-  "users": [
-    {
-      "firstname": "prenom",
-      "lastname": "nom",
-      "id": 1,
-      "created_at": "2022-12-05 20:54:01.496917",
-      "updated_at": null,
-      "email": "user332@email.com",
-      "phone_number": "01 23 45 67 89",
-      "role": {
-        "id": 1,
-        "can_edit_users": true,
-        "can_edit_hospitals": true,
-        "can_edit_listings": true,
-        "can_edit_staff": true,
-        "can_edit_roles": true,
-        "can_edit_persons": true,
-        "name": "admin"
-      }
-    },
-    {
-      "firstname": null,
-      "lastname": null,
-      "id": 2,
-      "created_at": "2022-12-05 20:54:01.867631",
-      "updated_at": null,
-      "email": "user430@email.com",
-      "phone_number": null,
-      "role": {
-        "id": 1,
-        "can_edit_users": true,
-        "can_edit_hospitals": true,
-        "can_edit_listings": true,
-        "can_edit_staff": true,
-        "can_edit_roles": true,
-        "can_edit_persons": true,
-        "name": "admin"
-      }
-    },
-    {
-      "firstname": null,
-      "lastname": null,
-      "id": 3,
-      "created_at": "2022-12-05 20:54:02.481233",
-      "updated_at": "2022-12-05 20:54:02.487779",
-      "email": "admin@localhost",
-      "phone_number": null,
-      "role": {
-        "id": 1,
-        "can_edit_users": true,
-        "can_edit_hospitals": true,
-        "can_edit_listings": true,
-        "can_edit_staff": true,
-        "can_edit_roles": true,
-        "can_edit_persons": true,
-        "name": "admin"
-      }
-    }
-  ],
-  "creator": {
-    "firstname": null,
-    "lastname": null,
-    "id": 3,
-    "created_at": "2022-12-05 20:54:02.481233",
-    "updated_at": "2022-12-05 20:54:02.487779",
-    "email": "admin@localhost",
-    "phone_number": null,
-    "role": {
-      "id": 1,
-      "can_edit_users": true,
-      "can_edit_hospitals": true,
-      "can_edit_listings": true,
-      "can_edit_staff": true,
-      "can_edit_roles": true,
-      "can_edit_persons": true,
-      "name": "admin"
-    }
-  }
+  "msg": "You are not in this chat."
 }
 ```
 
-**Status:** 200
+**Status:** 401
 
 ## POST /api/chats/1/messages
 Send a message
@@ -691,115 +672,11 @@ Send a message
 ### Response
 ```json
 {
-  "content": "Hello world!",
-  "chat": {
-    "id": 1,
-    "created_at": "2022-12-05 20:54:02.552608",
-    "updated_at": null,
-    "name": "Chat name",
-    "users": [
-      {
-        "firstname": "prenom",
-        "lastname": "nom",
-        "id": 1,
-        "created_at": "2022-12-05 20:54:01.496917",
-        "updated_at": null,
-        "email": "user332@email.com",
-        "phone_number": "01 23 45 67 89",
-        "role": {
-          "id": 1,
-          "can_edit_users": true,
-          "can_edit_hospitals": true,
-          "can_edit_listings": true,
-          "can_edit_staff": true,
-          "can_edit_roles": true,
-          "can_edit_persons": true,
-          "name": "admin"
-        }
-      },
-      {
-        "firstname": null,
-        "lastname": null,
-        "id": 2,
-        "created_at": "2022-12-05 20:54:01.867631",
-        "updated_at": null,
-        "email": "user430@email.com",
-        "phone_number": null,
-        "role": {
-          "id": 1,
-          "can_edit_users": true,
-          "can_edit_hospitals": true,
-          "can_edit_listings": true,
-          "can_edit_staff": true,
-          "can_edit_roles": true,
-          "can_edit_persons": true,
-          "name": "admin"
-        }
-      },
-      {
-        "firstname": null,
-        "lastname": null,
-        "id": 3,
-        "created_at": "2022-12-05 20:54:02.481233",
-        "updated_at": "2022-12-05 20:54:02.487779",
-        "email": "admin@localhost",
-        "phone_number": null,
-        "role": {
-          "id": 1,
-          "can_edit_users": true,
-          "can_edit_hospitals": true,
-          "can_edit_listings": true,
-          "can_edit_staff": true,
-          "can_edit_roles": true,
-          "can_edit_persons": true,
-          "name": "admin"
-        }
-      }
-    ],
-    "creator": {
-      "firstname": null,
-      "lastname": null,
-      "id": 3,
-      "created_at": "2022-12-05 20:54:02.481233",
-      "updated_at": "2022-12-05 20:54:02.487779",
-      "email": "admin@localhost",
-      "phone_number": null,
-      "role": {
-        "id": 1,
-        "can_edit_users": true,
-        "can_edit_hospitals": true,
-        "can_edit_listings": true,
-        "can_edit_staff": true,
-        "can_edit_roles": true,
-        "can_edit_persons": true,
-        "name": "admin"
-      }
-    }
-  },
-  "sender": {
-    "firstname": null,
-    "lastname": null,
-    "id": 3,
-    "created_at": "2022-12-05 20:54:02.481233",
-    "updated_at": "2022-12-05 20:54:02.487779",
-    "email": "admin@localhost",
-    "phone_number": null,
-    "role": {
-      "id": 1,
-      "can_edit_users": true,
-      "can_edit_hospitals": true,
-      "can_edit_listings": true,
-      "can_edit_staff": true,
-      "can_edit_roles": true,
-      "can_edit_persons": true,
-      "name": "admin"
-    }
-  },
-  "id": 1
+  "msg": "You are not in this chat."
 }
 ```
 
-**Status:** 200
+**Status:** 401
 
 ## GET /api/chats/messages/latest
 Get all chats the current user is part of and the last message of each
@@ -807,201 +684,7 @@ Get all chats the current user is part of and the last message of each
 > :lock: This request requires authentication. Pass `Bearer: the-token` in the `Authorization` header.
 ### Response
 ```json
-[
-  {
-    "chat": {
-      "id": 1,
-      "created_at": "2022-12-05 20:54:02.552608",
-      "updated_at": null,
-      "name": "Chat name",
-      "users": [
-        {
-          "firstname": "prenom",
-          "lastname": "nom",
-          "id": 1,
-          "created_at": "2022-12-05 20:54:01.496917",
-          "updated_at": null,
-          "email": "user332@email.com",
-          "phone_number": "01 23 45 67 89",
-          "role": {
-            "id": 1,
-            "can_edit_users": true,
-            "can_edit_hospitals": true,
-            "can_edit_listings": true,
-            "can_edit_staff": true,
-            "can_edit_roles": true,
-            "can_edit_persons": true,
-            "name": "admin"
-          }
-        },
-        {
-          "firstname": null,
-          "lastname": null,
-          "id": 2,
-          "created_at": "2022-12-05 20:54:01.867631",
-          "updated_at": null,
-          "email": "user430@email.com",
-          "phone_number": null,
-          "role": {
-            "id": 1,
-            "can_edit_users": true,
-            "can_edit_hospitals": true,
-            "can_edit_listings": true,
-            "can_edit_staff": true,
-            "can_edit_roles": true,
-            "can_edit_persons": true,
-            "name": "admin"
-          }
-        },
-        {
-          "firstname": null,
-          "lastname": null,
-          "id": 3,
-          "created_at": "2022-12-05 20:54:02.481233",
-          "updated_at": "2022-12-05 20:54:02.487779",
-          "email": "admin@localhost",
-          "phone_number": null,
-          "role": {
-            "id": 1,
-            "can_edit_users": true,
-            "can_edit_hospitals": true,
-            "can_edit_listings": true,
-            "can_edit_staff": true,
-            "can_edit_roles": true,
-            "can_edit_persons": true,
-            "name": "admin"
-          }
-        }
-      ],
-      "creator": {
-        "firstname": null,
-        "lastname": null,
-        "id": 3,
-        "created_at": "2022-12-05 20:54:02.481233",
-        "updated_at": "2022-12-05 20:54:02.487779",
-        "email": "admin@localhost",
-        "phone_number": null,
-        "role": {
-          "id": 1,
-          "can_edit_users": true,
-          "can_edit_hospitals": true,
-          "can_edit_listings": true,
-          "can_edit_staff": true,
-          "can_edit_roles": true,
-          "can_edit_persons": true,
-          "name": "admin"
-        }
-      }
-    },
-    "last_message": {
-      "content": "Hello world!",
-      "chat": {
-        "id": 1,
-        "created_at": "2022-12-05 20:54:02.552608",
-        "updated_at": null,
-        "name": "Chat name",
-        "users": [
-          {
-            "firstname": "prenom",
-            "lastname": "nom",
-            "id": 1,
-            "created_at": "2022-12-05 20:54:01.496917",
-            "updated_at": null,
-            "email": "user332@email.com",
-            "phone_number": "01 23 45 67 89",
-            "role": {
-              "id": 1,
-              "can_edit_users": true,
-              "can_edit_hospitals": true,
-              "can_edit_listings": true,
-              "can_edit_staff": true,
-              "can_edit_roles": true,
-              "can_edit_persons": true,
-              "name": "admin"
-            }
-          },
-          {
-            "firstname": null,
-            "lastname": null,
-            "id": 2,
-            "created_at": "2022-12-05 20:54:01.867631",
-            "updated_at": null,
-            "email": "user430@email.com",
-            "phone_number": null,
-            "role": {
-              "id": 1,
-              "can_edit_users": true,
-              "can_edit_hospitals": true,
-              "can_edit_listings": true,
-              "can_edit_staff": true,
-              "can_edit_roles": true,
-              "can_edit_persons": true,
-              "name": "admin"
-            }
-          },
-          {
-            "firstname": null,
-            "lastname": null,
-            "id": 3,
-            "created_at": "2022-12-05 20:54:02.481233",
-            "updated_at": "2022-12-05 20:54:02.487779",
-            "email": "admin@localhost",
-            "phone_number": null,
-            "role": {
-              "id": 1,
-              "can_edit_users": true,
-              "can_edit_hospitals": true,
-              "can_edit_listings": true,
-              "can_edit_staff": true,
-              "can_edit_roles": true,
-              "can_edit_persons": true,
-              "name": "admin"
-            }
-          }
-        ],
-        "creator": {
-          "firstname": null,
-          "lastname": null,
-          "id": 3,
-          "created_at": "2022-12-05 20:54:02.481233",
-          "updated_at": "2022-12-05 20:54:02.487779",
-          "email": "admin@localhost",
-          "phone_number": null,
-          "role": {
-            "id": 1,
-            "can_edit_users": true,
-            "can_edit_hospitals": true,
-            "can_edit_listings": true,
-            "can_edit_staff": true,
-            "can_edit_roles": true,
-            "can_edit_persons": true,
-            "name": "admin"
-          }
-        }
-      },
-      "sender": {
-        "firstname": null,
-        "lastname": null,
-        "id": 3,
-        "created_at": "2022-12-05 20:54:02.481233",
-        "updated_at": "2022-12-05 20:54:02.487779",
-        "email": "admin@localhost",
-        "phone_number": null,
-        "role": {
-          "id": 1,
-          "can_edit_users": true,
-          "can_edit_hospitals": true,
-          "can_edit_listings": true,
-          "can_edit_staff": true,
-          "can_edit_roles": true,
-          "can_edit_persons": true,
-          "name": "admin"
-        }
-      },
-      "id": 1
-    }
-  }
-]
+[]
 ```
 
 **Status:** 200
@@ -1012,125 +695,25 @@ Get all messages for a specific chat
 > :lock: This request requires authentication. Pass `Bearer: the-token` in the `Authorization` header.
 ### Response
 ```json
-[
-  {
-    "content": "Hello world!",
-    "chat": {
-      "id": 1,
-      "created_at": "2022-12-05 20:54:02.552608",
-      "updated_at": null,
-      "name": "Chat name",
-      "users": [
-        {
-          "firstname": "prenom",
-          "lastname": "nom",
-          "id": 1,
-          "created_at": "2022-12-05 20:54:01.496917",
-          "updated_at": null,
-          "email": "user332@email.com",
-          "phone_number": "01 23 45 67 89",
-          "role": {
-            "id": 1,
-            "can_edit_users": true,
-            "can_edit_hospitals": true,
-            "can_edit_listings": true,
-            "can_edit_staff": true,
-            "can_edit_roles": true,
-            "can_edit_persons": true,
-            "name": "admin"
-          }
-        },
-        {
-          "firstname": null,
-          "lastname": null,
-          "id": 2,
-          "created_at": "2022-12-05 20:54:01.867631",
-          "updated_at": null,
-          "email": "user430@email.com",
-          "phone_number": null,
-          "role": {
-            "id": 1,
-            "can_edit_users": true,
-            "can_edit_hospitals": true,
-            "can_edit_listings": true,
-            "can_edit_staff": true,
-            "can_edit_roles": true,
-            "can_edit_persons": true,
-            "name": "admin"
-          }
-        },
-        {
-          "firstname": null,
-          "lastname": null,
-          "id": 3,
-          "created_at": "2022-12-05 20:54:02.481233",
-          "updated_at": "2022-12-05 20:54:02.487779",
-          "email": "admin@localhost",
-          "phone_number": null,
-          "role": {
-            "id": 1,
-            "can_edit_users": true,
-            "can_edit_hospitals": true,
-            "can_edit_listings": true,
-            "can_edit_staff": true,
-            "can_edit_roles": true,
-            "can_edit_persons": true,
-            "name": "admin"
-          }
-        }
-      ],
-      "creator": {
-        "firstname": null,
-        "lastname": null,
-        "id": 3,
-        "created_at": "2022-12-05 20:54:02.481233",
-        "updated_at": "2022-12-05 20:54:02.487779",
-        "email": "admin@localhost",
-        "phone_number": null,
-        "role": {
-          "id": 1,
-          "can_edit_users": true,
-          "can_edit_hospitals": true,
-          "can_edit_listings": true,
-          "can_edit_staff": true,
-          "can_edit_roles": true,
-          "can_edit_persons": true,
-          "name": "admin"
-        }
-      }
-    },
-    "sender": {
-      "firstname": null,
-      "lastname": null,
-      "id": 3,
-      "created_at": "2022-12-05 20:54:02.481233",
-      "updated_at": "2022-12-05 20:54:02.487779",
-      "email": "admin@localhost",
-      "phone_number": null,
-      "role": {
-        "id": 1,
-        "can_edit_users": true,
-        "can_edit_hospitals": true,
-        "can_edit_listings": true,
-        "can_edit_staff": true,
-        "can_edit_roles": true,
-        "can_edit_persons": true,
-        "name": "admin"
-      }
-    },
-    "id": 1
-  }
-]
+{
+  "msg": "You are not in this chat."
+}
 ```
 
-**Status:** 200
+**Status:** 401
 
 ## DELETE /api/chats/1
 Delete a chat
 
 > :lock: This request requires authentication. Pass `Bearer: the-token` in the `Authorization` header.
 ### Response
-**Status:** 204
+```json
+{
+  "msg": "You are not in this chat."
+}
+```
+
+**Status:** 401
 
 ## GET /api/roles
 Lists all user roles

@@ -2,9 +2,11 @@ from datetime import date
 
 from pydantic import BaseModel
 
+import flask
+
 from app import db
 from app.db.models import Listing, Liver
-from app.errors import NotFoundError
+from app.errors import InvalidRequest, NotFoundError
 from app.utils.bp import Blueprint
 
 bp = Blueprint(__name__)
@@ -67,7 +69,14 @@ def update(listing, data):
 
 @bp.get('/')
 def get_listings():
-    return db.session.query(Listing)
+    query = db.session.query(Listing)
+    if type := flask.request.args.get('type'):
+        try:
+            type = Listing.Type(type.upper())
+        except ValueError:
+            raise InvalidRequest(f'Invalid type {type}')
+        query = query.filter_by(type=type)
+    return query
 
 
 @bp.get('/<int:id>')
