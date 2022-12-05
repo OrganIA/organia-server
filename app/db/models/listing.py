@@ -26,6 +26,11 @@ class Listing(db.Base):
     notes = sa.Column(sa.String)
     type = sa.Column(sa.Enum(Type))
     organ = sa.Column(sa.Enum(Organ))
+    organ_type = sa.Column("organ", sa.Enum(Organ))
+
+    @property
+    def organ(self):
+        return db.session.query(self.organ_type).filter_by(listing=self).first()
 
     # algo fields
 

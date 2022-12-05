@@ -1,4 +1,5 @@
 import sqlalchemy as sa
+from sqlalchemy import orm
 
 from app import db
 from app.db.mixins import TimedMixin
@@ -10,6 +11,8 @@ class Liver(TimedMixin, db.Base):
     biggest_tumor_size = sa.Column(sa.Integer, nullable=True)
     alpha_fetoprotein = sa.Column(sa.Integer, nullable=True)
     score = sa.Column(sa.Float, nullable=True, default=0)
+
+    listing = orm.relationship('Listing', back_populates='liver')
 
     @property
     def alpha_fetoprotein_score(self):

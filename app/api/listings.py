@@ -55,7 +55,6 @@ def create_organ(data):
     listing = db.session.query(Listing).order_by(Listing.id.desc()).first()
     if not listing:
         raise NotFoundError
-    organ = {}
     if listing.organ == Listing.Organ.LIVER:
         organ = Liver()
         organ = update(organ, data)
