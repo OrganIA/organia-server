@@ -69,7 +69,6 @@ def update_organ(data, id):
     organ = {}
     if data.organ == Listing.Organ.LIVER:
         organ = db.session.query(Liver).filter_by(listing_id=id).first()
-        print("ORGAN: ", organ)
         organ = update(organ, data)
         db.session.commit()
     return organ

@@ -63,7 +63,6 @@ def update_event(
     for key, value in data.items():
         if key == 'start_date' or key == 'end_date':
             value = datetime.fromisoformat(value)
-            print(value)
         setattr(event, key, value)
     db.session.commit()
     return event

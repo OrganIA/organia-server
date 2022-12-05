@@ -82,7 +82,6 @@ class App(Flask):
             if return_value is None:
                 code = code or 204
         if not isinstance(return_value, (self.response_class, Exception)):
-            print('Overloading response')
             if return_value:
                 return_value = json.dumps(
                     return_value, default=permissive_json, indent=2
@@ -92,7 +91,6 @@ class App(Flask):
                 mimetype=self.config['JSONIFY_MIMETYPE'],
                 status=code,
             )
-        print(flush=True)
         return super().make_response(return_value)
 
     def add_url_rule(
