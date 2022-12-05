@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 
 from app import db
 from app.db.models import Person
@@ -10,13 +10,9 @@ bp = Blueprint(__name__)
 
 
 class PersonSchema(Static):
-    @staticmethod
-    def birth_date(d):
-        birth_date = Static._get(d, 'birth_date')
-        return datetime.fromisoformat(birth_date).date()
-
     first_name = str
     last_name = str
+    birth_date = date
     description = str
     abo = Person.ABO
     rhesus = Person.Rhesus

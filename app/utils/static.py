@@ -1,9 +1,29 @@
 import builtins
 import inspect
 import typing
-from datetime import datetime
+from datetime import date, datetime
 
 from app import errors
+
+
+def convert_date(x, out_type=datetime):
+    print(x, type(x))
+    print(flush=True)
+    if isinstance(x, int):
+        dt = datetime.fromtimestamp(x)
+    if isinstance(x, str):
+        dt = datetime.fromisoformat(x)
+    if isinstance(x, datetime):
+        dt = x
+    if out_type == date:
+        return dt.date()
+    return dt
+
+
+converters = {
+    datetime: convert_date,
+    date: lambda x: convert_date(x, out_type=date),
+}
 
 
 class Static:
@@ -94,6 +114,8 @@ class Static:
             type = getattr(cls, key)
             if cls.__AUTO_STR__ and type == str:
                 type = cls.str()
+            if type in converters:
+                type = cls.getter(key, converters[type])
             if not isinstance(type, typing.Type) and callable(type):
                 if '_model_key' in inspect.signature(type).parameters:
                     value = type(d, _model_key=key)

@@ -32,7 +32,7 @@ def get_chat_by_id(chat_id: int, auth_user: User):
 @auth.route()
 def get_latest_message_chat(auth_user: User):
     return [
-        {"chat": x.chat, "last_message": x}
+        x
         for x in [
             db.session.query(Message)
             .filter_by(chat_id=chat.id)

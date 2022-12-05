@@ -35,7 +35,7 @@ def get_score(receiver_listing: Listing, listing_kidney):
             print("Error: Date invalid")
             return 0
         return s / 3650
-    except:
+    except Exception:
         return 0
 
 
