@@ -1,3 +1,4 @@
+from pydantic import ValidationError
 from werkzeug.exceptions import HTTPException as _HTTPException
 
 
@@ -22,8 +23,15 @@ def error_handler(e: HTTPException):
     }, e.code
 
 
+def error_handler_pydantic(e: ValidationError):
+    return {
+        'msg': e.errors(),
+    }, 422
+
+
 def register_error_handler(app):
     app.register_error_handler(HTTPException, error_handler)
+    app.register_error_handler(ValidationError, error_handler_pydantic)
 
 
 class InternalServerError(HTTPException):

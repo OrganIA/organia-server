@@ -1,25 +1,24 @@
+from pydantic import BaseModel
+
 from app import db
 from app.db.models import LoginToken, User
 from app.errors import InvalidRequest
 from app.utils.bp import Blueprint
-from app.utils.static import Static
 
 bp = Blueprint(__name__, auth=False)
 
 
-class LoginSchema(Static):
-    email = str
-    password = str
+class LoginSchema(BaseModel):
+    email: str
+    password: str
 
 
-class RegisterSchema(Static):
-    __ERROR_ON_UNFOUND__ = False
-
-    email = str
-    password = str
-    firstname = str
-    lastname = str
-    phone_number = str
+class RegisterSchema(BaseModel):
+    email: str
+    password: str
+    firstname: str | None
+    lastname: str | None
+    phone_number: str | None
 
 
 @bp.post('/login')
@@ -38,7 +37,7 @@ def login(data: LoginSchema, user=None):
 @bp.post('/register', success=201)
 def create_user(data: RegisterSchema):
     User.check_email(data.email)
-    user = User(**data.dict)
+    user = User(**data.dict())
     db.session.add(user)
     db.session.commit()
     return login(data=data, user=user)
