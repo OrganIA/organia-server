@@ -11,57 +11,80 @@ def fetch_baseline_values(file):
     return data["data"]
 
 
-def calculate_next_year_survival_chance_exponent(receiver, receiver_listing, listing_lung):
+def calculate_next_year_survival_chance_exponent(
+    receiver, receiver_listing, listing_lung
+):
     e = 0
 
-    if (listing_lung.diagnosis_group == "A" or listing_lung.diagnosis_group == "B"
-            or listing_lung.diagnosis_group == "C"):
+    if (
+        listing_lung.diagnosis_group == "A"
+        or listing_lung.diagnosis_group == "B"
+        or listing_lung.diagnosis_group == "C"
+    ):
         e += receiver.age * 0.015097  # Age Today - Birthday
-    elif (listing_lung.diagnosis_group == "D"):
+    elif listing_lung.diagnosis_group == "D":
         e += receiver.age * 0.021223  # Age
     e += listing_lung.body_mass_index * (-0.051781)  # Body Mass
-    if (listing_lung.diabetes):
+    if listing_lung.diabetes:
         e += 0.158821
-    if (listing_lung.assistance_required):
+    if listing_lung.assistance_required:
         e += 0.115024
     else:
         e += 0.182250
     e += listing_lung.FVC_percentage * (-0.019675)  # FVC not sure about %
-    if (listing_lung.diagnosis_group == "A" or listing_lung.diagnosis_group == "D"
-            or listing_lung.diagnosis_group == "C"):
+    if (
+        listing_lung.diagnosis_group == "A"
+        or listing_lung.diagnosis_group == "D"
+        or listing_lung.diagnosis_group == "C"
+    ):
         e += listing_lung.PA_systolic * 0.015889  # PA
-    if (listing_lung.diagnosis_group == "A" or listing_lung.diagnosis_group == "D"):
-        e += listing_lung.oxygen_requirement * 0.187599  # 02 requirement at rest
-    elif (listing_lung.diagnosis_group == "B"):
-        e += listing_lung.oxygen_requirement * 0.040766  # 02 requirement at rest
-    elif (listing_lung.diagnosis_group == "C"):
-        e += listing_lung.oxygen_requirement * 0.125568  # 02 requirement at rest
-    if (listing_lung.six_minutes_walk_distance_over_150_feet):
+    if (
+        listing_lung.diagnosis_group == "A"
+        or listing_lung.diagnosis_group == "D"
+    ):
+        e += (
+            listing_lung.oxygen_requirement * 0.187599
+        )  # 02 requirement at rest
+    elif listing_lung.diagnosis_group == "B":
+        e += (
+            listing_lung.oxygen_requirement * 0.040766
+        )  # 02 requirement at rest
+    elif listing_lung.diagnosis_group == "C":
+        e += (
+            listing_lung.oxygen_requirement * 0.125568
+        )  # 02 requirement at rest
+    if listing_lung.six_minutes_walk_distance_over_150_feet:
         e += 0.330752
-    if (listing_lung.continuous_mech_ventilation):
+    if listing_lung.continuous_mech_ventilation:
         e += 1.213804
     e += (listing_lung.PCO2 - 40) * 0.005448  # PCO2
-    if (listing_lung.PCO2_increase_superior_to_15_percent):
+    if listing_lung.PCO2_increase_superior_to_15_percent:
         e += 0.076370
-    if (listing_lung.diagnosis_group == "B"):
+    if listing_lung.diagnosis_group == "B":
         e += 2.376700
-    elif (listing_lung.diagnosis_group == "C"):
+    elif listing_lung.diagnosis_group == "C":
         e += 0.943377
-    elif (listing_lung.diagnosis_group == "D"):
+    elif listing_lung.diagnosis_group == "D":
         e += 0.996936
-    if listing_lung.detailled_diagnosis == "Bronchiectasis":
+    if listing_lung.detailed_diagnosis == "Bronchiectasis":
         e += 0.157212
-    elif listing_lung.detailled_diagnosis == "Eisenmenger":
+    elif listing_lung.detailed_diagnosis == "Eisenmenger":
         e += -0.627866
-    elif listing_lung.detailled_diagnosis == "Lymphangioleiomyomatosis":
+    elif listing_lung.detailed_diagnosis == "Lymphangioleiomyomatosis":
         e += -0.197434
-    elif listing_lung.detailled_diagnosis == "Bronchiolitis":
+    elif listing_lung.detailed_diagnosis == "Bronchiolitis":
         e += -0.256480
-    elif listing_lung.detailled_diagnosis == "Bronchiolitis":
+    elif listing_lung.detailed_diagnosis == "Bronchiolitis":
         e += -0.265233
-    if listing_lung.detailled_diagnosis == "Sarcoidosis" and receiver_listing.PA_systolic > 30:
+    if (
+        listing_lung.detailed_diagnosis == "Sarcoidosis"
+        and receiver_listing.PA_systolic > 30
+    ):
         e += -0.707346
-    elif listing_lung.detailled_diagnosis == "Sarcoidosis" and receiver_listing.PA_systolic <= 30:
+    elif (
+        listing_lung.detailed_diagnosis == "Sarcoidosis"
+        and receiver_listing.PA_systolic <= 30
+    ):
         e += 0.455348
     return e
 
@@ -70,15 +93,19 @@ def next_year_survival_chance(receiver, receiver_listing, listing_lung):
     score = []
 
     exponent = calculate_next_year_survival_chance_exponent(
-        receiver, receiver_listing, listing_lung)
+        receiver, receiver_listing, listing_lung
+    )
     baseline_values = fetch_baseline_values(
-        'app/score/lungs/data/BaselineWaitingListSurvival.json')
+        'lungs_data/BaselineWaitingListSurvival.json'
+    )
     for baseline_value in baseline_values:
-        score.append(baseline_value ** exponent)
+        score.append(baseline_value**exponent)
     return score
 
 
-def calculate_post_transplant_survival_chance_exponent(receiver, receiver_listing, listing_lung):
+def calculate_post_transplant_survival_chance_exponent(
+    receiver, receiver_listing, listing_lung
+):
     e = 0
 
     if listing_lung.diagnosis_group == 'B':
@@ -99,17 +126,23 @@ def calculate_post_transplant_survival_chance_exponent(receiver, receiver_listin
     if listing_lung.continuous_mech_ventilation:
         e += 0.312846
 
-    if (listing_lung.detailled_diagnosis == "Bronchiectasis"):
+    if listing_lung.detailed_diagnosis == "Bronchiectasis":
         e += 0.056116
-    elif (listing_lung.detailled_diagnosis == "Eisenmenger"):
+    elif listing_lung.detailed_diagnosis == "Eisenmenger":
         e += 0.393526
-    elif (listing_lung.detailled_diagnosis == "Lymphangioleiomyomatosis"):
+    elif listing_lung.detailed_diagnosis == "Lymphangioleiomyomatosis":
         e += -0.624209
-    elif (listing_lung.detailled_diagnosis == "Bronchiolitis"):
+    elif listing_lung.detailed_diagnosis == "Bronchiolitis":
         e += -0.443786
-    if listing_lung.detailled_diagnosis == "Sarcoidosis" and listing_lung.PA_systolic > 30:
+    if (
+        listing_lung.detailed_diagnosis == "Sarcoidosis"
+        and listing_lung.PA_systolic > 30
+    ):
         e += -0.122351
-    elif listing_lung.detailled_diagnosis == "Sarcoidosis" and listing_lung.PA_systolic <= 30:
+    elif (
+        listing_lung.detailed_diagnosis == "Sarcoidosis"
+        and listing_lung.PA_systolic <= 30
+    ):
         e += -0.016505
 
     return e
@@ -119,11 +152,13 @@ def post_transplant_survival_chance(receiver, receiver_listing, listing_lung):
     score = []
 
     exponent = calculate_post_transplant_survival_chance_exponent(
-        receiver, receiver_listing, listing_lung)
+        receiver, receiver_listing, listing_lung
+    )
     baseline_values = fetch_baseline_values(
-        'app/score/lungs/data/BaselinePostTransplantSurvival.json')
+        'lungs_data/BaselinePostTransplantSurvival.json'
+    )
     for baseline_value in baseline_values:
-        score.append(baseline_value ** exponent)
+        score.append(baseline_value**exponent)
     return score
 
 
@@ -132,7 +167,7 @@ def compute_under_curb_area(values):
     k = 2
     i = 0
 
-    while (i < len(values)):
+    while i < len(values):
         res += values[i] * (k - 1) * 1
         i += 1
         k += 1
@@ -144,21 +179,25 @@ def lungs_final_score(receiver, donor, receiver_listing):
     # select * from lungs where listing_id = receiver_listing.id
     # all values valid ? proceed : return error msg
 
-    listing_lung = db.session.query(Lung).filter_by(listing_id=receiver_listing.id).first()
+    listing_lung = (
+        db.session.query(Lung).filter_by(listing=receiver_listing).first()
+    )
     if not listing_lung:
         raise NotFoundError("No listing found in lungs table")
     for var in dir(listing_lung):
-        if not var or var == None:
+        if var is None:
             print("Not all variables are filled, can't compute score")
             return
 
     Swl = next_year_survival_chance(receiver, receiver_listing, listing_lung)
-    Stx = post_transplant_survival_chance(receiver, receiver_listing, listing_lung)
+    Stx = post_transplant_survival_chance(
+        receiver, receiver_listing, listing_lung
+    )
     # WL = sum(Swl)
     WL = compute_under_curb_area(Swl)
     PT = compute_under_curb_area(Stx)
     RawScore = PT - 2 * WL
-    return 42
+    return RawScore
 
 
 def normalized_lung_allocation_score(RawScore):

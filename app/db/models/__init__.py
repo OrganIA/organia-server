@@ -8,8 +8,6 @@ from .hospital import Hospital as Hospital
 from .listing import Listing as Listing
 from .liver import Liver as Liver
 from .login_token import LoginToken as LoginToken
-from .hospital import Hospital as Hospital
-# from .chat_group import ChatGroup as ChatGroup
 from .lung import Lung as Lung
 from .message import Message as Message
 from .person import Person as Person
