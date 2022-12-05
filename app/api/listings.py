@@ -3,7 +3,6 @@ from datetime import datetime
 from app import db
 from app.api.lungs import LungSchema, compute_matches
 from app.db.models import Listing, Liver, Lung
-from app.db.models.person import Person
 from app.errors import NotFoundError
 from app.utils.bp import Blueprint
 from app.utils.static import Static
@@ -52,7 +51,6 @@ class ListingSchema(Static):
     hospital_id = int
 
     lung = LungSchema
-
 
 
 def create_organ(data):
@@ -144,7 +142,6 @@ def delete_listing(id: int):
 
 @bp.get('/<int:id>/matches')
 def get_listing_matches(id):
-
     def schemaify(listing: Listing):
         return {
             'id': listing.id,
@@ -164,12 +161,22 @@ def get_listing_matches(id):
         score = organ.score
     if listing.organ == Listing.Organ.LUNG:
         results = compute_matches(id)
-        listings = db.session.query(Listing).filter(Listing.id != id, Listing.type == "PATIENT", Listing.organ == "LUNG").all()
+        listings = (
+            db.session.query(Listing)
+            .filter(
+                Listing.id != id,
+                Listing.type == "PATIENT",
+                Listing.organ == "LUNG",
+            )
+            .all()
+        )
         if listings is None:
             raise NotFoundError("L'organe n'a pas été trouvé")
         res_listings = []
         for listing in listings:
-            listing_organ = db.session.query(Lung).filter_by(listing_id = listing.id).first()
+            listing_organ = (
+                db.session.query(Lung).filter_by(listing_id=listing.id).first()
+            )
             res_listings.append([listing, listing_organ.score])
 
         return sorted(
@@ -190,7 +197,9 @@ def get_listing_matches(id):
                 "listing": schemaify(listing),
                 "score": score,
             }
-            for listing in db.session.query(Listing).filter_by(organ=listing.organ)
+            for listing in db.session.query(Listing).filter_by(
+                organ=listing.organ
+            )
         ],
         key=lambda x: x['score'],
         reverse=True,

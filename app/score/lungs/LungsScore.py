@@ -4,6 +4,7 @@ from app import db
 from app.db.models.lung import Lung
 from app.errors import NotFoundError
 
+
 def fetch_baseline_values(file):
     with open(file, 'r') as f:
         data = json.load(f)
