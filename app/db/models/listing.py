@@ -13,7 +13,7 @@ class Listing(db.Base):
 
     class Type(EnumStr):
         DONOR = enum.auto()
-        PATIENT = enum.auto()
+        RECEIVER = enum.auto()
 
     class Organ(EnumStr):
         HEART = enum.auto()

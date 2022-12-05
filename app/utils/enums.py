@@ -12,3 +12,6 @@ class EnumStr(enum.Enum):
     @classmethod
     def values(cls):
         return [x.value for x in cls]
+
+    def __str__(self):
+        return self.value
