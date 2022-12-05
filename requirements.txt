@@ -12,7 +12,7 @@ flask
 flask-cors
 passlib[bcrypt]
 flask-sock
-
+numpy
 # yaml support for config files etc
 pyyaml
 

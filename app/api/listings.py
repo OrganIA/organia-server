@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from app import db
-from app.db.models import Listing, Liver
+from app.db.models import Heart, Listing, Liver
 from app.errors import NotFoundError
 from app.utils.bp import Blueprint
 from app.utils.static import Static
@@ -60,8 +60,12 @@ def create_organ(data):
         organ = Liver()
         organ = update(organ, data)
         organ.listing_id = listing.id
-        db.session.add(organ)
-        db.session.commit()
+    if listing.organ == Listing.Organ.HEART:
+        organ = Heart()
+        organ = update(organ, data)
+        organ.listing_id = listing.id
+    db.session.add(organ)
+    db.session.commit()
     return organ
 
 
@@ -69,7 +73,6 @@ def update_organ(data, id):
     organ = {}
     if data.organ == Listing.Organ.LIVER:
         organ = db.session.query(Liver).filter_by(listing_id=id).first()
-        print("ORGAN: ", organ)
         organ = update(organ, data)
         db.session.commit()
     return organ
@@ -147,7 +150,7 @@ def get_listing_matches(id):
     return sorted(
         [
             {
-                "listing": schemaify(l),
+                "listing": schemaify(listing),
                 "score": score,
             }
             for listing in db.session.query(Listing)

@@ -11,7 +11,7 @@ from app import db
 from app.helpers.enums import EnumStr
 
 
-class Heart(db.TimedMixin, db.Base):
+class Heart(db.Base):
     class URGENCE(EnumStr):
         XPCA = enum.auto()
         XPCP1 = enum.auto()
