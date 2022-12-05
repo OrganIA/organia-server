@@ -10,18 +10,11 @@ bp = Blueprint(__name__)
 
 
 class CalendarEventSchema(Static):
-    @staticmethod
-    def start_date(d):
-        start_date = Static._get(d, 'start_date')
-        return datetime.fromisoformat(start_date)
-
-    def end_date(d):
-        end_date = Static._get(d, 'end_date')
-        return datetime.fromisoformat(end_date)
-
     title = str
     description = str
     event_type = str
+    start_date = datetime
+    end_date = datetime
 
 
 @bp.get('/')

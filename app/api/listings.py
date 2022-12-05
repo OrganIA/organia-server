@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 
 from app import db
 from app.db.models import Listing, Liver
@@ -10,44 +10,25 @@ bp = Blueprint(__name__)
 
 
 class ListingSchema(Static):
-    @staticmethod
-    def dialysis_start_date(d):
-        dialysis_start_date = Static._get(d, 'dialysis_start_date')
-        return datetime.fromisoformat(dialysis_start_date).date()
-
-    @staticmethod
-    def dialysis_end_date(d):
-        dialysis_end_date = Static._get(d, 'dialysis_end_date')
-        return datetime.fromisoformat(dialysis_end_date).date()
-
-    @staticmethod
-    def arf_date(d):
-        arf_date = Static._get(d, 'arf_date')
-        return datetime.fromisoformat(arf_date).date()
-
-    @staticmethod
-    def transplantation_date(d):
-        transplantation_date = Static._get(d, 'transplantation_date')
-        return datetime.fromisoformat(transplantation_date).date()
-
-    @staticmethod
-    def re_registration_date(d):
-        re_registration_date = Static._get(d, 're_registration_date')
-        return datetime.fromisoformat(re_registration_date).date()
-
+    hospital_id = int
     notes = str
-    type = Listing.Type
     organ = Listing.Organ
-    tumors_number = int
-    biggest_tumor_size = int
-    alpha_fetoprotein = int
+    person_id = int
+    type = Listing.Type
+
     is_under_dialysis = bool
+    re_registration_date = date
+    transplantation_date = date
+    dialysis_end_date = date
+    dialysis_start_date = date
+    alpha_fetoprotein = int
+    arf_date = date
+    biggest_tumor_size = int
+    tumors_number = int
     A = int
     B = int
-    DR = int
     DQ = int
-    person_id = int
-    hospital_id = int
+    DR = int
 
 
 def create_organ(data):
