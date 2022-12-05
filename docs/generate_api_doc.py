@@ -195,6 +195,10 @@ calls = [
     Get('/listings/1'),
     # Get the matching listings for an organ
     Get('/listings/1/matches'),
+    # Only get donor listings
+    Get('/listings/?type=donor'),
+    # Only get receiver listings
+    Get('/listings/?type=receiver'),
     # Create a new chat
     Post('/chats', {"name": "Chat name", "users_ids": [1, 2]}),
     # Get all the chats the current user is part of
