@@ -82,7 +82,7 @@ class App(Flask):
             if return_value is None:
                 code = code or 204
         if not isinstance(return_value, (self.response_class, Exception)):
-            if return_value:
+            if return_value is not None:
                 return_value = json.dumps(
                     return_value, default=permissive_json, indent=2
                 )
