@@ -90,7 +90,7 @@ def websocket_route(websocket: Server, chat_id: int):
             websocket.send(
                 dumps({"status": 213, "event": "error", "error": e.reason})
             )
-            manager.disconnect(websocket)
+            # manager.disconnect(websocket)
         except simple_websocket.ConnectionError as e:
             logging.fatal(
                 f"Websocket error: {websocket.environ['REMOTE_ADDR']} because of {e.status_code}, {e.with_traceback()}",
@@ -98,17 +98,19 @@ def websocket_route(websocket: Server, chat_id: int):
             websocket.send(
                 dumps({"status": 214, "event": "error", "error": e.reason})
             )
-            manager.disconnect(websocket)
+            # manager.disconnect(websocket)
         except HTTPException as e:
             websocket.send(
                 dumps(
                     {"status": e.code, "event": "error", "error": e.description}
                 )
             )
+            manager.disconnect(websocket)
         except Exception as e:
             websocket.send(
                 dumps({"status": 400, "event": "error", "error": e.args})
             )
+            manager.disconnect(websocket)
 
 
 def check_message(chat_id: int, user: User) -> bool:
