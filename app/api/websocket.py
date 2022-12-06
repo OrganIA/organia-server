@@ -1,5 +1,6 @@
 from json import dumps, loads
 
+import simple_websocket
 from simple_websocket.ws import Server
 
 from app import db, sock
@@ -79,6 +80,24 @@ def websocket_route(websocket: Server, chat_id: int):
                 )
                 continue
             raise InvalidRequest("Invalid event.")
+        except simple_websocket.ConnectionClosed as e:
+            Colors.print(
+                f"Websocket closed: {websocket.environ['REMOTE_ADDR']} because of {e.reason}, {e.message}",
+                Colors.Color.FAIL,
+            )
+            websocket.send(
+                dumps({"status": 213, "event": "error", "error": e.reason})
+            )
+            manager.disconnect(websocket)
+        except simple_websocket.ConnectionError as e:
+            Colors.print(
+                f"Websocket error: {websocket.environ['REMOTE_ADDR']} because of {e.status_code}, {e.with_traceback()}",
+                Colors.Color.FAIL,
+            )
+            websocket.send(
+                dumps({"status": 214, "event": "error", "error": e.reason})
+            )
+            manager.disconnect(websocket)
         except HTTPException as e:
             websocket.send(
                 dumps(
