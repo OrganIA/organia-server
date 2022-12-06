@@ -1,7 +1,8 @@
-import logging
 from datetime import date
 
 import flask
+from pydantic import BaseModel
+
 from app import db
 from app.api.lungs import LungSchema, compute_matches
 from app.api.person import PersonSchema
@@ -9,7 +10,6 @@ from app.db.models import Listing, Liver, Lung
 from app.db.models.person import Person
 from app.errors import InvalidRequest, NotFoundError
 from app.utils.bp import Blueprint
-from pydantic import BaseModel
 
 bp = Blueprint(__name__)
 
@@ -165,36 +165,7 @@ def get_listing_matches(id):
             raise NotFoundError("L'organe n'a pas été trouvé")
         score = organ.score
     if listing.organ == Listing.Organ.LUNG:
-        results = compute_matches(id)
-        listings = (
-            db.session.query(Listing)
-            .filter(
-                Listing.id != id,
-                Listing.type == "PATIENT",
-                Listing.organ == "LUNG",
-            )
-            .all()
-        )
-        if listings is None:
-            raise NotFoundError("L'organe n'a pas été trouvé")
-        res_listings = []
-        for listing in listings:
-            listing_organ = (
-                db.session.query(Lung).filter_by(listing_id=listing.id).first()
-            )
-            res_listings.append([listing, listing_organ.score])
-
-        return sorted(
-            [
-                {
-                    "listing": schemaify(result[0]),
-                    "score": result[1],
-                }
-                for result in results
-            ],
-            key=lambda x: x['score'],
-            reverse=True,
-        )
+        return compute_matches(id)
 
     return sorted(
         [
