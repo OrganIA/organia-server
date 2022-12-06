@@ -1,8 +1,7 @@
 from datetime import date
 
-from pydantic import BaseModel
-
 import flask
+from pydantic import BaseModel
 
 from app import db
 from app.db.models import Listing, Liver
@@ -77,6 +76,11 @@ def get_listings():
             raise InvalidRequest(f'Invalid type {type}')
         query = query.filter_by(type=type)
     return query
+
+
+@bp.get('/organs')
+def get_organs():
+    return Listing.Organ.values()
 
 
 @bp.get('/<int:id>')
