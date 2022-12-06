@@ -13,10 +13,10 @@ bp = Blueprint(__name__)
 
 
 class ListingSchema(BaseModel):
-    hospital_id: int
-    notes: str
-    organ: Listing.Organ
-    person_id: int
+    hospital_id: int | None
+    notes: str | None
+    organ: Listing.Organ | None
+    person_id: int | None
     type: Listing.Type
 
     lung: LungSchema | None
