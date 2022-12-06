@@ -1,8 +1,6 @@
 from datetime import date
 
 import flask
-from pydantic import BaseModel
-
 from app import db
 from app.api.lungs import LungSchema, compute_matches
 from app.api.person import PersonSchema
@@ -10,6 +8,7 @@ from app.db.models import Listing, Liver, Lung
 from app.db.models.person import Person
 from app.errors import InvalidRequest, NotFoundError
 from app.utils.bp import Blueprint
+from pydantic import BaseModel
 
 bp = Blueprint(__name__)
 
@@ -120,7 +119,6 @@ def create_listing(data: ListingSchema):
         data["lung"] = Lung(**lung_data)
     if person_data:
         data["person"] = Person(**person_data)
-        # db.session.add(data["person"])
     listing = Listing(**data)
     db.session.add(listing)
     db.session.commit()

@@ -4,10 +4,11 @@ from app import db
 from app.api.person import get_person
 from app.db.models import Listing, Lung
 from app.errors import NotFoundError
-from app.score.lungs.LungsScore import lungs_final_score
+from app.score.lungs.lungs_score import lungs_final_score
 from app.utils.bp import Blueprint
 
 bp = Blueprint(__name__)
+
 
 class LungSchema(BaseModel):
     diagnosis_group: str
@@ -29,25 +30,33 @@ class LungSchema(BaseModel):
     PCW_over_20_mmHg: bool
 
 
-@bp.get('/<int:listing_id>', success=201)
-def get_lungs(listing_id: int):
-    lung = db.session.query(Lung).filter_by(listing_id=listing_id).first()
+@bp.get('/<int:lung_id>', success=201)
+def get_lungs(lung_id: int):
+    lung = db.session.get(Lung, lung_id)
     if not lung:
-        raise NotFoundError('No Listing found')
+        raise NotFoundError
     return lung
+
 
 def compute_matches(listing_id: int):
     listing_lungs_receivers = (
         db.session.query(Listing)
         .filter(
             Listing.id != listing_id,
-            Listing.type == "RECEIVER",
-            Listing.organ == "LUNG",
+            Listing.type == Listing.Type.RECEIVER,
+            Listing.organ == Listing.Organ.LUNG,
         )
         .all()
     )
     result_listing = []
     for listing_lungs_receiver in listing_lungs_receivers:
         person_receiver = get_person(listing_lungs_receiver.person_id)
-        result_listing.append([listing_lungs_receiver, lungs_final_score(person_receiver, None, listing_lungs_receiver)])
+        result_listing.append(
+            [
+                listing_lungs_receiver,
+                lungs_final_score(
+                    person_receiver, None, listing_lungs_receiver
+                ),
+            ]
+        )
     return result_listing
