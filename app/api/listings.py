@@ -1,6 +1,6 @@
-from datetime import date
-
 import flask
+from pydantic import BaseModel
+
 from app import db
 from app.api.lungs import LungSchema, compute_matches
 from app.api.person import PersonSchema
@@ -8,7 +8,6 @@ from app.db.models import Listing, Liver, Lung
 from app.db.models.person import Person
 from app.errors import InvalidRequest, NotFoundError
 from app.utils.bp import Blueprint
-from pydantic import BaseModel
 
 bp = Blueprint(__name__)
 
@@ -19,20 +18,6 @@ class ListingSchema(BaseModel):
     organ: Listing.Organ
     person_id: int
     type: Listing.Type
-
-    is_under_dialysis: bool
-    re_registration_date: date
-    transplantation_date: date
-    dialysis_end_date: date
-    dialysis_start_date: date
-    alpha_fetoprotein: int
-    arf_date: date
-    biggest_tumor_size: int
-    tumors_number: int
-    A: int
-    B: int
-    DQ: int
-    DR: int
 
     lung: LungSchema
     person: PersonSchema
