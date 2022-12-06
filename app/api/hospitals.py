@@ -1,18 +1,19 @@
+from pydantic import BaseModel
+
 from app import db, geopy
 from app.db.models import City, Hospital
 from app.errors import NotFoundError
 from app.utils.bp import Blueprint
-from app.utils.static import Static
 
 bp = Blueprint(__name__)
 
 
-class HospitalSchema(Static):
-    name = str
-    phone_number = str
-    latitude = float
-    longitude = float
-    city_id = int
+class HospitalSchema(BaseModel):
+    name: str
+    phone_number: str | None
+    latitude: float | None
+    longitude: float | None
+    city_id: int | None
 
 
 def create_city(city_data):
@@ -32,7 +33,7 @@ def create_city(city_data):
 
 
 def update(obj, data):
-    for key, value in data.dict.items():
+    for key, value in data.dict().items():
         if value == 'null':
             setattr(obj, key, None)
         elif value is not None:

@@ -1,5 +1,7 @@
+import logging
 from json import dumps, loads
 
+import simple_websocket
 from simple_websocket.ws import Server
 
 from app import db, sock
@@ -20,10 +22,12 @@ def websocket_route(websocket: Server, chat_id: int):
         f"Websocket connected: {websocket.environ['REMOTE_ADDR']}",
         Colors.Color.OKGREEN,
     )
+    logging.debug(f"Websocket connected: {websocket.environ['REMOTE_ADDR']}")
     manager.connect(websocket)
-    while websocket.connected:
+    while True:
         try:
             data = loads(websocket.receive())
+            logging.warning(f"Received data: {data}")
             Colors.print(f"Received data: {data}", Colors.Color.WARNING)
             if "event" not in data:
                 websocket.send(
@@ -52,7 +56,7 @@ def websocket_route(websocket: Server, chat_id: int):
                 client = manager.get_client(websocket)
                 message = send_message(
                     chat_id=chat_id,
-                    data=MessageCreateSchema(data["data"]),
+                    data=MessageCreateSchema(**data["data"]),
                     user=client.user,
                 )
                 manager.send_client(
@@ -79,16 +83,34 @@ def websocket_route(websocket: Server, chat_id: int):
                 )
                 continue
             raise InvalidRequest("Invalid event.")
+        except simple_websocket.ConnectionClosed as e:
+            logging.fatal(
+                f"Websocket closed: {websocket.environ['REMOTE_ADDR']} because of {e.reason}, {e.message}",
+            )
+            websocket.send(
+                dumps({"status": 213, "event": "error", "error": e.reason})
+            )
+            # manager.disconnect(websocket)
+        except simple_websocket.ConnectionError as e:
+            logging.fatal(
+                f"Websocket error: {websocket.environ['REMOTE_ADDR']} because of {e.status_code}, {e.with_traceback()}",
+            )
+            websocket.send(
+                dumps({"status": 214, "event": "error", "error": e.reason})
+            )
+            # manager.disconnect(websocket)
         except HTTPException as e:
             websocket.send(
                 dumps(
                     {"status": e.code, "event": "error", "error": e.description}
                 )
             )
+            manager.disconnect(websocket)
         except Exception as e:
             websocket.send(
                 dumps({"status": 400, "event": "error", "error": e.args})
             )
+            manager.disconnect(websocket)
 
 
 def check_message(chat_id: int, user: User) -> bool:

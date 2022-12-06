@@ -1,30 +1,27 @@
-from datetime import datetime
+from datetime import date
+
+from pydantic import BaseModel
 
 from app import db
 from app.db.models import Person
 from app.errors import NotFoundError
 from app.utils.bp import Blueprint
-from app.utils.static import Static
 
 bp = Blueprint(__name__)
 
 
-class PersonSchema(Static):
-    @staticmethod
-    def birth_date(d):
-        birth_date = Static._get(d, 'birth_date')
-        return datetime.fromisoformat(birth_date).date()
-
-    first_name = str
-    last_name = str
-    description = str
-    abo = Person.ABO
-    rhesus = Person.Rhesus
-    gender = Person.Gender
+class PersonSchema(BaseModel):
+    first_name: str
+    last_name: str
+    birth_date: date
+    description: str
+    abo: Person.ABO
+    rhesus: Person.Rhesus
+    gender: Person.Gender
 
 
 def update(person, data):
-    for key, value in data.dict.items():
+    for key, value in data.dict().items():
         if value == 'null':
             setattr(person, key, None)
         elif value is not None:
@@ -47,7 +44,7 @@ def get_person(id):
 
 @bp.post('/')
 def create_person(data: PersonSchema):
-    person = Person(**data.dict)
+    person = Person(**data.dict())
     db.session.add(person)
     db.session.commit()
     return get_person(person.id)

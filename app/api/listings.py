@@ -1,55 +1,36 @@
-from datetime import datetime
+from datetime import date
 
+import flask
 from app import db
 from app.api.lungs import LungSchema, compute_matches
 from app.db.models import Listing, Liver, Lung
-from app.db.models.person import Person
-from app.errors import NotFoundError
+from app.errors import InvalidRequest, NotFoundError
 from app.utils.bp import Blueprint
-from app.utils.static import Static
+from pydantic import BaseModel
 
 bp = Blueprint(__name__)
 
 
-class ListingSchema(Static):
-    @staticmethod
-    def dialysis_start_date(d):
-        dialysis_start_date = Static._get(d, 'dialysis_start_date')
-        return datetime.fromisoformat(dialysis_start_date).date()
+class ListingSchema(BaseModel):
+    hospital_id: int
+    notes: str
+    organ: Listing.Organ
+    person_id: int
+    type: Listing.Type
 
-    @staticmethod
-    def dialysis_end_date(d):
-        dialysis_end_date = Static._get(d, 'dialysis_end_date')
-        return datetime.fromisoformat(dialysis_end_date).date()
-
-    @staticmethod
-    def arf_date(d):
-        arf_date = Static._get(d, 'arf_date')
-        return datetime.fromisoformat(arf_date).date()
-
-    @staticmethod
-    def transplantation_date(d):
-        transplantation_date = Static._get(d, 'transplantation_date')
-        return datetime.fromisoformat(transplantation_date).date()
-
-    @staticmethod
-    def re_registration_date(d):
-        re_registration_date = Static._get(d, 're_registration_date')
-        return datetime.fromisoformat(re_registration_date).date()
-
-    notes = str
-    type = Listing.Type
-    organ = Listing.Organ
-    tumors_number = int
-    biggest_tumor_size = int
-    alpha_fetoprotein = int
-    is_under_dialysis = bool
-    A = int
-    B = int
-    DR = int
-    DQ = int
-    person_id = int
-    hospital_id = int
+    is_under_dialysis: bool
+    re_registration_date: date
+    transplantation_date: date
+    dialysis_end_date: date
+    dialysis_start_date: date
+    alpha_fetoprotein: int
+    arf_date: date
+    biggest_tumor_size: int
+    tumors_number: int
+    A: int
+    B: int
+    DQ: int
+    DR: int
 
     lung = LungSchema
 
@@ -82,7 +63,6 @@ def update_organ(data, id):
     organ = {}
     if data.organ == Listing.Organ.LIVER:
         organ = db.session.query(Liver).filter_by(listing_id=id).first()
-        print("ORGAN: ", organ)
         organ = update(organ, data)
         db.session.commit()
     if data.organ == Listing.Organ.LUNG:
@@ -94,7 +74,7 @@ def update_organ(data, id):
 
 
 def update(listing, data):
-    for key, value in data.dict.items():
+    for key, value in data.dict().items():
         if value == 'null':
             setattr(listing, key, None)
         elif value is not None:
@@ -104,7 +84,19 @@ def update(listing, data):
 
 @bp.get('/')
 def get_listings():
-    return db.session.query(Listing)
+    query = db.session.query(Listing)
+    if type := flask.request.args.get('type'):
+        try:
+            type = Listing.Type(type.upper())
+        except ValueError:
+            raise InvalidRequest(f'Invalid type {type}')
+        query = query.filter_by(type=type)
+    return query
+
+
+@bp.get('/organs')
+def get_organs():
+    return Listing.Organ.values()
 
 
 @bp.get('/<int:id>')
@@ -117,7 +109,7 @@ def get_listing(id):
 
 @bp.post('/')
 def create_listing(data: ListingSchema):
-    listing = Listing(**data.dict)
+    listing = Listing(**data.dict())
     db.session.add(listing)
     db.session.commit()
     create_organ(data)
