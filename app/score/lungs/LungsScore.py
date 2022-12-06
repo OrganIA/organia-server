@@ -1,8 +1,10 @@
 import json
+import logging
 
 from app import db
 from app.db.models.lung import Lung
 from app.errors import NotFoundError
+
 
 def fetch_baseline_values(file):
     with open(file, 'r') as f:
@@ -178,9 +180,8 @@ def lungs_final_score(receiver, donor, receiver_listing):
     # select * from lungs where listing_id = receiver_listing.id
     # all values valid ? proceed : return error msg
 
-    listing_lung = (
-        db.session.query(Lung).filter_by(listing=receiver_listing).first()
-    )
+    listing_lung = db.session.query(Lung).filter_by(listing_id=receiver_listing.id).first()
+    
     if not listing_lung:
         raise NotFoundError("No listing found in lungs table")
     for var in dir(listing_lung):

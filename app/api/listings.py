@@ -1,9 +1,12 @@
+import logging
 from datetime import date
 
 import flask
 from app import db
 from app.api.lungs import LungSchema, compute_matches
+from app.api.person import PersonSchema
 from app.db.models import Listing, Liver, Lung
+from app.db.models.person import Person
 from app.errors import InvalidRequest, NotFoundError
 from app.utils.bp import Blueprint
 from pydantic import BaseModel
@@ -32,7 +35,8 @@ class ListingSchema(BaseModel):
     DQ: int
     DR: int
 
-    lung = LungSchema
+    lung: LungSchema
+    person: PersonSchema
 
 
 
@@ -49,8 +53,6 @@ def create_organ(data):
         db.session.add(organ)
         db.session.commit()
     if listing.organ == Listing.Organ.LUNG:
-        print('-----------------------')
-        print(data)
         organ = Lung()
         organ = update(organ, data)
         organ.listing_id = listing.id
@@ -109,10 +111,20 @@ def get_listing(id):
 
 @bp.post('/')
 def create_listing(data: ListingSchema):
-    listing = Listing(**data.dict())
+    data = data.dict()
+    liver_data = data.pop("liver", None)
+    lung_data = data.pop("lung", None)
+    person_data = data.pop("person", None)
+    if liver_data:
+        data["liver"] = Liver(**liver_data)
+    if lung_data:
+        data["lung"] = Lung(**lung_data)
+    if person_data:
+        data["person"] = Person(**person_data)
+        # db.session.add(data["person"])
+    listing = Listing(**data)
     db.session.add(listing)
     db.session.commit()
-    create_organ(data)
     return get_listing(listing.id)
 
 
@@ -152,7 +164,7 @@ def get_listing_matches(id):
     if listing.organ == Listing.Organ.LIVER:
         organ = db.session.query(Liver).filter_by(listing_id=id).first()
         if organ is None:
-            raise NotFoundError.r("L'organe n'a pas été trouvé")
+            raise NotFoundError("L'organe n'a pas été trouvé")
         score = organ.score
     if listing.organ == Listing.Organ.LUNG:
         results = compute_matches(id)
