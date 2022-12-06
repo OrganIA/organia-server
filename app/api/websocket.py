@@ -52,7 +52,7 @@ def websocket_route(websocket: Server, chat_id: int):
                 client = manager.get_client(websocket)
                 message = send_message(
                     chat_id=chat_id,
-                    data=MessageCreateSchema(data["data"]),
+                    data=MessageCreateSchema(**data["data"]),
                     user=client.user,
                 )
                 manager.send_client(
