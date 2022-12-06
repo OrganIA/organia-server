@@ -1,11 +1,13 @@
 from datetime import date
 
+import flask
 from pydantic import BaseModel
 
-import flask
-
 from app import db
-from app.db.models import Heart, Listing, Liver
+from app.api.lungs import LungSchema, compute_matches
+from app.api.person import PersonSchema
+from app.db.models import Heart, Listing, Liver, Lung
+from app.db.models.person import Person
 from app.errors import InvalidRequest, NotFoundError
 from app.utils.bp import Blueprint
 
@@ -33,29 +35,19 @@ class ListingSchema(BaseModel):
     DQ: int
     DR: int
 
-
-def create_organ(data):
-    # Update this function when an organ is implemented
-    listing = db.session.query(Listing).order_by(Listing.id.desc()).first()
-    if not listing:
-        raise NotFoundError
-    if listing.organ == Listing.Organ.LIVER:
-        organ = Liver()
-        organ = update(organ, data)
-        organ.listing_id = listing.id
-    if listing.organ == Listing.Organ.HEART:
-        organ = Heart()
-        organ = update(organ, data)
-        organ.listing_id = listing.id
-    db.session.add(organ)
-    db.session.commit()
-    return organ
+    lung: LungSchema
+    person: PersonSchema
 
 
 def update_organ(data, id):
     organ = {}
     if data.organ == Listing.Organ.LIVER:
         organ = db.session.query(Liver).filter_by(listing_id=id).first()
+        organ = update(organ, data)
+        db.session.commit()
+    if data.organ == Listing.Organ.LUNG:
+        organ = db.session.query(Lung).filter_by(listing_id=id).first()
+        print("ORGAN: ", organ)
         organ = update(organ, data)
         db.session.commit()
     return organ
@@ -82,6 +74,11 @@ def get_listings():
     return query
 
 
+@bp.get('/organs')
+def get_organs():
+    return Listing.Organ.values()
+
+
 @bp.get('/<int:id>')
 def get_listing(id):
     result = db.session.get(Listing, id)
@@ -92,10 +89,22 @@ def get_listing(id):
 
 @bp.post('/')
 def create_listing(data: ListingSchema):
-    listing = Listing(**data.dict())
+    data = data.dict()
+    liver_data = data.pop("liver", None)
+    lung_data = data.pop("lung", None)
+    heart_data = data.pop("heart", None)
+    person_data = data.pop("person", None)
+    if liver_data:
+        data["liver"] = Liver(**liver_data)
+    if lung_data:
+        data["lung"] = Lung(**lung_data)
+    if heart_data:
+        data["heart"] = Heart(**heart_data)
+    if person_data:
+        data["person"] = Person(**person_data)
+    listing = Listing(**data)
     db.session.add(listing)
     db.session.commit()
-    create_organ(data)
     return get_listing(listing.id)
 
 
@@ -119,14 +128,6 @@ def delete_listing(id: int):
 
 @bp.get('/<int:id>/matches')
 def get_listing_matches(id):
-    listing = get_listing(id)
-    score = 0
-    if listing.organ == Listing.Organ.LIVER:
-        organ = db.session.query(Liver).filter_by(listing_id=id).first()
-        if organ is None:
-            raise NotFoundError.r("L'organe n'a pas été trouvé")
-        score = organ.score
-
     def schemaify(listing: Listing):
         return {
             'id': listing.id,
@@ -137,13 +138,25 @@ def get_listing_matches(id):
             'hospital_id': listing.hospital_id,
         }
 
+    listing = get_listing(id)
+    score = 0
+    if listing.organ == Listing.Organ.LIVER:
+        organ = db.session.query(Liver).filter_by(listing_id=id).first()
+        if organ is None:
+            raise NotFoundError("L'organe n'a pas été trouvé")
+        score = organ.score
+    if listing.organ == Listing.Organ.LUNG:
+        return compute_matches(id)
+
     return sorted(
         [
             {
                 "listing": schemaify(listing),
                 "score": score,
             }
-            for listing in db.session.query(Listing)
+            for listing in db.session.query(Listing).filter_by(
+                organ=listing.organ
+            )
         ],
         key=lambda x: x['score'],
         reverse=True,

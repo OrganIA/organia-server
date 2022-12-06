@@ -9,7 +9,7 @@ from app.utils.enums import EnumStr
 
 class Listing(db.Base):
     __AUTO_DICT_EXCLUDE__ = ['person_id']
-    __AUTO_DICT_INCLUDE__ = ['person']
+    __AUTO_DICT_INCLUDE__ = ['person', 'lung', 'liver']
 
     class Type(EnumStr):
         DONOR = enum.auto()
@@ -64,6 +64,9 @@ class Listing(db.Base):
     hospital = orm.relationship('Hospital', backref='listings')
     liver = orm.relationship(
         'Liver', cascade='all,delete', backref='listing', uselist=False
+    )
+    lung = orm.relationship(
+        'Lung', back_populates='listing', cascade='all, delete', uselist=False
     )
 
     @property
