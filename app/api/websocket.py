@@ -88,17 +88,11 @@ def websocket_route(websocket: Server, chat_id: int):
                 f"Websocket closed: {websocket.environ['REMOTE_ADDR']} because"
                 f" of {e.reason}, {e.message}",
             )
-            websocket.send(
-                dumps({"status": 213, "event": "error", "error": e.reason})
-            )
             manager.disconnect(websocket)
         except simple_websocket.ConnectionError as e:
             logging.fatal(
                 f"Websocket error: {websocket.environ['REMOTE_ADDR']} because"
                 f" of {e.status_code}, {e.with_traceback()}",
-            )
-            websocket.send(
-                dumps({"status": 214, "event": "error", "error": e.reason})
             )
             manager.disconnect(websocket)
         except HTTPException as e:

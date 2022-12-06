@@ -14,8 +14,9 @@ class ConnectionManager:
         self.active_connections.append(WebSocketClient(websocket=websocket))
 
     def disconnect(self, websocket: Server) -> None:
+        logging.warn(f"Disconnecting client {id(websocket)}")
         for client in self.active_connections:
-            logging.warn(f"Client: {client.user.email}")
+            logging.warn(f"Client: {client.id}")
             logging.warn(
                 f"Websocket: {client.websocket.environ['REMOTE_ADDR']}"
             )
