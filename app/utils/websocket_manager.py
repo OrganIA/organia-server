@@ -32,7 +32,7 @@ class ConnectionManager:
     def broadcast(self, message: str, client: WebSocketClient) -> None:
         for cl in self.active_connections:
             if (
-                cl.user.id != client.user.id
+                (cl.id != client.id)
                 and cl.is_logged()
                 and cl.chat_id == client.chat_id
             ):
