@@ -12,23 +12,23 @@ from app.utils.bp import Blueprint
 bp = Blueprint(__name__)
 
 class LungSchema(BaseModel):
-    diagnosis_group: str
-    detailed_diagnosis: str
-    body_mass_index: float
-    diabetes: bool
-    assistance_required: bool
-    FVC_percentage: float
-    PA_systolic: float
-    oxygen_requirement: float
-    six_minutes_walk_distance_over_150_feet: bool
-    continuous_mech_ventilation: bool
-    PCO2: float
-    PCO2_increase_superior_to_15_percent: bool
+    diagnosis_group: str | None
+    detailed_diagnosis: str | None
+    body_mass_index: float | None
+    diabetes: bool | None
+    assistance_required: bool | None
+    FVC_percentage: float | None
+    PA_systolic: float | None
+    oxygen_requirement: float | None
+    six_minutes_walk_distance_over_150_feet: bool | None
+    continuous_mech_ventilation: bool | None
+    PCO2: float | None
+    PCO2_increase_superior_to_15_percent: bool | None
 
-    age_at_transplant: int
-    creatinine_at_transplant: float
-    ADL_required: bool
-    PCW_over_20_mmHg: bool
+    age_at_transplant: int | None
+    creatinine_at_transplant: float | None
+    ADL_required: bool | None
+    PCW_over_20_mmHg: bool | None
 
 
 @bp.get('/<int:listing_id>', success=201)
