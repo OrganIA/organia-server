@@ -1,3 +1,4 @@
+import logging
 from typing import List
 
 from simple_websocket.ws import Server
@@ -14,7 +15,12 @@ class ConnectionManager:
 
     def disconnect(self, websocket: Server) -> None:
         for client in self.active_connections:
+            logging.warn(f"Client: {client.user.email}")
+            logging.warn(
+                f"Websocket: {client.websocket.environ['REMOTE_ADDR']}"
+            )
             if client.websocket == websocket:
+                logging.critical("Removing client")
                 self.active_connections.remove(client)
                 client.websocket.close()
                 break
