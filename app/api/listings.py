@@ -19,8 +19,8 @@ class ListingSchema(BaseModel):
     person_id: int
     type: Listing.Type
 
-    lung: LungSchema
-    person: PersonSchema
+    lung: LungSchema | None
+    person: PersonSchema | None
 
 
 def create_organ(data):
