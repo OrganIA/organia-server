@@ -24,7 +24,7 @@ def websocket_route(websocket: Server, chat_id: int):
     )
     logging.debug(f"Websocket connected: {websocket.environ['REMOTE_ADDR']}")
     manager.connect(websocket)
-    while websocket.connected:
+    while True:
         try:
             data = loads(websocket.receive())
             logging.warning(f"Received data: {data}")
