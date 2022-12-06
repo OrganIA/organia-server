@@ -19,11 +19,11 @@ class ConnectionManager:
             logging.warn(
                 f"Websocket: {client.websocket.environ['REMOTE_ADDR']}"
             )
-            if client.websocket == websocket:
-                logging.critical("Removing client")
-                self.active_connections.remove(client)
-                client.websocket.close()
-                break
+            if client.id != id(websocket):
+                continue
+            logging.critical("Removing client")
+            self.active_connections.remove(client)
+            client.websocket.close()
 
     def send_client(self, message: str, client: WebSocketClient) -> None:
         client.websocket.send(message)
@@ -39,5 +39,5 @@ class ConnectionManager:
 
     def get_client(self, websocket: Server) -> WebSocketClient:
         for client in self.active_connections:
-            if client.websocket == websocket:
+            if client.id == id(websocket):
                 return client
