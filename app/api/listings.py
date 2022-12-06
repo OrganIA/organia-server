@@ -39,7 +39,6 @@ class ListingSchema(BaseModel):
     person: PersonSchema
 
 
-
 def create_organ(data):
     # Update this function when an organ is implemented
     listing = db.session.query(Listing).order_by(Listing.id.desc()).first()
@@ -148,7 +147,6 @@ def delete_listing(id: int):
 
 @bp.get('/<int:id>/matches')
 def get_listing_matches(id):
-
     def schemaify(listing: Listing):
         return {
             'id': listing.id,
@@ -168,12 +166,22 @@ def get_listing_matches(id):
         score = organ.score
     if listing.organ == Listing.Organ.LUNG:
         results = compute_matches(id)
-        listings = db.session.query(Listing).filter(Listing.id != id, Listing.type == "PATIENT", Listing.organ == "LUNG").all()
+        listings = (
+            db.session.query(Listing)
+            .filter(
+                Listing.id != id,
+                Listing.type == "PATIENT",
+                Listing.organ == "LUNG",
+            )
+            .all()
+        )
         if listings is None:
             raise NotFoundError("L'organe n'a pas été trouvé")
         res_listings = []
         for listing in listings:
-            listing_organ = db.session.query(Lung).filter_by(listing_id = listing.id).first()
+            listing_organ = (
+                db.session.query(Lung).filter_by(listing_id=listing.id).first()
+            )
             res_listings.append([listing, listing_organ.score])
 
         return sorted(
@@ -194,7 +202,9 @@ def get_listing_matches(id):
                 "listing": schemaify(listing),
                 "score": score,
             }
-            for listing in db.session.query(Listing).filter_by(organ=listing.organ)
+            for listing in db.session.query(Listing).filter_by(
+                organ=listing.organ
+            )
         ],
         key=lambda x: x['score'],
         reverse=True,
