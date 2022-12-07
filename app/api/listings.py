@@ -98,15 +98,34 @@ def create_listing(data: ListingSchema):
     return get_listing(listing.id)
 
 
-# @bp.post('/<int:id>')
-# def update_listing(id, data: ListingSchema):
-#     listing = db.session.get(Listing, id)
-#     if not listing:
-#         raise NotFoundError
-#     listing = update(listing, data)
-#     update_organ(data, id)
-#     db.session.commit()
-#     return listing
+@bp.post('/<int:id>')
+def update_listing(id, data: ListingSchema):
+    listing = get_listing(id)
+    data = data.dict()
+    liver_data = data.pop("liver", None)
+    lung_data = data.pop("lung", None)
+    heart_data = data.pop("heart", None)
+    if isinstance(listing.organ, Liver):
+        organ = db.session.query(Liver).filter_by(listing_id=id).first()
+        if organ is None:
+            raise NotFoundError("L'organe n'a pas été trouvé")
+        organ = liver_data
+    if isinstance(listing.organ, Lung):
+        organ = db.session.query(Lung).filter_by(listing_id=id).first()
+        if organ is None:
+            raise NotFoundError("L'organe n'a pas été trouvé")
+        organ = lung_data
+    if isinstance(listing.organ, Heart):
+        organ = db.session.query(Heart).filter_by(listing_id=id).first()
+        if organ is None:
+            raise NotFoundError("L'organe n'a pas été trouvé")
+        organ = heart_data
+
+    listing.hospital_id = data["hospital_id"]
+    listing.notes = data["notes"]
+    listing.person_id = data["person_id"]
+    db.session.commit()
+    return listing
 
 
 @bp.delete('/<int:id>')
