@@ -21,14 +21,14 @@ class Listing(db.Base):
         LUNG = enum.auto()
         LIVER = enum.auto()
 
-    # fields
-
     notes = sa.Column(sa.String)
     type = sa.Column(sa.Enum(Type))
+    start_date = sa.Column(sa.Date)
+    end_date = sa.Column(sa.Date)
 
     @property
     def organ(self):
-        return self.liver or self.heart or self.lung
+        return self.liver or self.lung
 
     person_id = sa.Column(sa.ForeignKey('persons.id'))
     hospital_id = sa.Column(sa.ForeignKey('hospitals.id'))
@@ -45,7 +45,4 @@ class Listing(db.Base):
     )
     lung = orm.relationship(
         'Lung', back_populates='listing', cascade='all, delete', uselist=False
-    )
-    heart = orm.relationship(
-        'Heart', back_populates='listing', cascade='all, delete', uselist=False
     )

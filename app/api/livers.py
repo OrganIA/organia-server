@@ -9,7 +9,6 @@ bp = Blueprint(__name__)
 
 
 class LiverSchema(BaseModel):
-    listing_id: int
     tumors_number: int
     biggest_tumor_size: int
     alpha_fetoprotein: int
