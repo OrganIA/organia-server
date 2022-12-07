@@ -6,13 +6,13 @@ from app.score.kidney.kidney_score import get_score_HD
 
 def alpha_fetoprotein_score(receiver_listing):
     if (
-        receiver_listing.tumors_number == 0
+        receiver_listing.tumors_count == 0
         or receiver_listing.biggest_tumor_size is None
         or receiver_listing.alpha_fetoprotein is None
     ):
         return 0
     alpha_fetoprotein_score = 0
-    if receiver_listing.tumors_number >= 4:
+    if receiver_listing.tumors_count >= 4:
         alpha_fetoprotein_score += 2
     if (
         receiver_listing.biggest_tumor_size > 3

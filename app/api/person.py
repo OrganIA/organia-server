@@ -14,7 +14,7 @@ class PersonSchema(BaseModel):
     first_name: str
     last_name: str
     birth_date: date
-    description: str
+    description: str | None
     abo: Person.ABO
     rhesus: Person.Rhesus
     gender: Person.Gender
