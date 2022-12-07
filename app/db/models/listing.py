@@ -21,10 +21,10 @@ class Listing(db.Base):
         LUNG = enum.auto()
         LIVER = enum.auto()
 
-    # fields
-
     notes = sa.Column(sa.String)
     type = sa.Column(sa.Enum(Type))
+    start_date = sa.Column(sa.Date)
+    end_date = sa.Column(sa.Date)
 
     @property
     def organ(self):
