@@ -2,6 +2,7 @@ import flask
 from pydantic import BaseModel
 
 from app import db
+from app.api.livers import LiverSchema
 from app.api.lungs import LungSchema, compute_matches
 from app.api.person import PersonSchema
 from app.db.models import Listing, Liver, Lung
@@ -15,10 +16,9 @@ bp = Blueprint(__name__)
 class ListingSchema(BaseModel):
     hospital_id: int | None
     notes: str | None
-    organ: Listing.Organ | None
     person_id: int | None
     type: Listing.Type
-
+    liver: LiverSchema | None
     lung: LungSchema | None
     person: PersonSchema | None
 
@@ -112,11 +112,25 @@ def create_listing(data: ListingSchema):
 
 @bp.post('/<int:id>')
 def update_listing(id, data: ListingSchema):
-    listing = db.session.get(Listing, id)
-    if not listing:
-        raise NotFoundError
-    listing = update(listing, data)
-    update_organ(data, id)
+    listing = get_listing(id)
+    data = data.dict()
+    liver_data = data.pop("liver", None)
+    lung_data = data.pop("lung", None)
+
+    if isinstance(listing.organ, Liver):
+        organ = db.session.query(Liver).filter_by(listing_id=id).first()
+        if organ is None:
+            raise NotFoundError("L'organe n'a pas été trouvé")
+        organ = liver_data
+    if isinstance(listing.organ, Lung):
+        organ = db.session.query(Lung).filter_by(listing_id=id).first()
+        if organ is None:
+            raise NotFoundError("L'organe n'a pas été trouvé")
+        organ = lung_data
+    listing.hospital_id = data["hospital_id"]
+    listing.notes = data["notes"]
+    listing.person_id = data["person_id"]
+    # Je n'ai pas réussi à trouver comment accéder à Person pour changer les infos
     db.session.commit()
     return listing
 
