@@ -1,4 +1,5 @@
 import sqlalchemy as sa
+from sqlalchemy import orm
 
 from app import db
 
@@ -6,12 +7,14 @@ from app import db
 class Kidney(db.Base):
     listing_id = sa.Column(sa.ForeignKey("listings.id"))
 
-    isDialyse = sa.Column(sa.Boolean, default=False, nullable=True)
-    isRetransplantation = sa.Column(sa.Boolean, default=False, nullable=True)
-    startDateDialyse = sa.Column(sa.Date, nullable=True)
+    is_dialyse = sa.Column(sa.Boolean, default=False, nullable=True)
+    is_retransplantation = sa.Column(sa.Boolean, default=False, nullable=True)
+    start_date_dialyse = sa.Column(sa.Date, nullable=True)
     EndDateDialyse = sa.Column(sa.Date, nullable=True)
-    ARFDate = sa.Column(sa.Date, nullable=True)
-    DateTransplantation = sa.Column(sa.Date, nullable=True)
-    ReRegistrationDate = sa.Column(sa.Date, nullable=True)
+    arf_date = sa.Column(sa.Date, nullable=True)
+    date_transplantation = sa.Column(sa.Date, nullable=True)
+    re_registration_date = sa.Column(sa.Date, nullable=True)
 
-    score = sa.Column(sa.Float, nullable=True, default=0)
+    listing = orm.relationship(
+        'Listing', back_populates="kidney", uselist=False
+    )

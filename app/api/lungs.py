@@ -38,7 +38,7 @@ def get_lungs(lung_id: int):
     return lung
 
 
-def compute_matches(listing_id: int):
+def compute_matches_lungs(listing_id: int):
     listing_lungs_receivers = (
         db.session.query(Listing)
         .filter(

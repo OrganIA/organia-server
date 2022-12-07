@@ -1,13 +1,14 @@
+import logging
+
 import flask
 from pydantic import BaseModel
 
 from app import db
-from app.api.kidneys import compute_matches
-from app.errors import NotFoundError
+from app.api.kidneys import KidneySchema, compute_matches_kidney
 from app.api.livers import LiverSchema
-from app.api.lungs import LungSchema, compute_matches
+from app.api.lungs import LungSchema, compute_matches_lungs
 from app.api.person import PersonSchema
-from app.db.models import Listing, Liver, Lung, Kidney
+from app.db.models import Kidney, Listing, Liver, Lung
 from app.db.models.person import Person
 from app.errors import InvalidRequest, NotFoundError
 from app.utils.bp import Blueprint
@@ -22,6 +23,7 @@ class ListingSchema(BaseModel):
     type: Listing.Type
     liver: LiverSchema | None
     lung: LungSchema | None
+    kidney: KidneySchema | None
     person: PersonSchema | None
 
 
@@ -39,6 +41,9 @@ def create_organ(data):
         db.session.commit()
     if listing.organ == Listing.Organ.KIDNEY:
         organ = Kidney()
+        organ = update(organ, data)
+        db.session.add(organ)
+        db.session.commit()
     if listing.organ == Listing.Organ.LUNG:
         organ = Lung()
         organ = update(organ, data)
@@ -105,12 +110,16 @@ def get_listing(id):
 def create_listing(data: ListingSchema):
     data = data.dict()
     liver_data = data.pop("liver", None)
+    logging.debug(liver_data)
     lung_data = data.pop("lung", None)
+    kidney_data = data.pop("kidney", None)
     person_data = data.pop("person", None)
     if liver_data:
         data["liver"] = Liver(**liver_data)
     if lung_data:
         data["lung"] = Lung(**lung_data)
+    if kidney_data:
+        data["kidney"] = Kidney(**kidney_data)
     if person_data:
         data["person"] = Person(**person_data)
     listing = Listing(**data)
@@ -125,6 +134,7 @@ def update_listing(id, data: ListingSchema):
     data = data.dict()
     liver_data = data.pop("liver", None)
     lung_data = data.pop("lung", None)
+    kidney_data = data.pop("kidney", None)
 
     if isinstance(listing.organ, Liver):
         organ = db.session.query(Liver).filter_by(listing_id=id).first()
@@ -136,6 +146,11 @@ def update_listing(id, data: ListingSchema):
         if organ is None:
             raise NotFoundError("L'organe n'a pas été trouvé")
         organ = lung_data
+    if isinstance(listing.organ, Kidney):
+        organ = db.session.query(Kidney).filter_by(listing_id=id).first()
+        if organ is None:
+            raise NotFoundError("L'organe n'a pas été trouvé")
+        organ = kidney_data
     listing.hospital_id = data["hospital_id"]
     listing.notes = data["notes"]
     listing.person_id = data["person_id"]
@@ -153,24 +168,6 @@ def delete_listing(id: int):
 
 @bp.get('/<int:id>/matches')
 def get_listing_matches(id):
-<<<<<<< HEAD
-    listing = get_listing(id)
-    score = 0
-    if listing.organ == Listing.Organ.LIVER:
-        organ = db.session.query(Liver).filter_by(listing_id=id).first()
-        if organ is None:
-            raise NotFoundError.r("L'organe n'a pas été trouvé")
-        score = organ.score
-
-    if listing.organ == Listing.Organ.KIDNEY:
-        compute_matches(id)
-        organ = db.session.query(Kidney).filter_by(listing_id=id).first()
-        if organ is None:
-            raise NotFoundError.r("L'organe n'a pas été trouvé")
-        score = organ.score
-
-=======
->>>>>>> 31a0ad1c11271dbffa2c82792a2456af7914c99e
     def schemaify(listing: Listing):
         return {
             'id': listing.id,
@@ -189,7 +186,9 @@ def get_listing_matches(id):
             raise NotFoundError("L'organe n'a pas été trouvé")
         score = organ.score
     if listing.organ == Listing.Organ.LUNG:
-        return compute_matches(id)
+        return compute_matches_lungs(id)
+    if listing.organ == Listing.Organ.KIDNEY:
+        return compute_matches_kidney(id)
 
     return sorted(
         [
@@ -197,13 +196,9 @@ def get_listing_matches(id):
                 "listing": schemaify(listing),
                 "score": score,
             }
-<<<<<<< HEAD
-            for listing in db.session.query(Listing).filter_by(organ=listing.organ)
-=======
             for listing in db.session.query(Listing).filter_by(
                 organ=listing.organ
             )
->>>>>>> 31a0ad1c11271dbffa2c82792a2456af7914c99e
         ],
         key=lambda x: x['score'],
         reverse=True,

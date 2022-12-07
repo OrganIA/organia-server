@@ -14,7 +14,7 @@ def get_date(listing_kidney):
     elif (
         listing_kidney.dialysis_end_date is not None
         and listing_kidney.dialysis_end_date
-        > listing_kidney.DateTransplantation
+        > listing_kidney.date_transplantation
     ):
         return listing_kidney.dialysis_end_date
     elif listing_kidney.arf_date is not None:

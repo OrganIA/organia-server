@@ -10,7 +10,7 @@ class Liver(TimedMixin, db.Base):
     tumors_number = sa.Column(sa.Integer, default=0)
     biggest_tumor_size = sa.Column(sa.Integer)
     alpha_fetoprotein = sa.Column(sa.Integer)
-    listing = orm.relationship('Listing', back_populates='liver')
+    listing = orm.relationship('Listing', back_populates='liver', uselist=False)
 
     @property
     def alpha_fetoprotein_score(self):
