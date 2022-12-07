@@ -93,12 +93,13 @@ class Route:
         last_was_dash = False
         s = ''
         for c in self.title.lower():
-            if c in (' ', '/'):
+            if c in (' ',):
                 if not last_was_dash:
                     s += '-'
                 last_was_dash = True
             else:
-                s += c
+                if c not in ('#', '/', ':', '(', ')', '?', '&', '=', ','):
+                    s += c
                 last_was_dash = False
         return s.strip('-')
 

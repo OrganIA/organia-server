@@ -1,31 +1,31 @@
 # API Documentation
-Generated on: 2022-12-07 at 23:42:57
+Generated on: 2022-12-07 at 23:48:59
 
 - [GET /api/](#get-api)
-- [POST /api/auth/register](#post-api-auth-register)
-- [POST /api/auth/login](#post-api-auth-login)
-- [GET /api/users](#get-api-users)
-- [GET /api/users/me](#get-api-users-me)
-- [GET /api/users/1](#get-api-users-1)
-- [DELETE /api/users/3](#delete-api-users-3)
-- [GET /api/listings](#get-api-listings)
-- [GET /api/listings/1](#get-api-listings-1)
-- [GET /api/listings/1/matches](#get-api-listings-1-matches)
-- [GET /api/listings/?type=donor](#get-api-listings-?type=donor)
-- [GET /api/listings/?type=receiver](#get-api-listings-?type=receiver)
-- [POST /api/chats](#post-api-chats)
-- [GET /api/chats](#get-api-chats)
-- [GET /api/chats/1](#get-api-chats-1)
-- [POST /api/chats/1/messages](#post-api-chats-1-messages)
-- [GET /api/chats/messages/latest](#get-api-chats-messages-latest)
-- [GET /api/chats/1/messages](#get-api-chats-1-messages)
-- [DELETE /api/chats/1](#delete-api-chats-1)
-- [GET /api/roles](#get-api-roles)
-- [GET /api/roles/1](#get-api-roles-1)
-- [POST /api/roles](#post-api-roles)
-- [POST /api/roles/3](#post-api-roles-3)
-- [DELETE /api/roles/3](#delete-api-roles-3)
-- [POST /api/listings](#post-api-listings)
+- [POST /api/auth/register](#post-apiauthregister)
+- [POST /api/auth/login](#post-apiauthlogin)
+- [GET /api/users](#get-apiusers)
+- [GET /api/users/me](#get-apiusersme)
+- [GET /api/users/1](#get-apiusers1)
+- [DELETE /api/users/3](#delete-apiusers3)
+- [GET /api/listings](#get-apilistings)
+- [GET /api/listings/1](#get-apilistings1)
+- [GET /api/listings/1/matches](#get-apilistings1matches)
+- [GET /api/listings/?type=donor](#get-apilistingstypedonor)
+- [GET /api/listings/?type=receiver](#get-apilistingstypereceiver)
+- [POST /api/chats](#post-apichats)
+- [GET /api/chats](#get-apichats)
+- [GET /api/chats/1](#get-apichats1)
+- [POST /api/chats/1/messages](#post-apichats1messages)
+- [GET /api/chats/messages/latest](#get-apichatsmessageslatest)
+- [GET /api/chats/1/messages](#get-apichats1messages)
+- [DELETE /api/chats/1](#delete-apichats1)
+- [GET /api/roles](#get-apiroles)
+- [GET /api/roles/1](#get-apiroles1)
+- [POST /api/roles](#post-apiroles)
+- [POST /api/roles/3](#post-apiroles3)
+- [DELETE /api/roles/3](#delete-apiroles3)
+- [POST /api/listings](#post-apilistings)
 
 
 ## GET /api/
@@ -36,9 +36,9 @@ the latest version.
 ### Response
 ```json
 {
-  "version": "31a0ad1",
-  "time": 1670449377.027753,
-  "datetime": "2022-12-07 22:42:57.027753",
+  "version": "80297ea",
+  "time": 1670449739.31508,
+  "datetime": "2022-12-07 22:48:59.315080",
   "software": {
     "flask": "2.2.2",
     "python": "3.10.7",
@@ -61,7 +61,7 @@ login after registering.
 ### Request
 ```json
 {
-  "email": "user799@email.com",
+  "email": "user541@email.com",
   "password": "password",
   "firstname": "prenom",
   "lastname": "nom",
@@ -72,14 +72,14 @@ login after registering.
 ### Response
 ```json
 {
-  "token": "1-1-ab4270ef5cf2d5c637395a220338fd9f203217cb6b876138ee1b120a9b7a23c8",
+  "token": "4-4-ef93fa52b8be051a37c660332160da5d0702624bdab414af5fb6703ee7c9b94a",
   "user": {
     "firstname": "prenom",
     "lastname": "nom",
-    "id": 1,
-    "created_at": "2022-12-07 22:42:57.245972",
+    "id": 4,
+    "created_at": "2022-12-07 22:48:59.531835",
     "updated_at": null,
-    "email": "user799@email.com",
+    "email": "user541@email.com",
     "phone_number": "01 23 45 67 89",
     "role": {
       "id": 1,
@@ -99,7 +99,7 @@ login after registering.
 ### Request
 ```json
 {
-  "email": "user799@email.com",
+  "email": "user541@email.com",
   "password": "password",
   "firstname": "prenom",
   "lastname": "nom",
@@ -110,7 +110,7 @@ login after registering.
 ### Response
 ```json
 {
-  "msg": "email \"user799@email.com\" is already taken."
+  "msg": "email \"user541@email.com\" is already taken."
 }
 ```
 
@@ -122,7 +122,7 @@ Login and get a token.
 ### Request
 ```json
 {
-  "email": "user799@email.com",
+  "email": "user541@email.com",
   "password": "password"
 }
 ```
@@ -130,14 +130,14 @@ Login and get a token.
 ### Response
 ```json
 {
-  "token": "3-1-3a1bf7dcb71ef9bc6a58db927972bbc93518bb269d9e64017e26ae44d81b8d92",
+  "token": "6-4-11eb95d4ea84d1b92ff65306ae54ea6d4a5e9f33c49a954de2dc2e24ae9c8bed",
   "user": {
     "firstname": "prenom",
     "lastname": "nom",
-    "id": 1,
-    "created_at": "2022-12-07 22:42:57.245972",
+    "id": 4,
+    "created_at": "2022-12-07 22:48:59.531835",
     "updated_at": null,
-    "email": "user799@email.com",
+    "email": "user541@email.com",
     "phone_number": "01 23 45 67 89",
     "role": {
       "id": 1,
@@ -173,7 +173,7 @@ Login and get a token.
 ### Request
 ```json
 {
-  "email": "user799@email.com",
+  "email": "user541@email.com",
   "password": "not-the-password"
 }
 ```
@@ -236,9 +236,47 @@ List all users
     "firstname": null,
     "lastname": null,
     "id": 3,
-    "created_at": "2022-12-07 22:42:58.184677",
-    "updated_at": "2022-12-07 22:42:58.193242",
+    "created_at": "2022-12-07 22:42:58.254591",
+    "updated_at": "2022-12-07 22:42:58.263127",
     "email": "admin@localhost",
+    "phone_number": null,
+    "role": {
+      "id": 1,
+      "can_edit_users": true,
+      "can_edit_hospitals": true,
+      "can_edit_listings": true,
+      "can_edit_staff": true,
+      "can_edit_roles": true,
+      "can_edit_persons": true,
+      "name": "admin"
+    }
+  },
+  {
+    "firstname": "prenom",
+    "lastname": "nom",
+    "id": 4,
+    "created_at": "2022-12-07 22:48:59.531835",
+    "updated_at": null,
+    "email": "user541@email.com",
+    "phone_number": "01 23 45 67 89",
+    "role": {
+      "id": 1,
+      "can_edit_users": true,
+      "can_edit_hospitals": true,
+      "can_edit_listings": true,
+      "can_edit_staff": true,
+      "can_edit_roles": true,
+      "can_edit_persons": true,
+      "name": "admin"
+    }
+  },
+  {
+    "firstname": null,
+    "lastname": null,
+    "id": 5,
+    "created_at": "2022-12-07 22:48:59.894886",
+    "updated_at": null,
+    "email": "user38@email.com",
     "phone_number": null,
     "role": {
       "id": 1,
@@ -266,8 +304,8 @@ Get info about the current user
   "firstname": null,
   "lastname": null,
   "id": 3,
-  "created_at": "2022-12-07 22:42:58.184677",
-  "updated_at": "2022-12-07 22:42:58.193242",
+  "created_at": "2022-12-07 22:42:58.254591",
+  "updated_at": "2022-12-07 22:42:58.263127",
   "email": "admin@localhost",
   "phone_number": null,
   "role": {
@@ -327,7 +365,36 @@ Get the list of listings
 > :lock: This request requires authentication. Pass `Bearer: the-token` in the `Authorization` header.
 ### Response
 ```json
-[]
+[
+  {
+    "id": 1,
+    "notes": null,
+    "type": "DONOR",
+    "organ_type": "LIVER",
+    "start_date": null,
+    "end_date": null,
+    "person": {
+      "id": 1,
+      "created_at": "2022-12-07 22:42:58.525043",
+      "updated_at": null,
+      "first_name": "John",
+      "last_name": "Doe",
+      "birth_date": "1990-02-10",
+      "description": null,
+      "gender": "MALE",
+      "user": null,
+      "blood_type": "A+"
+    },
+    "organ": {
+      "id": 1,
+      "tumors_count": 2,
+      "biggest_tumor_size": 10,
+      "alpha_fetoprotein": 10,
+      "listing_id": 1
+    },
+    "hospital": null
+  }
+]
 ```
 
 **Status:** 200
@@ -341,7 +408,36 @@ Get the list of listings
 
 ### Response
 ```json
-[]
+[
+  {
+    "id": 1,
+    "notes": null,
+    "type": "DONOR",
+    "organ_type": "LIVER",
+    "start_date": null,
+    "end_date": null,
+    "person": {
+      "id": 1,
+      "created_at": "2022-12-07 22:42:58.525043",
+      "updated_at": null,
+      "first_name": "John",
+      "last_name": "Doe",
+      "birth_date": "1990-02-10",
+      "description": null,
+      "gender": "MALE",
+      "user": null,
+      "blood_type": "A+"
+    },
+    "organ": {
+      "id": 1,
+      "tumors_count": 2,
+      "biggest_tumor_size": 10,
+      "alpha_fetoprotein": 10,
+      "listing_id": 1
+    },
+    "hospital": null
+  }
+]
 ```
 
 **Status:** 200
@@ -354,7 +450,36 @@ Get the list of listings
 
 ### Response
 ```json
-[]
+[
+  {
+    "id": 1,
+    "notes": null,
+    "type": "DONOR",
+    "organ_type": "LIVER",
+    "start_date": null,
+    "end_date": null,
+    "person": {
+      "id": 1,
+      "created_at": "2022-12-07 22:42:58.525043",
+      "updated_at": null,
+      "first_name": "John",
+      "last_name": "Doe",
+      "birth_date": "1990-02-10",
+      "description": null,
+      "gender": "MALE",
+      "user": null,
+      "blood_type": "A+"
+    },
+    "organ": {
+      "id": 1,
+      "tumors_count": 2,
+      "biggest_tumor_size": 10,
+      "alpha_fetoprotein": 10,
+      "listing_id": 1
+    },
+    "hospital": null
+  }
+]
 ```
 
 **Status:** 200
@@ -366,11 +491,36 @@ Get a specific listing
 ### Response
 ```json
 {
-  "msg": "The requested resource was not found"
+  "id": 1,
+  "notes": null,
+  "type": "DONOR",
+  "organ_type": "LIVER",
+  "start_date": null,
+  "end_date": null,
+  "person": {
+    "id": 1,
+    "created_at": "2022-12-07 22:42:58.525043",
+    "updated_at": null,
+    "first_name": "John",
+    "last_name": "Doe",
+    "birth_date": "1990-02-10",
+    "description": null,
+    "gender": "MALE",
+    "user": null,
+    "blood_type": "A+"
+  },
+  "organ": {
+    "id": 1,
+    "tumors_count": 2,
+    "biggest_tumor_size": 10,
+    "alpha_fetoprotein": 10,
+    "listing_id": 1
+  },
+  "hospital": null
 }
 ```
 
-**Status:** 404
+**Status:** 200
 
 ## GET /api/listings/1/matches
 Get the matching listings for an organ
@@ -379,11 +529,39 @@ Get the matching listings for an organ
 ### Response
 ```json
 {
-  "msg": "The requested resource was not found"
+  "donor": {
+    "id": 1,
+    "notes": null,
+    "type": "DONOR",
+    "organ_type": "LIVER",
+    "start_date": null,
+    "end_date": null,
+    "person": {
+      "id": 1,
+      "created_at": "2022-12-07 22:42:58.525043",
+      "updated_at": null,
+      "first_name": "John",
+      "last_name": "Doe",
+      "birth_date": "1990-02-10",
+      "description": null,
+      "gender": "MALE",
+      "user": null,
+      "blood_type": "A+"
+    },
+    "organ": {
+      "id": 1,
+      "tumors_count": 2,
+      "biggest_tumor_size": 10,
+      "alpha_fetoprotein": 10,
+      "listing_id": 1
+    },
+    "hospital": null
+  },
+  "matches": []
 }
 ```
 
-**Status:** 404
+**Status:** 200
 
 ## GET /api/listings/?type=donor
 Only get donor listings
@@ -391,7 +569,36 @@ Only get donor listings
 > :lock: This request requires authentication. Pass `Bearer: the-token` in the `Authorization` header.
 ### Response
 ```json
-[]
+[
+  {
+    "id": 1,
+    "notes": null,
+    "type": "DONOR",
+    "organ_type": "LIVER",
+    "start_date": null,
+    "end_date": null,
+    "person": {
+      "id": 1,
+      "created_at": "2022-12-07 22:42:58.525043",
+      "updated_at": null,
+      "first_name": "John",
+      "last_name": "Doe",
+      "birth_date": "1990-02-10",
+      "description": null,
+      "gender": "MALE",
+      "user": null,
+      "blood_type": "A+"
+    },
+    "organ": {
+      "id": 1,
+      "tumors_count": 2,
+      "biggest_tumor_size": 10,
+      "alpha_fetoprotein": 10,
+      "listing_id": 1
+    },
+    "hospital": null
+  }
+]
 ```
 
 **Status:** 200
@@ -426,7 +633,7 @@ Create a new chat
 ```json
 {
   "id": 1,
-  "created_at": "2022-12-07 22:42:58.337569",
+  "created_at": "2022-12-07 22:49:00.579924",
   "updated_at": null,
   "name": "Chat name",
   "users": [
@@ -471,9 +678,9 @@ Create a new chat
     {
       "firstname": null,
       "lastname": null,
-      "id": 3,
-      "created_at": "2022-12-07 22:42:58.254591",
-      "updated_at": "2022-12-07 22:42:58.263127",
+      "id": 6,
+      "created_at": "2022-12-07 22:49:00.481058",
+      "updated_at": "2022-12-07 22:49:00.488647",
       "email": "admin@localhost",
       "phone_number": null,
       "role": {
@@ -491,9 +698,9 @@ Create a new chat
   "creator": {
     "firstname": null,
     "lastname": null,
-    "id": 3,
-    "created_at": "2022-12-07 22:42:58.254591",
-    "updated_at": "2022-12-07 22:42:58.263127",
+    "id": 6,
+    "created_at": "2022-12-07 22:49:00.481058",
+    "updated_at": "2022-12-07 22:49:00.488647",
     "email": "admin@localhost",
     "phone_number": null,
     "role": {
@@ -521,7 +728,7 @@ Get all the chats the current user is part of
 [
   {
     "id": 1,
-    "created_at": "2022-12-07 22:42:58.337569",
+    "created_at": "2022-12-07 22:49:00.579924",
     "updated_at": null,
     "name": "Chat name",
     "users": [
@@ -566,9 +773,9 @@ Get all the chats the current user is part of
       {
         "firstname": null,
         "lastname": null,
-        "id": 3,
-        "created_at": "2022-12-07 22:42:58.254591",
-        "updated_at": "2022-12-07 22:42:58.263127",
+        "id": 6,
+        "created_at": "2022-12-07 22:49:00.481058",
+        "updated_at": "2022-12-07 22:49:00.488647",
         "email": "admin@localhost",
         "phone_number": null,
         "role": {
@@ -586,9 +793,9 @@ Get all the chats the current user is part of
     "creator": {
       "firstname": null,
       "lastname": null,
-      "id": 3,
-      "created_at": "2022-12-07 22:42:58.254591",
-      "updated_at": "2022-12-07 22:42:58.263127",
+      "id": 6,
+      "created_at": "2022-12-07 22:49:00.481058",
+      "updated_at": "2022-12-07 22:49:00.488647",
       "email": "admin@localhost",
       "phone_number": null,
       "role": {
@@ -616,7 +823,7 @@ Get a specific chat
 ```json
 {
   "id": 1,
-  "created_at": "2022-12-07 22:42:58.337569",
+  "created_at": "2022-12-07 22:49:00.579924",
   "updated_at": null,
   "name": "Chat name",
   "users": [
@@ -661,9 +868,9 @@ Get a specific chat
     {
       "firstname": null,
       "lastname": null,
-      "id": 3,
-      "created_at": "2022-12-07 22:42:58.254591",
-      "updated_at": "2022-12-07 22:42:58.263127",
+      "id": 6,
+      "created_at": "2022-12-07 22:49:00.481058",
+      "updated_at": "2022-12-07 22:49:00.488647",
       "email": "admin@localhost",
       "phone_number": null,
       "role": {
@@ -681,9 +888,9 @@ Get a specific chat
   "creator": {
     "firstname": null,
     "lastname": null,
-    "id": 3,
-    "created_at": "2022-12-07 22:42:58.254591",
-    "updated_at": "2022-12-07 22:42:58.263127",
+    "id": 6,
+    "created_at": "2022-12-07 22:49:00.481058",
+    "updated_at": "2022-12-07 22:49:00.488647",
     "email": "admin@localhost",
     "phone_number": null,
     "role": {
@@ -719,7 +926,7 @@ Send a message
   "content": "Hello world!",
   "chat": {
     "id": 1,
-    "created_at": "2022-12-07 22:42:58.337569",
+    "created_at": "2022-12-07 22:49:00.579924",
     "updated_at": null,
     "name": "Chat name",
     "users": [
@@ -764,9 +971,9 @@ Send a message
       {
         "firstname": null,
         "lastname": null,
-        "id": 3,
-        "created_at": "2022-12-07 22:42:58.254591",
-        "updated_at": "2022-12-07 22:42:58.263127",
+        "id": 6,
+        "created_at": "2022-12-07 22:49:00.481058",
+        "updated_at": "2022-12-07 22:49:00.488647",
         "email": "admin@localhost",
         "phone_number": null,
         "role": {
@@ -784,9 +991,9 @@ Send a message
     "creator": {
       "firstname": null,
       "lastname": null,
-      "id": 3,
-      "created_at": "2022-12-07 22:42:58.254591",
-      "updated_at": "2022-12-07 22:42:58.263127",
+      "id": 6,
+      "created_at": "2022-12-07 22:49:00.481058",
+      "updated_at": "2022-12-07 22:49:00.488647",
       "email": "admin@localhost",
       "phone_number": null,
       "role": {
@@ -804,9 +1011,9 @@ Send a message
   "sender": {
     "firstname": null,
     "lastname": null,
-    "id": 3,
-    "created_at": "2022-12-07 22:42:58.254591",
-    "updated_at": "2022-12-07 22:42:58.263127",
+    "id": 6,
+    "created_at": "2022-12-07 22:49:00.481058",
+    "updated_at": "2022-12-07 22:49:00.488647",
     "email": "admin@localhost",
     "phone_number": null,
     "role": {
@@ -820,8 +1027,8 @@ Send a message
       "name": "admin"
     }
   },
-  "id": 1,
-  "created_at": "2022-12-07 22:42:58.384507"
+  "id": 2,
+  "created_at": "2022-12-07 22:49:00.634940"
 }
 ```
 
@@ -838,7 +1045,7 @@ Get all chats the current user is part of and the last message of each
     "content": "Hello world!",
     "chat": {
       "id": 1,
-      "created_at": "2022-12-07 22:42:58.337569",
+      "created_at": "2022-12-07 22:49:00.579924",
       "updated_at": null,
       "name": "Chat name",
       "users": [
@@ -883,9 +1090,9 @@ Get all chats the current user is part of and the last message of each
         {
           "firstname": null,
           "lastname": null,
-          "id": 3,
-          "created_at": "2022-12-07 22:42:58.254591",
-          "updated_at": "2022-12-07 22:42:58.263127",
+          "id": 6,
+          "created_at": "2022-12-07 22:49:00.481058",
+          "updated_at": "2022-12-07 22:49:00.488647",
           "email": "admin@localhost",
           "phone_number": null,
           "role": {
@@ -903,9 +1110,9 @@ Get all chats the current user is part of and the last message of each
       "creator": {
         "firstname": null,
         "lastname": null,
-        "id": 3,
-        "created_at": "2022-12-07 22:42:58.254591",
-        "updated_at": "2022-12-07 22:42:58.263127",
+        "id": 6,
+        "created_at": "2022-12-07 22:49:00.481058",
+        "updated_at": "2022-12-07 22:49:00.488647",
         "email": "admin@localhost",
         "phone_number": null,
         "role": {
@@ -923,9 +1130,9 @@ Get all chats the current user is part of and the last message of each
     "sender": {
       "firstname": null,
       "lastname": null,
-      "id": 3,
-      "created_at": "2022-12-07 22:42:58.254591",
-      "updated_at": "2022-12-07 22:42:58.263127",
+      "id": 6,
+      "created_at": "2022-12-07 22:49:00.481058",
+      "updated_at": "2022-12-07 22:49:00.488647",
       "email": "admin@localhost",
       "phone_number": null,
       "role": {
@@ -939,8 +1146,8 @@ Get all chats the current user is part of and the last message of each
         "name": "admin"
       }
     },
-    "id": 1,
-    "created_at": "2022-12-07 22:42:58.384507"
+    "id": 2,
+    "created_at": "2022-12-07 22:49:00.634940"
   }
 ]
 ```
@@ -958,7 +1165,7 @@ Get all messages for a specific chat
     "content": "Hello world!",
     "chat": {
       "id": 1,
-      "created_at": "2022-12-07 22:42:58.337569",
+      "created_at": "2022-12-07 22:49:00.579924",
       "updated_at": null,
       "name": "Chat name",
       "users": [
@@ -1003,9 +1210,9 @@ Get all messages for a specific chat
         {
           "firstname": null,
           "lastname": null,
-          "id": 3,
-          "created_at": "2022-12-07 22:42:58.254591",
-          "updated_at": "2022-12-07 22:42:58.263127",
+          "id": 6,
+          "created_at": "2022-12-07 22:49:00.481058",
+          "updated_at": "2022-12-07 22:49:00.488647",
           "email": "admin@localhost",
           "phone_number": null,
           "role": {
@@ -1023,9 +1230,9 @@ Get all messages for a specific chat
       "creator": {
         "firstname": null,
         "lastname": null,
-        "id": 3,
-        "created_at": "2022-12-07 22:42:58.254591",
-        "updated_at": "2022-12-07 22:42:58.263127",
+        "id": 6,
+        "created_at": "2022-12-07 22:49:00.481058",
+        "updated_at": "2022-12-07 22:49:00.488647",
         "email": "admin@localhost",
         "phone_number": null,
         "role": {
@@ -1043,9 +1250,9 @@ Get all messages for a specific chat
     "sender": {
       "firstname": null,
       "lastname": null,
-      "id": 3,
-      "created_at": "2022-12-07 22:42:58.254591",
-      "updated_at": "2022-12-07 22:42:58.263127",
+      "id": 6,
+      "created_at": "2022-12-07 22:49:00.481058",
+      "updated_at": "2022-12-07 22:49:00.488647",
       "email": "admin@localhost",
       "phone_number": null,
       "role": {
@@ -1059,8 +1266,8 @@ Get all messages for a specific chat
         "name": "admin"
       }
     },
-    "id": 1,
-    "created_at": "2022-12-07 22:42:58.384507"
+    "id": 2,
+    "created_at": "2022-12-07 22:49:00.634940"
   }
 ]
 ```
@@ -1222,15 +1429,15 @@ Create a listing, creating the Person and Organ in one go
 ### Response
 ```json
 {
-  "id": 1,
+  "id": 2,
   "notes": null,
   "type": "DONOR",
   "organ_type": "LIVER",
   "start_date": null,
   "end_date": null,
   "person": {
-    "id": 1,
-    "created_at": "2022-12-07 22:42:58.525043",
+    "id": 2,
+    "created_at": "2022-12-07 22:49:00.797416",
     "updated_at": null,
     "first_name": "John",
     "last_name": "Doe",
@@ -1241,11 +1448,11 @@ Create a listing, creating the Person and Organ in one go
     "blood_type": "A+"
   },
   "organ": {
-    "id": 1,
+    "id": 2,
     "tumors_count": 2,
     "biggest_tumor_size": 10,
     "alpha_fetoprotein": 10,
-    "listing_id": 1
+    "listing_id": 2
   },
   "hospital": null
 }
