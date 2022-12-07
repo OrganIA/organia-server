@@ -1,71 +1,31 @@
-from datetime import datetime
+from datetime import date
+
+from pydantic import BaseModel
 
 from app import db
 from app.db.models import Heart
 from app.errors import NotFoundError
 from app.utils.bp import Blueprint
-from app.utils.static import Static
 
 bp = Blueprint(__name__)
 
 
-class HeartSchema(Static):
-    @staticmethod
-    def R_D_NAI(d):
-        R_D_NAI = Static._get(d, 'R_D_NAI')
-        return datetime.fromisoformat(R_D_NAI).date()
-
-    @staticmethod
-    def D_INSC(d):
-        D_INSC = Static._get(d, 'D_INSC')
-        return datetime.fromisoformat(D_INSC).date()
-
-    @staticmethod
-    def d_urgence(d):
-        d_urgence = Static._get(d, 'd_urgence')
-        return datetime.fromisoformat(d_urgence).date()
-
-    @staticmethod
-    def DCEC(d):
-        DCEC = Static._get(d, 'DCEC')
-        return datetime.fromisoformat(DCEC).date()
-
-    @staticmethod
-    def DPROBNP(d):
-        DPROBNP = Static._get(d, 'd_urgence')
-        return datetime.fromisoformat(DPROBNP).date()
-
-    @staticmethod
-    def DCREAT(d):
-        DCREAT = Static._get(d, 'DCREAT')
-        return datetime.fromisoformat(DCREAT).date()
-
-    @staticmethod
-    def DBILI(d):
-        DBILI = Static._get(d, 'DBILI')
-        return datetime.fromisoformat(DBILI).date()
-
-    @staticmethod
-    def D_D_NAI(d):
-        D_D_NAI = Static._get(d, 'D_D_NAI')
-        return datetime.fromisoformat(D_D_NAI).date()
-
-    @staticmethod
-    def D_PREL(d):
-        D_PREL = Static._get(d, 'D_PREL')
-        return datetime.fromisoformat(D_PREL).date()
-
-    @staticmethod
-    def urgence(d):
-        urgence = Static._get(d, 'urgence')
-        return datetime.fromisoformat(urgence).date()
-
+class HeartSchema(BaseModel):
+    R_D_NAI = date
+    D_INSC = date
+    d_urgence = date
+    DCEC = date
+    DPROBNP = date
+    DCREAT = date
+    DBILI = date
+    D_D_NAI = date
+    D_PREL = date
+    urgence = date
     ABO_D = str
     sex_D = str
     MAL = str
     MAL2 = str
     MAL3 = str
-    # urgence
     KXPC = str
     XPC = int
     DRG = str

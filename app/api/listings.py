@@ -6,37 +6,27 @@ from pydantic import BaseModel
 from app import db
 from app.api.lungs import LungSchema, compute_matches
 from app.api.person import PersonSchema
-from app.db.models import Heart, Listing, Liver, Lung
-from app.db.models.person import Person
+from app.db.models import Heart, Listing, Liver, Lung, Person
 from app.errors import InvalidRequest, NotFoundError
+from app.score.liver.liver_score import final_score
 from app.utils.bp import Blueprint
 
 bp = Blueprint(__name__)
 
 
-class ListingSchema(BaseModel):
-    hospital_id: int
-    notes: str
-    organ: Listing.Organ
-    person_id: int
-    type: Listing.Type
-
-    is_under_dialysis: bool
-    re_registration_date: date
-    transplantation_date: date
-    dialysis_end_date: date
-    dialysis_start_date: date
+class LiverSchema(BaseModel):
     alpha_fetoprotein: int
-    arf_date: date
     biggest_tumor_size: int
     tumors_number: int
-    A: int
-    B: int
-    DQ: int
-    DR: int
 
-    lung: LungSchema
-    person: PersonSchema
+
+class ListingSchema(BaseModel):
+    hospital_id: int | None
+    notes: str | None
+    person_id: int | None
+    lung: LungSchema | None
+    liver: LiverSchema | None
+    person: PersonSchema | None
 
 
 def update_organ(data, id):
@@ -108,15 +98,15 @@ def create_listing(data: ListingSchema):
     return get_listing(listing.id)
 
 
-@bp.post('/<int:id>')
-def update_listing(id, data: ListingSchema):
-    listing = db.session.get(Listing, id)
-    if not listing:
-        raise NotFoundError
-    listing = update(listing, data)
-    update_organ(data, id)
-    db.session.commit()
-    return listing
+# @bp.post('/<int:id>')
+# def update_listing(id, data: ListingSchema):
+#     listing = db.session.get(Listing, id)
+#     if not listing:
+#         raise NotFoundError
+#     listing = update(listing, data)
+#     update_organ(data, id)
+#     db.session.commit()
+#     return listing
 
 
 @bp.delete('/<int:id>')
@@ -140,11 +130,12 @@ def get_listing_matches(id):
 
     listing = get_listing(id)
     score = 0
-    if listing.organ == Listing.Organ.LIVER:
+    if isinstance(listing.organ, Liver):
         organ = db.session.query(Liver).filter_by(listing_id=id).first()
         if organ is None:
             raise NotFoundError("L'organe n'a pas été trouvé")
-        score = organ.score
+        score = final_score(listing, listing)
+        return score
     if listing.organ == Listing.Organ.LUNG:
         return compute_matches(id)
 

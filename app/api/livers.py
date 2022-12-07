@@ -13,7 +13,6 @@ class LiverSchema(BaseModel):
     tumors_number: int
     biggest_tumor_size: int
     alpha_fetoprotein: int
-    score: int
 
 
 @bp.get('/')
