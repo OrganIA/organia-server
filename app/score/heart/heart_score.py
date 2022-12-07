@@ -3,23 +3,22 @@ from datetime import datetime
 from math import ceil as round
 
 import numpy as np
-import sqlalchemy as sa
 from numpy import log as ln
 
 
-def get_delai_var_bio_GRF(self, CEC, DRG):
+def get_delai_var_bio_GRF(CEC, DRG):
     if CEC != 'O' and DRG != 'O':
         return 105
     else:
         return 4
 
 
-def get_score_NACG(self, score_CCP, TTLGP):
+def get_score_NACG(score_CCP, TTLGP):
     MG = 1 / np.exp(0.0000002 * pow(TTLGP, 2.9))
     return score_CCP * MG
 
 
-def get_CAS(self, age_R, urgence, fICAR):
+def get_CAS(age_R, urgence, fICAR):
     if age_R >= 18 and urgence not in ['XPCA', 'XPCP1', 'XPCP2']:
         if fICAR < 775:
             return fICAR
@@ -29,7 +28,7 @@ def get_CAS(self, age_R, urgence, fICAR):
         return 0
 
 
-def check_CAS(self, CAS):
+def check_CAS(CAS):
     if CAS < 0 or (CAS > 775 and CAS < 826) or CAS > 1051:
         raise Exception(
             "La composante adulte standard doit se situer entre 0 et 775\n"
@@ -39,7 +38,7 @@ def check_CAS(self, CAS):
         return 0
 
 
-def get_XPCA(self, age_R, urgence, XPC, fICAR, KXPC, DAURG):
+def get_XPCA(age_R, urgence, XPC, fICAR, KXPC, DAURG):
     if age_R >= 18 and urgence == 'XPCA':
         if XPC == 0:
             return max(fICAR, KXPC)
@@ -49,7 +48,7 @@ def get_XPCA(self, age_R, urgence, XPC, fICAR, KXPC, DAURG):
         return 0
 
 
-def check_XPCA(self, XPCA):
+def check_XPCA(XPCA):
     if XPCA != 900:
         raise Exception(
             "La composante XPCA ne peut etre differente de 900 points"
@@ -58,14 +57,14 @@ def check_XPCA(self, XPCA):
         return 0
 
 
-def get_CPS(self, age_R, urgence, DA):
+def get_CPS(age_R, urgence, DA):
     if age_R < 18 and urgence not in ['XPCA', 'XPCP1', 'XPCP2']:
         return 775 + 50 * max(0, min(1, DA / 24))
     else:
         return 0
 
 
-def check_CPS(self, CPS):
+def check_CPS(CPS):
     if CPS < 776 or CPS > 825:
         raise Exception(
             "La composante pediatrique standard doit se situer entre 776\
@@ -75,14 +74,14 @@ def check_CPS(self, CPS):
         return 0
 
 
-def get_XPCP(self, urgence, KXPC, DAURG):
+def get_XPCP(urgence, KXPC, DAURG):
     if urgence == 'XPCP1' or urgence == 'XPCP2':
         return KXPC + 50 * max(0, min(1, DAURG / 24))
     else:
         return 0
 
 
-def check_XPCP(self, urgence, XPCP):
+def check_XPCP(urgence, XPCP):
     if urgence == 'XPCP1' and XPCP < 1102 or XPCP > 1151:
         raise Exception(
             "Le score XPCP pour une urgence de niveau 1 doit se situer\
@@ -97,16 +96,15 @@ def check_XPCP(self, urgence, XPCP):
         return 0
 
 
-# def getScoreCCB(self, F_ICAR):
-#     CAS = self.get_CAS(self.age_R, self.urgence, F_ICAR)
-#     XPCA = self.get_XPCA(self.age_R, self.urgence,
-#                         self.XPC, F_ICAR, self.KXPC, self.DAURG)
-#     CPS = self.get_CPS(self.age_R, self.urgence, self.DA)
-#     XPCP = self.get_XPCP(self.urgence, self.KXPC, self.DAURG)
-#     return (CAS + XPCA + CPS + XPCP)
+def getScoreCCB(F_ICAR):
+    CAS = get_CAS(age_R, urgence, F_ICAR)
+    XPCA = get_XPCA(age_R, urgence, XPC, F_ICAR, KXPC, DAURG)
+    CPS = get_CPS(age_R, urgence, DA)
+    XPCP = get_XPCP(urgence, KXPC, DAURG)
+    return CAS + XPCA + CPS + XPCP
 
 
-def get_dif_age(self, age_R, age_D):
+def get_dif_age(age_R, age_D):
     ageRD = age_R - age_D
     dif_age = 0
 
@@ -121,7 +119,7 @@ def get_dif_age(self, age_R, age_D):
     return dif_age
 
 
-def get_ABO(self, ABO_D, ABOR):
+def get_ABO(ABO_D, ABOR):
     if (
         (ABO_D == ABOR)
         or (ABO_D == 'A' and ABOR == 'AB')
@@ -134,7 +132,7 @@ def get_ABO(self, ABO_D, ABOR):
         return 0
 
 
-def get_SC(self, taille_D, taille_R, poids_D, poids_R, age_R, sex_D):
+def get_SC(taille_D, taille_R, poids_D, poids_R, age_R, sex_D):
     fscD = 0.007184 * (pow(taille_D, 0.725)) * (pow(poids_D, 0.425))
     fscR = 0.007184 * (pow(taille_R, 0.725)) * (pow(poids_R, 0.425))
 
@@ -152,18 +150,18 @@ def get_SC(self, taille_D, taille_R, poids_D, poids_R, age_R, sex_D):
             return 0
 
 
-def get_surv_post_GRF(self, risk_post_GRF):
+def get_surv_post_GRF(risk_post_GRF):
     return pow(0.6785748856, np.exp(risk_post_GRF))
 
 
-def tri_surv_post_GRF(self, surv_post_GRF, age_R):
+def tri_surv_post_GRF(surv_post_GRF, age_R):
     if surv_post_GRF > 0.5 or age_R < 18:
         return 1
     else:
         return 0
 
 
-def get_risk_post_GRF(self, fage_R, fage_D, f_MAL, LnBili, LnDFG, sex_RD):
+def get_risk_post_GRF(fage_R, fage_D, f_MAL, LnBili, LnDFG, sex_RD):
     return (
         0.50608 * fage_R
         + 0.50754 * f_MAL
@@ -174,14 +172,14 @@ def get_risk_post_GRF(self, fage_R, fage_D, f_MAL, LnBili, LnDFG, sex_RD):
     )
 
 
-def get_f_age_r(self, age_R):
+def get_f_age_r(age_R):
     if age_R > 50:
         return 1
     else:
         return 0
 
 
-def get_f_MAL(self, MAL, MAL2, MAL3):
+def get_f_MAL(MAL, MAL2, MAL3):
     mal = [
         'Maladie valvulaire',
         'Maladie congenitale',
@@ -193,7 +191,7 @@ def get_f_MAL(self, MAL, MAL2, MAL3):
         return 0
 
 
-def get_LnBili(self, BILI, date_DBILI, d_var_bio, date_courante):
+def get_LnBili(BILI, date_DBILI, d_var_bio, date_courante):
     x = np.timedelta64((date_courante - date_DBILI), 'ns')
     day = x.astype('timedelta64[D]')
     date_DBILI = day.astype(int)
@@ -204,7 +202,7 @@ def get_LnBili(self, BILI, date_DBILI, d_var_bio, date_courante):
         return np.log(min(230, max(5, BILI)))
 
 
-def get_LnDFG(self, DIA, CREAT, DCREAT, d_var_bio, DFG, date_courante):
+def get_LnDFG(DIA, CREAT, DCREAT, d_var_bio, DFG, date_courante):
     x = np.timedelta64((date_courante - DCREAT), 'ns')
     day = x.astype('timedelta64[D]')
     DCREAT = day.astype(int)
@@ -220,7 +218,7 @@ def get_LnDFG(self, DIA, CREAT, DCREAT, d_var_bio, DFG, date_courante):
 # Fonction sur l’appariemment du sexe entre donneur et receveur
 
 
-def get_sex_RD(self, sex_D, sex_R):
+def get_sex_RD(sex_D, sex_R):
     if sex_D == 'MALE' and sex_R == 'FEMALE':
         return 1
     else:
@@ -230,7 +228,7 @@ def get_sex_RD(self, sex_D, sex_R):
 # Fonction sur l’âge du donneur
 
 
-def get_f_ageD(self, age_D):
+def get_f_ageD(age_D):
     if age_D > 55:
         return 1
     else:
@@ -241,7 +239,7 @@ def get_f_ageD(self, age_D):
 # (méthode MDRD) du jour
 
 
-def get_d_dfgj(self, sex_R, age_R, CREAT):
+def get_d_dfgj(sex_R, age_R, CREAT):
     if sex_R == 'FEMALE':
         return (
             186.3 * (pow((CREAT / 88.4), -1.154)) * (pow(age_R, -0.203)) * 0.742
@@ -253,41 +251,41 @@ def get_d_dfgj(self, sex_R, age_R, CREAT):
 # ********************Score CCP******************
 
 
-def get_score_CCP(self, CCB):
-    F_DFGj = self.get_d_dfgj(self.sex_R, self.age_R, self.CREAT)
-    LnDFG = self.get_LnDFG(
-        self.DIA,
-        self.CREAT,
-        self.DCREAT,
-        self.delai_var_bio_GRF,
+def get_score_CCP(CCB):
+    F_DFGj = get_d_dfgj(sex_R, age_R, CREAT)
+    LnDFG = get_LnDFG(
+        DIA,
+        CREAT,
+        DCREAT,
+        delai_var_bio_GRF,
         F_DFGj,
-        self.date_courante,
+        date_courante,
     )
-    fage_D = self.get_f_ageD(self.age_D)
-    sex_RD = self.get_sex_RD(self.sex_D, self.sex_R)
-    LnBili = self.get_LnBili(
-        self.BILI,
-        self.date_DBILI,
-        self.delai_var_bio_GRF,
-        self.date_courante,
+    fage_D = get_f_ageD(age_D)
+    sex_RD = get_sex_RD(sex_D, sex_R)
+    LnBili = get_LnBili(
+        BILI,
+        date_DBILI,
+        delai_var_bio_GRF,
+        date_courante,
     )
-    f_MAL = self.get_f_MAL(self.MAL, self.MAL2, self.MAL3)
-    fage_R = self.get_f_age_r(self.age_R)
-    risk_post_GRF = self.get_risk_post_GRF(
+    f_MAL = get_f_MAL(MAL, MAL2, MAL3)
+    fage_R = get_f_age_r(age_R)
+    risk_post_GRF = get_risk_post_GRF(
         fage_R, fage_D, f_MAL, LnBili, LnDFG, sex_RD
     )
-    dif_age = self.get_dif_age(self.age_R, self.age_D)
-    ABO = self.get_ABO(self.ABO_D, self.ABOR)
-    SC = self.get_SC(
-        self.taille_D,
-        self.taille_R,
-        self.poids_D,
-        self.poids_R,
-        self.age_R,
-        self.sex_D,
+    dif_age = get_dif_age(age_R, age_D)
+    ABO = get_ABO(ABO_D, ABOR)
+    SC = get_SC(
+        taille_D,
+        taille_R,
+        poids_D,
+        poids_R,
+        age_R,
+        sex_D,
     )
-    surv_post_GRF = self.get_surv_post_GRF(risk_post_GRF)
-    tri_surv_post_grf = self.tri_surv_post_GRF(surv_post_GRF, self.age_R)
+    surv_post_GRF = get_surv_post_GRF(risk_post_GRF)
+    tri_surv_post_grf = tri_surv_post_GRF(surv_post_GRF, age_R)
     return CCB * dif_age * ABO * SC * tri_surv_post_grf
 
 
@@ -299,7 +297,6 @@ def get_score_CCP(self, CCB):
 
 
 def get_f_decile_pnj(
-    self,
     CEC,
     CAT,
     SIAV,
@@ -341,9 +338,9 @@ def get_f_decile_pnj(
 
 
 def get_F_Ln_DFG_LAj(
-    self, DIA, CREAT, DCREAT, sex_R, age_R, date_courante, delai_var_bio_LA
+    DIA, CREAT, DCREAT, sex_R, age_R, date_courante, delai_var_bio_LA
 ):
-    F_DFGj = self.get_d_dfgj(sex_R, age_R, CREAT)
+    F_DFGj = get_d_dfgj(sex_R, age_R, CREAT)
     if DIA == 'O':
         return ln(15)
     elif (
@@ -357,7 +354,7 @@ def get_F_Ln_DFG_LAj(
 # Fonction Bilirubine en Liste d’attente du jour
 
 
-def getF_Ln_BILI_LAj(self, BILI, DBILI, date_courante, delai_var_bio_LA):
+def getF_Ln_BILI_LAj(BILI, DBILI, date_courante, delai_var_bio_LA):
     if isnan(BILI) is True or (date_courante - DBILI).days > delai_var_bio_LA:
         return ln(5)
     else:
@@ -367,7 +364,7 @@ def getF_Ln_BILI_LAj(self, BILI, DBILI, date_courante, delai_var_bio_LA):
 # Fonction Assistance de Courte Durée
 
 
-def get_f_ASCD(self, CEC):
+def get_f_ASCD(CEC):
     if CEC == 'O':
         return 1
     else:
@@ -377,9 +374,7 @@ def get_f_ASCD(self, CEC):
 # La fonction de risque pré-greffe en liste d’attente du jour
 
 
-def get_f_risque_pre_GRFj(
-    self, F_ASCD, F_Decile_PNj, F_Ln_DFG_LAj, F_Ln_BILI_LAj
-):
+def get_f_risque_pre_GRFj(F_ASCD, F_Decile_PNj, F_Ln_DFG_LAj, F_Ln_BILI_LAj):
     return (
         1.301335 * F_ASCD
         + 0.157691 * F_Decile_PNj
@@ -391,7 +386,7 @@ def get_f_risque_pre_GRFj(
 # La function Index de risque Cardiaque du jour (ICARj)
 
 
-def getICARj(self, F_RisquePreGRFj, C_ICAR):
+def getICARj(F_RisquePreGRFj, C_ICAR):
     return min(40, max(0, round((F_RisquePreGRFj - C_ICAR) * 10)))
 
 
@@ -402,7 +397,7 @@ def getICARj(self, F_RisquePreGRFj, C_ICAR):
 # Fonction Décile des peptides natriurétiques (BNP ou NT-ProBNP) initiale
 
 
-def get_F_decile_PNi(self, BNP_AVI, PBN_AVI, PROBNP, BNP, CEC, CAT, SIAV):
+def get_F_decile_PNi(BNP_AVI, PBN_AVI, PROBNP, BNP, CEC, CAT, SIAV):
     if CEC == 'O' or CAT == 'O' or SIAV == 'B':
         return 10
     elif isnan(BNP_AVI) is True and isnan(PBN_AVI) is True:
@@ -431,7 +426,7 @@ def get_F_decile_PNi(self, BNP_AVI, PBN_AVI, PROBNP, BNP, CEC, CAT, SIAV):
 # (méthode MDRD) initiale
 
 
-def get_f_DFGi(self, sex_R, CRE_AVI, age_R):
+def get_f_DFGi(sex_R, CRE_AVI, age_R):
     if sex_R == 'FEMALE':
         return (
             186.3 * ((CRE_AVI / 88.4) * -1.154) * (pow(age_R, -0.203)) * 0.742
@@ -440,8 +435,8 @@ def get_f_DFGi(self, sex_R, CRE_AVI, age_R):
         return 186.3 * ((CRE_AVI / 88.4) * -1.154) * (pow(age_R, -0.203)) * 1
 
 
-def get_f_Ln_DFG_LAi(self, DIA_AVI, CRE_AVI, sex_R, age_R):
-    F_DFGi = self.get_f_DFGi(sex_R, CRE_AVI, age_R)
+def get_f_Ln_DFG_LAi(DIA_AVI, CRE_AVI, sex_R, age_R):
+    F_DFGi = get_f_DFGi(sex_R, CRE_AVI, age_R)
     if DIA_AVI == 'O':
         return ln(15)
     elif isnan(CRE_AVI) is True:
@@ -453,7 +448,7 @@ def get_f_Ln_DFG_LAi(self, DIA_AVI, CRE_AVI, sex_R, age_R):
 # Fonction Bilirubine en Liste d’attente initiale
 
 
-def get_f_Ln_BILI_LAi(self, BILI_AVI):
+def get_f_Ln_BILI_LAi(BILI_AVI):
     if isnan(BILI_AVI) is True:
         return ln(5)
     else:
@@ -463,9 +458,7 @@ def get_f_Ln_BILI_LAi(self, BILI_AVI):
 # La fonction de risque pré-greffe en liste d’attente initiale
 
 
-def get_f_risque_pre_GRFi(
-    self, F_ASCD, F_decile_PNi, F_Ln_DFG_LAi, F_Ln_BILI_LAi
-):
+def get_f_risque_pre_GRFi(F_ASCD, F_decile_PNi, F_Ln_DFG_LAi, F_Ln_BILI_LAi):
     return (
         1.301335 * F_ASCD
         + 0.157691 * F_decile_PNi
@@ -477,7 +470,7 @@ def get_f_risque_pre_GRFi(
 # Index de risque avant perfusion ou implantation CEC (ICARi)
 
 
-def get_ICARi(self, F_risque_pre_GRFi, C_ICAR):
+def get_ICARi(F_risque_pre_GRFi, C_ICAR):
     return min(40, max(0, round((F_risque_pre_GRFi - C_ICAR) * 10)))
 
 
@@ -486,66 +479,64 @@ def get_ICARi(self, F_risque_pre_GRFi, C_ICAR):
 # ---------Calcul de l’Index de Risque Cardiaque (ICAR)
 
 
-def get_ICAR(self, sex_R, age_R):
+def get_ICAR(sex_R, age_R):
     date_courante = datetime.utcnow().date()
     delai_var_bio_GRF = 30
-    if self.CREAT <= 0:
-        self.CREAT += 10
+    if CREAT <= 0:
+        CREAT += 10
     C_ICAR = 1.301335 * 0 + 0.157691 * 1 - 0.510058 * ln(150) + 0.615711 * ln(5)
-    F_Decile_PNj = self.get_f_decile_pnj(
-        self.CEC,
-        self.CAT,
-        self.SIAV,
-        self.DBNP,
-        self.BNP,
-        self.PROBNP,
+    F_Decile_PNj = get_f_decile_pnj(
+        CEC,
+        CAT,
+        SIAV,
+        DBNP,
+        BNP,
+        PROBNP,
         date_courante,
-        self.DPROBNP,
+        DPROBNP,
         delai_var_bio_GRF,
     )
-    F_Ln_DFG_LAj = self.get_F_Ln_DFG_LAj(
-        self.DIA,
-        self.CREAT,
-        self.DCREAT,
+    F_Ln_DFG_LAj = get_F_Ln_DFG_LAj(
+        DIA,
+        CREAT,
+        DCREAT,
         sex_R,
         age_R,
         date_courante,
         delai_var_bio_GRF,
     )
-    F_Ln_BILI_LAj = self.getF_Ln_BILI_LAj(
-        self.BILI, self.DBILI, date_courante, delai_var_bio_GRF
+    F_Ln_BILI_LAj = getF_Ln_BILI_LAj(
+        BILI, DBILI, date_courante, delai_var_bio_GRF
     )
-    F_ASCD = self.get_f_ASCD(self.CEC)
-    F_RisquePreGRFj = self.get_f_risque_pre_GRFj(
+    F_ASCD = get_f_ASCD(CEC)
+    F_RisquePreGRFj = get_f_risque_pre_GRFj(
         F_ASCD, F_Decile_PNj, F_Ln_DFG_LAj, F_Ln_BILI_LAj
     )
-    ICARj = self.getICARj(F_RisquePreGRFj, C_ICAR)
+    ICARj = getICARj(F_RisquePreGRFj, C_ICAR)
 
-    F_Ln_BILI_LAi = self.get_f_Ln_BILI_LAi(self.BILI_AVI)
-    F_Ln_DFG_LAi = self.get_f_Ln_DFG_LAi(
-        self.DIA_AVI, self.CRE_AVI, sex_R, age_R
+    F_Ln_BILI_LAi = get_f_Ln_BILI_LAi(BILI_AVI)
+    F_Ln_DFG_LAi = get_f_Ln_DFG_LAi(DIA_AVI, CRE_AVI, sex_R, age_R)
+    F_decile_PNi = getF_Decile_PNi(
+        BNP_AVI,
+        PBN_AVI,
+        PROBNP,
+        BNP,
+        CEC,
+        CAT,
+        SIAV,
     )
-    F_decile_PNi = self.getF_Decile_PNi(
-        self.BNP_AVI,
-        self.PBN_AVI,
-        self.PROBNP,
-        self.BNP,
-        self.CEC,
-        self.CAT,
-        self.SIAV,
-    )
-    F_risque_pre_GRFi = self.get_f_risque_pre_GRFi(
+    F_risque_pre_GRFi = get_f_risque_pre_GRFi(
         F_ASCD, F_decile_PNi, F_Ln_DFG_LAi, F_Ln_BILI_LAi
     )
-    ICARi = self.get_ICARi(F_risque_pre_GRFi, C_ICAR)
+    ICARi = get_ICARi(F_risque_pre_GRFi, C_ICAR)
 
-    if self.CEC != 'O' and self.DRG != 'O':
+    if CEC != 'O' and DRG != 'O':
         return ICARj
     else:
         return max(ICARj, ICARi)
 
 
-def check_ICAR(self, ICAR):
+def check_ICAR(ICAR):
     if ICAR > 40 or ICAR < 0:
         raise Exception("Le score ICAR doit etre compris entre 0 et 40")
     else:

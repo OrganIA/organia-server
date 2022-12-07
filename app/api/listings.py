@@ -2,6 +2,7 @@ import flask
 from pydantic import BaseModel
 
 from app import db
+from app.api.hearts import HeartSchema
 from app.api.livers import LiverSchema
 from app.api.lungs import LungSchema, compute_matches
 from app.api.person import PersonSchema
@@ -20,15 +21,7 @@ class ListingSchema(BaseModel):
     type: Listing.Type
     liver: LiverSchema | None
     lung: LungSchema | None
-    person: PersonSchema | None
-
-
-class ListingSchema(BaseModel):
-    hospital_id: int | None
-    notes: str | None
-    person_id: int | None
-    lung: LungSchema | None
-    liver: LiverSchema | None
+    heart: HeartSchema | None
     person: PersonSchema | None
 
 
@@ -107,6 +100,7 @@ def update_listing(id, data: ListingSchema):
     data = data.dict()
     liver_data = data.pop("liver", None)
     lung_data = data.pop("lung", None)
+    heart_data = data.pop("heart", None)
     person_data = data.pop("person", None)
 
     if isinstance(listing.organ, Liver):
@@ -119,14 +113,16 @@ def update_listing(id, data: ListingSchema):
         if organ is None:
             raise NotFoundError("L'organe n'a pas été trouvé")
         organ = lung_data
+    if isinstance(listing.organ, Lung):
+        organ = db.session.query(Heart).filter_by(listing_id=id).first()
+        if organ is None:
+            raise NotFoundError("L'organe n'a pas été trouvé")
+        organ = heart_data
     listing.hospital_id = data["hospital_id"]
     listing.notes = data["notes"]
     listing.person_id = data["person_id"]
-    print(person_data)
-    # listing.person_data = data["person_data"]
-
-    # Je n'ai pas réussi à trouver comment accéder à Person pour changer les infos
-    # db.session.commit()
+    listing.person_data = data["person_data"]
+    db.session.commit()
     return listing
 
 

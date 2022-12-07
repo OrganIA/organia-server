@@ -11,53 +11,35 @@ bp = Blueprint(__name__)
 
 
 class HeartSchema(BaseModel):
-    R_D_NAI = date
-    D_INSC = date
-    d_urgence = date
-    DCEC = date
-    DPROBNP = date
-    DCREAT = date
-    DBILI = date
-    D_D_NAI = date
-    D_PREL = date
-    urgence = date
-    ABO_D = str
-    sex_D = str
-    MAL = str
-    MAL2 = str
-    MAL3 = str
-    KXPC = str
-    XPC = int
-    DRG = str
-    CEC = str
-    SIAV = str
-    CAT = str
-    BNP = int
-    DBNP = int
-    PROBNP = float
-    DIA = str
-    CREAT = float
-    BILI = float
-    BNP_AVI = float
-    PBN_AVI = float
-    DIA_AVI = str
-    CRE_AVI = float
-    BILI_AVI = float
-    TTLGP = float
-    ICAR = float
-    F_ICAR = float
-    comp_ad_std = float
-    comp_ad_XPCA = float
-    comp_ped_std = float
-    comp_ped_XPCP = float
-    score_CCN = float
-    F1_dif_age = bool
-    F2_ABO = bool
-    F3_SC = bool
-    F4_surv_post_GRF = bool
-    score_CCP = float
-    score_NACG = float
-    score = float
+    DPROBNP: date | None
+    DCREAT: date | None
+    DBILI: date | None
+    urgence: date | None
+    ABO_D: str | None
+    sex_D: str | None
+    MAL: str | None
+    MAL2: str | None
+    MAL3: str | None
+    KXPC: str | None
+    XPC: int | None
+    DRG: str | None
+    CEC: str | None
+    SIAV: str | None
+    CAT: str | None
+    BNP: int | None
+    DBNP: int | None
+    PROBNP: float | None
+    DIA: str | None
+    CREAT: float | None
+    BILI: float | None
+    BNP_AVI: float | None
+    PBN_AVI: float | None
+    DIA_AVI: str | None
+    CRE_AVI: float | None
+    BILI_AVI: float | None
+    TTLGP: float | None
+    ICAR: float | None
+    F_ICAR: float | None
 
 
 def update(listing, data):
@@ -84,7 +66,8 @@ def get_heart(id):
 
 @bp.post('/')
 def create_heart(data: HeartSchema):
-    heart = Heart(**data.dict)
+    heart = Heart(**data.dict())
+    return heart
     db.session.add(heart)
     db.session.commit()
     return get_heart(heart.id)
