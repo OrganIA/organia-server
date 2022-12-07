@@ -13,6 +13,7 @@ from .login_token import LoginToken as LoginToken
 # from .chat_group import ChatGroup as ChatGroup
 from .liver import Liver as Liver
 from .login_token import LoginToken as LoginToken
+from .lung import Lung as Lung
 from .message import Message as Message
 from .person import Person as Person
 from .roles import Role as Role

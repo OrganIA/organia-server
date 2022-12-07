@@ -28,7 +28,7 @@ def get_user(user_id: int):
 @bp.post('/<int:user_id>')
 @auth.route()
 def update_user(user_id: int, data: dict, auth_user: User):
-    if (auth_user.role.can_edit_users or auth_user.id == user_id) is False:
+    if not (auth_user.role.can_edit_users or auth_user.id == user_id):
         raise Unauthorized
     user = get_user(user_id)
     for key, value in data.items():

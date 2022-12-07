@@ -1,8 +1,9 @@
+from pydantic import BaseModel
+
 from app import auth, db
 from app.db.models import Chat, Message, User
 from app.errors import InvalidRequest, NotFoundError, Unauthorized
 from app.utils.bp import Blueprint
-from app.utils.static import Static
 
 bp = Blueprint(__name__)
 
@@ -32,7 +33,7 @@ def get_chat_by_id(chat_id: int, auth_user: User):
 @auth.route()
 def get_latest_message_chat(auth_user: User):
     return [
-        {"chat": x.chat, "last_message": x}
+        x
         for x in [
             db.session.query(Message)
             .filter_by(chat_id=chat.id)
@@ -51,9 +52,9 @@ def get_chat_messages(chat_id: int, auth_user: User):
     return chat.messages
 
 
-class ChatCreateSchema(Static):
-    users_ids = list
-    name = str
+class ChatCreateSchema(BaseModel):
+    users_ids: list[int]
+    name: str
 
 
 def _create_users_list(users_ids: list, auth_user: User):
@@ -101,8 +102,8 @@ def delete_chat(chat_id: int, auth_user: User):
     db.session.commit()
 
 
-class MessageCreateSchema(Static):
-    content = str
+class MessageCreateSchema(BaseModel):
+    content: str
 
 
 @bp.post('/<int:chat_id>/messages')

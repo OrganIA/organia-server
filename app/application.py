@@ -6,6 +6,7 @@ import typing as t
 import flask
 from flask import Flask
 from flask_cors import CORS
+from pydantic import BaseModel
 from sqlalchemy import orm
 
 from app import config, db
@@ -37,9 +38,9 @@ class App(Flask):
     auto-inject schemas into routes when using type-hinting in arguments.
 
     ```
-    class UserSchema(Static):
-        email = str
-        password = str
+    class UserSchema(BaseModel):
+        email: str
+        password: str
 
     @app.post('/login')
     def login(data: UserSchema):
@@ -82,8 +83,7 @@ class App(Flask):
             if return_value is None:
                 code = code or 204
         if not isinstance(return_value, (self.response_class, Exception)):
-            print('Overloading response')
-            if return_value:
+            if return_value is not None:
                 return_value = json.dumps(
                     return_value, default=permissive_json, indent=2
                 )
@@ -92,7 +92,6 @@ class App(Flask):
                 mimetype=self.config['JSONIFY_MIMETYPE'],
                 status=code,
             )
-        print(flush=True)
         return super().make_response(return_value)
 
     def add_url_rule(
@@ -139,7 +138,9 @@ class App(Flask):
                     coerce = type
                     if not coerce:
                         coerce = func.__annotations__.get(arg)
-                    if coerce:
+                    if isinstance(coerce, BaseModel.__class__):
+                        data = coerce(**data)
+                    elif coerce:
                         data = coerce(data)
                     kwargs[arg] = data
                 return func(*args, **kwargs)

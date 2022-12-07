@@ -1,3 +1,4 @@
+import logging
 from typing import List
 
 from simple_websocket.ws import Server
@@ -13,11 +14,17 @@ class ConnectionManager:
         self.active_connections.append(WebSocketClient(websocket=websocket))
 
     def disconnect(self, websocket: Server) -> None:
+        logging.warn(f"Disconnecting client {id(websocket)}")
         for client in self.active_connections:
-            if client.websocket == websocket:
-                self.active_connections.remove(client)
-                client.websocket.close()
-                break
+            logging.warn(f"Client: {client.id}")
+            logging.warn(
+                f"Websocket: {client.websocket.environ['REMOTE_ADDR']}"
+            )
+            if client.id != id(websocket):
+                continue
+            logging.critical("Removing client")
+            self.active_connections.remove(client)
+            client.websocket.close()
 
     def send_client(self, message: str, client: WebSocketClient) -> None:
         client.websocket.send(message)
@@ -25,7 +32,7 @@ class ConnectionManager:
     def broadcast(self, message: str, client: WebSocketClient) -> None:
         for cl in self.active_connections:
             if (
-                cl.user.id != client.user.id
+                (cl.id != client.id)
                 and cl.is_logged()
                 and cl.chat_id == client.chat_id
             ):
@@ -33,5 +40,5 @@ class ConnectionManager:
 
     def get_client(self, websocket: Server) -> WebSocketClient:
         for client in self.active_connections:
-            if client.websocket == websocket:
+            if client.id == id(websocket):
                 return client

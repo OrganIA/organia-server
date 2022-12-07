@@ -24,4 +24,5 @@ class Message(db.mixins.TimedMixin, db.Base):
             "chat": self.chat.to_dict(),
             "sender": self.sender.to_dict(),
             "id": self.id,
+            "created_at": self.created_at,
         }

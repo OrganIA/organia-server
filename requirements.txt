@@ -10,8 +10,11 @@ phonenumbers
 # api app
 flask
 flask-cors
-passlib[bcrypt]
 flask-sock
+passlib[bcrypt]
+
+# api validation
+pydantic
 
 # yaml support for config files etc
 pyyaml

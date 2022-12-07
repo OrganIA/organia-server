@@ -1,3 +1,5 @@
+import logging
+
 import flask
 from flask_sock import Sock
 
@@ -5,6 +7,7 @@ from . import db
 from .application import App
 
 sock = Sock()
+logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] %(message)s')
 
 
 def create_app():
