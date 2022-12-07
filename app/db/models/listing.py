@@ -56,11 +56,23 @@ class Listing(db.Base):
         return self._liver or self._lung
 
     def read_dict(self, data):
+        from app.db.models import Person
+
         organ_data = data.pop('organ', None)
         organ_type = data.pop('organ_type', self.organ_type)
+        person_data = data.pop('person', None)
         if organ_data:
             if self.organ:
                 self.organ.read_dict(organ_data)
             if organ_type:
-                self.organ = organ_type.table(**organ_data)
+                setattr(
+                    self,
+                    '_' + organ_type.value.lower(),
+                    organ_type.table(**organ_data),
+                )
+        if person_data:
+            if self.person:
+                self.person.read_dict(person_data)
+            else:
+                self.person = Person(**person_data)
         super().read_dict(data)

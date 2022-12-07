@@ -1,10 +1,10 @@
-import logging
+from datetime import date
 
 import flask
 from pydantic import BaseModel
 
 from app import db
-from app.api.person import PersonSchema
+from app.api.person import PersonCreateSchema, PersonSchema
 from app.db.models import Listing, Person
 from app.errors import InvalidRequest, NotFoundError
 from app.utils.bp import Blueprint
@@ -20,6 +20,12 @@ class ListingSchema(BaseModel):
     organ_type: Listing.Organ | None
     organ: dict | None
     person: PersonSchema | None
+    start_date: date | None
+    end_date: date | None
+
+
+class ListingCreateSchema(ListingSchema):
+    person: PersonCreateSchema | None
 
 
 @bp.get('/')
@@ -48,7 +54,7 @@ def get_listing(id):
 
 
 @bp.post('/')
-def create_listing(data: ListingSchema):
+def create_listing(data: ListingCreateSchema):
     data = data.dict()
     organ_data = data.pop("organ", None)
     organ_type = data.get("organ_type", None)
@@ -65,7 +71,7 @@ def create_listing(data: ListingSchema):
 @bp.post('/<int:id>')
 def update_listing(id, data: ListingSchema):
     listing = get_listing(id)
-    data = data.dict()
+    data = data.dict(exclude_unset=True)
     listing.read_dict(data)
     db.session.commit()
     return listing

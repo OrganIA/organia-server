@@ -285,6 +285,25 @@ calls = [
             "organ_type": "LIVER",
         },
     ),
+    # Update a listing
+    Post(
+        '/listings/1',
+        {
+            "start_date": "2020-02-10",
+        },
+    ),
+    # Update only a subset of the fields of a listing
+    Post(
+        '/listings/1',
+        {
+            "organ": {
+                "alpha_fetoprotein": 20,
+            },
+            "person": {
+                "first_name": "Jojo",
+            },
+        },
+    ),
 ]
 
 
