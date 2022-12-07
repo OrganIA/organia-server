@@ -1,5 +1,5 @@
 # API Documentation
-Generated on: 2022-12-07 at 23:48:59
+Generated on: 2022-12-07 at 23:53:02
 
 - [GET /api/](#get-api)
 - [POST /api/auth/register](#post-apiauthregister)
@@ -26,6 +26,7 @@ Generated on: 2022-12-07 at 23:48:59
 - [POST /api/roles/3](#post-apiroles3)
 - [DELETE /api/roles/3](#delete-apiroles3)
 - [POST /api/listings](#post-apilistings)
+- [POST /api/listings](#post-apilistings)
 
 
 ## GET /api/
@@ -36,9 +37,9 @@ the latest version.
 ### Response
 ```json
 {
-  "version": "80297ea",
-  "time": 1670449739.31508,
-  "datetime": "2022-12-07 22:48:59.315080",
+  "version": "612de65",
+  "time": 1670449982.636696,
+  "datetime": "2022-12-07 22:53:02.636696",
   "software": {
     "flask": "2.2.2",
     "python": "3.10.7",
@@ -61,7 +62,7 @@ login after registering.
 ### Request
 ```json
 {
-  "email": "user541@email.com",
+  "email": "user686@email.com",
   "password": "password",
   "firstname": "prenom",
   "lastname": "nom",
@@ -72,14 +73,14 @@ login after registering.
 ### Response
 ```json
 {
-  "token": "4-4-ef93fa52b8be051a37c660332160da5d0702624bdab414af5fb6703ee7c9b94a",
+  "token": "7-7-bcdd9c012b9abeb05dc4bae89167a338c38d213a25856c52db69aa2ab87db51a",
   "user": {
     "firstname": "prenom",
     "lastname": "nom",
-    "id": 4,
-    "created_at": "2022-12-07 22:48:59.531835",
+    "id": 7,
+    "created_at": "2022-12-07 22:53:02.854562",
     "updated_at": null,
-    "email": "user541@email.com",
+    "email": "user686@email.com",
     "phone_number": "01 23 45 67 89",
     "role": {
       "id": 1,
@@ -99,7 +100,7 @@ login after registering.
 ### Request
 ```json
 {
-  "email": "user541@email.com",
+  "email": "user686@email.com",
   "password": "password",
   "firstname": "prenom",
   "lastname": "nom",
@@ -110,7 +111,7 @@ login after registering.
 ### Response
 ```json
 {
-  "msg": "email \"user541@email.com\" is already taken."
+  "msg": "email \"user686@email.com\" is already taken."
 }
 ```
 
@@ -122,7 +123,7 @@ Login and get a token.
 ### Request
 ```json
 {
-  "email": "user541@email.com",
+  "email": "user686@email.com",
   "password": "password"
 }
 ```
@@ -130,14 +131,14 @@ Login and get a token.
 ### Response
 ```json
 {
-  "token": "6-4-11eb95d4ea84d1b92ff65306ae54ea6d4a5e9f33c49a954de2dc2e24ae9c8bed",
+  "token": "9-7-179d2ae51f8451370a2082b539cbdbd61e909068ec8fb8886a266ea03d9332f4",
   "user": {
     "firstname": "prenom",
     "lastname": "nom",
-    "id": 4,
-    "created_at": "2022-12-07 22:48:59.531835",
+    "id": 7,
+    "created_at": "2022-12-07 22:53:02.854562",
     "updated_at": null,
-    "email": "user541@email.com",
+    "email": "user686@email.com",
     "phone_number": "01 23 45 67 89",
     "role": {
       "id": 1,
@@ -173,7 +174,7 @@ Login and get a token.
 ### Request
 ```json
 {
-  "email": "user541@email.com",
+  "email": "user686@email.com",
   "password": "not-the-password"
 }
 ```
@@ -233,25 +234,6 @@ List all users
     }
   },
   {
-    "firstname": null,
-    "lastname": null,
-    "id": 3,
-    "created_at": "2022-12-07 22:42:58.254591",
-    "updated_at": "2022-12-07 22:42:58.263127",
-    "email": "admin@localhost",
-    "phone_number": null,
-    "role": {
-      "id": 1,
-      "can_edit_users": true,
-      "can_edit_hospitals": true,
-      "can_edit_listings": true,
-      "can_edit_staff": true,
-      "can_edit_roles": true,
-      "can_edit_persons": true,
-      "name": "admin"
-    }
-  },
-  {
     "firstname": "prenom",
     "lastname": "nom",
     "id": 4,
@@ -288,6 +270,63 @@ List all users
       "can_edit_persons": true,
       "name": "admin"
     }
+  },
+  {
+    "firstname": null,
+    "lastname": null,
+    "id": 6,
+    "created_at": "2022-12-07 22:49:00.481058",
+    "updated_at": "2022-12-07 22:49:00.488647",
+    "email": "admin@localhost",
+    "phone_number": null,
+    "role": {
+      "id": 1,
+      "can_edit_users": true,
+      "can_edit_hospitals": true,
+      "can_edit_listings": true,
+      "can_edit_staff": true,
+      "can_edit_roles": true,
+      "can_edit_persons": true,
+      "name": "admin"
+    }
+  },
+  {
+    "firstname": "prenom",
+    "lastname": "nom",
+    "id": 7,
+    "created_at": "2022-12-07 22:53:02.854562",
+    "updated_at": null,
+    "email": "user686@email.com",
+    "phone_number": "01 23 45 67 89",
+    "role": {
+      "id": 1,
+      "can_edit_users": true,
+      "can_edit_hospitals": true,
+      "can_edit_listings": true,
+      "can_edit_staff": true,
+      "can_edit_roles": true,
+      "can_edit_persons": true,
+      "name": "admin"
+    }
+  },
+  {
+    "firstname": null,
+    "lastname": null,
+    "id": 8,
+    "created_at": "2022-12-07 22:53:03.215055",
+    "updated_at": null,
+    "email": "user337@email.com",
+    "phone_number": null,
+    "role": {
+      "id": 1,
+      "can_edit_users": true,
+      "can_edit_hospitals": true,
+      "can_edit_listings": true,
+      "can_edit_staff": true,
+      "can_edit_roles": true,
+      "can_edit_persons": true,
+      "name": "admin"
+    }
   }
 ]
 ```
@@ -303,9 +342,9 @@ Get info about the current user
 {
   "firstname": null,
   "lastname": null,
-  "id": 3,
-  "created_at": "2022-12-07 22:42:58.254591",
-  "updated_at": "2022-12-07 22:42:58.263127",
+  "id": 6,
+  "created_at": "2022-12-07 22:49:00.481058",
+  "updated_at": "2022-12-07 22:49:00.488647",
   "email": "admin@localhost",
   "phone_number": null,
   "role": {
@@ -357,7 +396,13 @@ Delete a user
 
 > :police_car: This request requires specific permissions. An user must be authenticated via a token and their role must have the permissions edit_users to access this route.
 ### Response
-**Status:** 204
+```json
+{
+  "msg": "The requested resource was not found"
+}
+```
+
+**Status:** 404
 
 ## GET /api/listings
 Get the list of listings
@@ -391,6 +436,34 @@ Get the list of listings
       "biggest_tumor_size": 10,
       "alpha_fetoprotein": 10,
       "listing_id": 1
+    },
+    "hospital": null
+  },
+  {
+    "id": 2,
+    "notes": null,
+    "type": "DONOR",
+    "organ_type": "LIVER",
+    "start_date": null,
+    "end_date": null,
+    "person": {
+      "id": 2,
+      "created_at": "2022-12-07 22:49:00.797416",
+      "updated_at": null,
+      "first_name": "John",
+      "last_name": "Doe",
+      "birth_date": "1990-02-10",
+      "description": null,
+      "gender": "MALE",
+      "user": null,
+      "blood_type": "A+"
+    },
+    "organ": {
+      "id": 2,
+      "tumors_count": 2,
+      "biggest_tumor_size": 10,
+      "alpha_fetoprotein": 10,
+      "listing_id": 2
     },
     "hospital": null
   }
@@ -436,6 +509,34 @@ Get the list of listings
       "listing_id": 1
     },
     "hospital": null
+  },
+  {
+    "id": 2,
+    "notes": null,
+    "type": "DONOR",
+    "organ_type": "LIVER",
+    "start_date": null,
+    "end_date": null,
+    "person": {
+      "id": 2,
+      "created_at": "2022-12-07 22:49:00.797416",
+      "updated_at": null,
+      "first_name": "John",
+      "last_name": "Doe",
+      "birth_date": "1990-02-10",
+      "description": null,
+      "gender": "MALE",
+      "user": null,
+      "blood_type": "A+"
+    },
+    "organ": {
+      "id": 2,
+      "tumors_count": 2,
+      "biggest_tumor_size": 10,
+      "alpha_fetoprotein": 10,
+      "listing_id": 2
+    },
+    "hospital": null
   }
 ]
 ```
@@ -476,6 +577,34 @@ Get the list of listings
       "biggest_tumor_size": 10,
       "alpha_fetoprotein": 10,
       "listing_id": 1
+    },
+    "hospital": null
+  },
+  {
+    "id": 2,
+    "notes": null,
+    "type": "DONOR",
+    "organ_type": "LIVER",
+    "start_date": null,
+    "end_date": null,
+    "person": {
+      "id": 2,
+      "created_at": "2022-12-07 22:49:00.797416",
+      "updated_at": null,
+      "first_name": "John",
+      "last_name": "Doe",
+      "birth_date": "1990-02-10",
+      "description": null,
+      "gender": "MALE",
+      "user": null,
+      "blood_type": "A+"
+    },
+    "organ": {
+      "id": 2,
+      "tumors_count": 2,
+      "biggest_tumor_size": 10,
+      "alpha_fetoprotein": 10,
+      "listing_id": 2
     },
     "hospital": null
   }
@@ -597,6 +726,34 @@ Only get donor listings
       "listing_id": 1
     },
     "hospital": null
+  },
+  {
+    "id": 2,
+    "notes": null,
+    "type": "DONOR",
+    "organ_type": "LIVER",
+    "start_date": null,
+    "end_date": null,
+    "person": {
+      "id": 2,
+      "created_at": "2022-12-07 22:49:00.797416",
+      "updated_at": null,
+      "first_name": "John",
+      "last_name": "Doe",
+      "birth_date": "1990-02-10",
+      "description": null,
+      "gender": "MALE",
+      "user": null,
+      "blood_type": "A+"
+    },
+    "organ": {
+      "id": 2,
+      "tumors_count": 2,
+      "biggest_tumor_size": 10,
+      "alpha_fetoprotein": 10,
+      "listing_id": 2
+    },
+    "hospital": null
   }
 ]
 ```
@@ -633,7 +790,7 @@ Create a new chat
 ```json
 {
   "id": 1,
-  "created_at": "2022-12-07 22:49:00.579924",
+  "created_at": "2022-12-07 22:53:03.885532",
   "updated_at": null,
   "name": "Chat name",
   "users": [
@@ -728,7 +885,7 @@ Get all the chats the current user is part of
 [
   {
     "id": 1,
-    "created_at": "2022-12-07 22:49:00.579924",
+    "created_at": "2022-12-07 22:53:03.885532",
     "updated_at": null,
     "name": "Chat name",
     "users": [
@@ -823,7 +980,7 @@ Get a specific chat
 ```json
 {
   "id": 1,
-  "created_at": "2022-12-07 22:49:00.579924",
+  "created_at": "2022-12-07 22:53:03.885532",
   "updated_at": null,
   "name": "Chat name",
   "users": [
@@ -926,7 +1083,7 @@ Send a message
   "content": "Hello world!",
   "chat": {
     "id": 1,
-    "created_at": "2022-12-07 22:49:00.579924",
+    "created_at": "2022-12-07 22:53:03.885532",
     "updated_at": null,
     "name": "Chat name",
     "users": [
@@ -1027,8 +1184,8 @@ Send a message
       "name": "admin"
     }
   },
-  "id": 2,
-  "created_at": "2022-12-07 22:49:00.634940"
+  "id": 3,
+  "created_at": "2022-12-07 22:53:03.936915"
 }
 ```
 
@@ -1045,7 +1202,7 @@ Get all chats the current user is part of and the last message of each
     "content": "Hello world!",
     "chat": {
       "id": 1,
-      "created_at": "2022-12-07 22:49:00.579924",
+      "created_at": "2022-12-07 22:53:03.885532",
       "updated_at": null,
       "name": "Chat name",
       "users": [
@@ -1146,8 +1303,8 @@ Get all chats the current user is part of and the last message of each
         "name": "admin"
       }
     },
-    "id": 2,
-    "created_at": "2022-12-07 22:49:00.634940"
+    "id": 3,
+    "created_at": "2022-12-07 22:53:03.936915"
   }
 ]
 ```
@@ -1165,7 +1322,7 @@ Get all messages for a specific chat
     "content": "Hello world!",
     "chat": {
       "id": 1,
-      "created_at": "2022-12-07 22:49:00.579924",
+      "created_at": "2022-12-07 22:53:03.885532",
       "updated_at": null,
       "name": "Chat name",
       "users": [
@@ -1266,8 +1423,8 @@ Get all messages for a specific chat
         "name": "admin"
       }
     },
-    "id": 2,
-    "created_at": "2022-12-07 22:49:00.634940"
+    "id": 3,
+    "created_at": "2022-12-07 22:53:03.936915"
   }
 ]
 ```
@@ -1401,7 +1558,7 @@ Delete a role
 **Status:** 204
 
 ## POST /api/listings
-Create a listing, creating the Person and Organ in one go
+Create a donor listing, creating the Person and Organ in one go
 
 > :lock: This request requires authentication. Pass `Bearer: the-token` in the `Authorization` header.
 ### Request
@@ -1429,15 +1586,15 @@ Create a listing, creating the Person and Organ in one go
 ### Response
 ```json
 {
-  "id": 2,
+  "id": 3,
   "notes": null,
   "type": "DONOR",
   "organ_type": "LIVER",
   "start_date": null,
   "end_date": null,
   "person": {
-    "id": 2,
-    "created_at": "2022-12-07 22:49:00.797416",
+    "id": 3,
+    "created_at": "2022-12-07 22:53:04.093172",
     "updated_at": null,
     "first_name": "John",
     "last_name": "Doe",
@@ -1448,12 +1605,61 @@ Create a listing, creating the Person and Organ in one go
     "blood_type": "A+"
   },
   "organ": {
-    "id": 2,
+    "id": 3,
     "tumors_count": 2,
     "biggest_tumor_size": 10,
     "alpha_fetoprotein": 10,
-    "listing_id": 2
+    "listing_id": 3
   },
+  "hospital": null
+}
+```
+
+**Status:** 200
+
+## POST /api/listings
+Create a receiver listing, creating the Person and Organ in one go
+
+> :lock: This request requires authentication. Pass `Bearer: the-token` in the `Authorization` header.
+### Request
+```json
+{
+  "type": "RECEIVER",
+  "person": {
+    "first_name": "Johnatan",
+    "last_name": "Joeystarr",
+    "phone_number": "+33123456789",
+    "gender": "MALE",
+    "birth_date": "1990-02-10",
+    "abo": "A",
+    "rhesus": "+"
+  },
+  "organ_type": "LIVER"
+}
+```
+
+### Response
+```json
+{
+  "id": 4,
+  "notes": null,
+  "type": "RECEIVER",
+  "organ_type": "LIVER",
+  "start_date": null,
+  "end_date": null,
+  "person": {
+    "id": 4,
+    "created_at": "2022-12-07 22:53:04.115232",
+    "updated_at": null,
+    "first_name": "Johnatan",
+    "last_name": "Joeystarr",
+    "birth_date": "1990-02-10",
+    "description": null,
+    "gender": "MALE",
+    "user": null,
+    "blood_type": "A+"
+  },
+  "organ": null,
   "hospital": null
 }
 ```

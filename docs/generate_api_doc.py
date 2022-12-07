@@ -246,7 +246,7 @@ calls = [
     Post('/roles/3', {"name": "Updated role"}, perms=['edit_roles']),
     # Delete a role
     Delete('/roles/3', perms=['edit_roles']),
-    # Create a listing, creating the Person and Organ in one go
+    # Create a donor listing, creating the Person and Organ in one go
     Post(
         '/listings',
         {
@@ -266,6 +266,23 @@ calls = [
                 "biggest_tumor_size": 10,
                 "alpha_fetoprotein": 10,
             },
+        },
+    ),
+    # Create a receiver listing, creating the Person and Organ in one go
+    Post(
+        '/listings',
+        {
+            "type": "RECEIVER",
+            "person": {
+                "first_name": "Johnatan",
+                "last_name": "Joeystarr",
+                "phone_number": "+33123456789",
+                "gender": "MALE",
+                "birth_date": "1990-02-10",
+                "abo": "A",
+                "rhesus": "+",
+            },
+            "organ_type": "LIVER",
         },
     ),
 ]
