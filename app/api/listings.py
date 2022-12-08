@@ -1,4 +1,5 @@
 import importlib
+import logging
 from datetime import date
 
 import flask
@@ -6,13 +7,8 @@ from pydantic import BaseModel
 
 from app import db
 from app.api.kidneys import KidneySchema
-from app.api.livers import LiverSchema
-from app.api.lungs import LungSchema
-from app.api.person import PersonSchema
-from app.db.models import Kidney, Listing, Liver, Lung, Person
-from app.db.models.person import Person
 from app.api.person import PersonCreateSchema, PersonSchema
-from app.db.models import Listing, Person
+from app.db.models import Kidney, Listing, Liver, Lung, Person
 from app.errors import InvalidRequest, NotFoundError
 from app.utils.bp import Blueprint
 
@@ -24,13 +20,10 @@ class ListingSchema(BaseModel):
     notes: str | None
     person_id: int | None
     type: Listing.Type
-    liver: LiverSchema | None
-    lung: LungSchema | None
-    kidney: KidneySchema | None
     person: PersonSchema | None
     type: Listing.Type | None
     organ_type: Listing.Organ | None
-    organ: dict | None
+    organ: KidneySchema | dict | None
     person: PersonSchema | None
     start_date: date | None
     end_date: date | None
@@ -38,60 +31,6 @@ class ListingSchema(BaseModel):
 
 class ListingCreateSchema(ListingSchema):
     person: PersonCreateSchema | None
-
-
-def create_organ(data):
-    # Update this function when an organ is implemented
-    listing = db.session.query(Listing).order_by(Listing.id.desc()).first()
-    if not listing:
-        raise NotFoundError
-    organ = {}
-    if listing.organ == Listing.Organ.LIVER:
-        organ = Liver()
-        organ = update(organ, data)
-        organ.listing_id = listing.id
-        db.session.add(organ)
-        db.session.commit()
-    if listing.organ == Listing.Organ.KIDNEY:
-        organ = Kidney()
-        organ = update(organ, data)
-        db.session.add(organ)
-        db.session.commit()
-    if listing.organ == Listing.Organ.LUNG:
-        organ = Lung()
-        organ = update(organ, data)
-        organ.listing_id = listing.id
-        db.session.add(organ)
-        db.session.commit()
-    return organ
-
-
-def update_organ(data, id):
-    organ = {}
-    if data.organ == Listing.Organ.LIVER:
-        organ = db.session.query(Liver).filter_by(listing_id=id).first()
-        organ = update(organ, data)
-        db.session.commit()
-    if data.organ == Listing.Organ.LUNG:
-        organ = db.session.query(Lung).filter_by(listing_id=id).first()
-        print("ORGAN: ", organ)
-        organ = update(organ, data)
-        db.session.commit()
-    if data.organ == Listing.Organ.KIDNEY:
-        organ = db.session.query(Kidney).filter_by(listing_id=id).first()
-        print("ORGAN: ", organ)
-        organ = update(organ, data)
-        db.session.commit()
-    return organ
-
-
-def update(listing, data):
-    for key, value in data.dict().items():
-        if value == 'null':
-            setattr(listing, key, None)
-        elif value is not None:
-            setattr(listing, key, value)
-    return listing
 
 
 @bp.get('/')
@@ -126,6 +65,8 @@ def create_listing(data: ListingCreateSchema):
     organ_type = data.get("organ_type", None)
     if organ_type and organ_data:
         data['_' + organ_type.value.lower()] = organ_type.table(**organ_data)
+        logging.debug(data)
+        logging.debug(organ_data)
     if person_data := data.pop("person", None):
         data['person'] = Person(**person_data)
     listing = Listing(**data)
@@ -160,6 +101,7 @@ def get_listing_matches(id):
         Listing.organ_type == listing.organ_type,
         Listing.organ,
     )
+    logging.debug(receivers.all())
     organ_name = listing.organ_type.value.lower()
     score_module = importlib.import_module(
         f'app.score.{organ_name}.{organ_name}_score'

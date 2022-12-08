@@ -4,7 +4,7 @@ from app import db
 from app.api.person import get_person
 from app.db.models import Listing, Lung
 from app.errors import NotFoundError
-from app.score.lungs.lungs_score import lungs_final_score
+from app.score.lung.lung_score import compute_lung_score
 from app.utils.bp import Blueprint
 
 bp = Blueprint(__name__)
@@ -54,7 +54,7 @@ def compute_matches_lungs(listing_id: int):
         result_listing.append(
             [
                 listing_lungs_receiver,
-                lungs_final_score(
+                compute_lung_score(
                     person_receiver, None, listing_lungs_receiver
                 ),
             ]

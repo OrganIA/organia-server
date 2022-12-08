@@ -55,7 +55,7 @@ def get_score_MG(hospital_1, hospital_2):
     return MG
 
 
-def compute_kindey_score(donor_listing, receiver_listing):
+def compute_kidney_score(donor_listing, receiver_listing):
     listing_kidney = receiver_listing.organ
     receiver = receiver_listing.person
     donor = donor_listing.person

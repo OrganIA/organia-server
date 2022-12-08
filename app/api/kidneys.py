@@ -6,7 +6,7 @@ from app import db
 from app.api.person import get_person
 from app.db.models import Kidney, Listing
 from app.errors import InvalidRequest, NotFoundError
-from app.score.kidney.kidney_score import get_score_NAP
+from app.score.kidney.kidney_score import compute_kidney_score
 from app.utils.bp import Blueprint
 
 bp = Blueprint(__name__)
@@ -19,14 +19,6 @@ class KidneySchema(BaseModel):
     arf_date: date
     date_transplantation: date
     re_registration_date: date
-
-
-@bp.get('/<int:listing_id>', success=201)
-def get_kidney(listing_id):
-    result = db.session.query(Kidney).filter_by(listing_id=listing_id).first()
-    if not result:
-        raise NotFoundError
-    return result
 
 
 async def compute_matches_kidney(listing_id: int):
@@ -56,7 +48,7 @@ async def compute_matches_kidney(listing_id: int):
         result_listing.append(
             [
                 receiver,
-                get_score_NAP(receiver_person, donor_person, receiver),
+                compute_kidney_score(receiver_person, donor_person, receiver),
             ]
         )
         return result_listing
