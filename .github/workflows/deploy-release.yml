@@ -16,4 +16,4 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           host: ${{ secrets.PROD_HOST }}
           script: |
-            organia-deploy prod organia-server ${{ GITHUB_REF }}
+            organia-deploy prod organia-server ${{ github.ref }}
