@@ -5,7 +5,7 @@ WORKDIR /app
 ENV PYTHONPATH=/app
 ENV PIP_ROOT_USER_ACTION=ignore
 RUN pip install -U pip
-RUN pip install -r requirements.txt
+RUN pip install -r deps-lock.txt
 RUN pip install alembic
 
 EXPOSE 8000
