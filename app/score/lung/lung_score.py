@@ -59,8 +59,8 @@ def calculate_next_year_survival_chance_exponent(
         e += 0.330752
     if listing_lung.continuous_mech_ventilation:
         e += 1.213804
-    e += (listing_lung.PCO2 - 40) * 0.005448  # PCO2
-    if listing_lung.PCO2_increase_superior_to_15_percent:
+    e += (listing_lung.carbon_dioxide_partial_pressure - 40) * 0.005448
+    if listing_lung.carbon_dioxide_partial_pressure_15_percent_increase:
         e += 0.076370
     if listing_lung.diagnosis_group == Lung.DiagnosisGroup.B:
         e += 2.376700

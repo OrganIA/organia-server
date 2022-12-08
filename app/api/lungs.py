@@ -21,8 +21,8 @@ class LungSchema(BaseModel):
     oxygen_requirement: float
     six_minutes_walk_distance_over_150_feet: bool
     continuous_mech_ventilation: bool
-    PCO2: float
-    PCO2_increase_superior_to_15_percent: bool
+    carbon_dioxide_partial_pressure: float
+    carbon_dioxide_partial_pressure_increase_superior_to_15_percent: bool
 
     age_at_transplant: int
     creatinine_at_transplant: float

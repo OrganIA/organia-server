@@ -275,6 +275,7 @@ calls = [
     # - `carbon_dioxide_partial_pressure` is expected to be between 35 and 40
     # - `pulmonary_capilary_wedge_pressure` is expected to be between 8 and 12,
     # \> 20 is considered critical
+    # - `creatinine` is expected to be between 7 and 13
     Post(
         '/listings',
         {
@@ -301,10 +302,40 @@ calls = [
                 "six_minutes_walk_distance_over_150_feet": True,
                 "continuous_mech_ventilation": True,
                 "carbon_dioxide_partial_pressure": 36.3,
-                "carbone_dioxide_partial_pressure_15_percent_increase": False,
+                "carbon_dioxide_partial_pressure_15_percent_increase": False,
                 "activities_of_daily_life_required": False,
                 "pulmonary_capilary_wedge_pressure": 9.2,
+                "creatinine": 10.2,
             },
+        },
+    ),
+    # Create a receiver listing for a kidney, creating the Person in one go
+    Post(
+        '/listings',
+        {
+            "type": "RECEIVER",
+            "person": {
+                "first_name": "John",
+                "last_name": "Doe",
+                "phone_number": "+33123456789",
+                "gender": "MALE",
+                "birth_date": "1990-02-10",
+                "abo": "A",
+                "rhesus": "+",
+            },
+            "organ": {
+                "is_under_dialysis": True,
+                "is_retransplantation": False,
+                "dialysis_start_date": "2022-12-12",
+                "arf_date": "2022-12-12",
+                "date_transplantation": "2022-12-12",
+                "re_registration_date": "2022-12-12",
+                "A": 1.2,
+                "B": 1.3,
+                "DR": 1.4,
+                "DQ": 1.5,
+            },
+            "organ_type": "KIDNEY",
         },
     ),
     # Create a donor listing for a liver, creating the Person in one go
@@ -322,6 +353,40 @@ calls = [
                 "rhesus": "+",
             },
             "organ_type": "LIVER",
+        },
+    ),
+    # Create a donor listing for a kidney, creating the Person in one go
+    Post(
+        '/listings',
+        {
+            "type": "DONOR",
+            "person": {
+                "first_name": "Johnatan",
+                "last_name": "Joeystarr",
+                "phone_number": "+33123456789",
+                "gender": "MALE",
+                "birth_date": "1990-02-10",
+                "abo": "A",
+                "rhesus": "+",
+            },
+            "organ_type": "KIDNEY",
+        },
+    ),
+    # Create a donor listing for a lung, creating the Person in one go
+    Post(
+        '/listings',
+        {
+            "type": "DONOR",
+            "person": {
+                "first_name": "Johnatan",
+                "last_name": "Joeystarr",
+                "phone_number": "+33123456789",
+                "gender": "MALE",
+                "birth_date": "1990-02-10",
+                "abo": "A",
+                "rhesus": "+",
+            },
+            "organ_type": "LUNG",
         },
     ),
     # Update a listing
@@ -351,8 +416,12 @@ calls = [
     Get('/listings/?type=receiver'),
     # Get a specific listing
     Get('/listings/1'),
-    # Get a list of all matching receivers for a donor listing, with the score
-    Get('/listings/2/matches'),
+    # Get a list of all matching receivers for a liver listing, with the score
+    Get('/listings/4/matches'),
+    # Get a list of all matching receivers for a lung listing, with the score
+    Get('/listings/5/matches'),
+    # Get a list of all matching receivers for a kidney listing, with the score
+    Get('/listings/6/matches'),
     # Delete a listing
     Delete('/listings/2'),
 ]

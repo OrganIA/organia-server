@@ -1,14 +1,12 @@
 import importlib
-import logging
 from datetime import date
 
 import flask
 from pydantic import BaseModel
 
 from app import db
-from app.api.kidneys import KidneySchema
 from app.api.person import PersonCreateSchema, PersonSchema
-from app.db.models import Kidney, Listing, Liver, Lung, Person
+from app.db.models import Listing, Person
 from app.errors import InvalidRequest, NotFoundError
 from app.utils.bp import Blueprint
 
@@ -23,7 +21,7 @@ class ListingSchema(BaseModel):
     person: PersonSchema | None
     type: Listing.Type | None
     organ_type: Listing.Organ | None
-    organ: KidneySchema | dict | None
+    organ: dict | None
     person: PersonSchema | None
     start_date: date | None
     end_date: date | None
@@ -31,6 +29,16 @@ class ListingSchema(BaseModel):
 
 class ListingCreateSchema(ListingSchema):
     person: PersonCreateSchema | None
+
+
+def get_organ_data(organ_type, data, update=False) -> dict:
+    schemas_module = importlib.import_module('app.api.organs')
+    schema_name = organ_type.value.capitalize()
+    if update:
+        schema_name += 'Update'
+    schema_name += 'Schema'
+    schema: BaseModel = getattr(schemas_module, schema_name)
+    return schema(**data).dict(exclude_unset=True)
 
 
 @bp.get('/')
@@ -64,9 +72,8 @@ def create_listing(data: ListingCreateSchema):
     organ_data = data.pop("organ", None)
     organ_type = data.get("organ_type", None)
     if organ_type and organ_data:
+        organ_data = get_organ_data(organ_type, organ_data)
         data['_' + organ_type.value.lower()] = organ_type.table(**organ_data)
-        logging.debug(data)
-        logging.debug(organ_data)
     if person_data := data.pop("person", None):
         data['person'] = Person(**person_data)
     listing = Listing(**data)
@@ -79,6 +86,14 @@ def create_listing(data: ListingCreateSchema):
 def update_listing(id, data: ListingSchema):
     listing = get_listing(id)
     data = data.dict(exclude_unset=True)
+    organ_data = data.pop("organ", None)
+    if organ_data:
+        organ_type = data.get("organ_type", listing.organ_type)
+        organ_data = get_organ_data(organ_type, organ_data, update=True)
+        if listing.organ:
+            listing.organ.read_dict(organ_data)
+        else:
+            listing.organ = organ_type.table(**organ_data)
     listing.read_dict(data)
     db.session.commit()
     return listing
@@ -99,9 +114,8 @@ def get_listing_matches(id):
     receivers = db.session.query(Listing).filter(
         Listing.type == Listing.Type.RECEIVER,
         Listing.organ_type == listing.organ_type,
-        Listing.organ,
     )
-    logging.debug(receivers.all())
+    receivers = filter(lambda x: x.organ, receivers)
     organ_name = listing.organ_type.value.lower()
     score_module = importlib.import_module(
         f'app.score.{organ_name}.{organ_name}_score'

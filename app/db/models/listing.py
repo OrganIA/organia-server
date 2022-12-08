@@ -2,7 +2,6 @@ import enum
 
 import sqlalchemy as sa
 from sqlalchemy import orm
-from sqlalchemy.ext.hybrid import hybrid_property
 
 from app import db
 from app.errors import InvalidRequest
@@ -67,7 +66,7 @@ class Listing(db.Base):
         uselist=False,
     )
 
-    @hybrid_property
+    @property
     def organ(self):
         return self._liver or self._lung or self._kidney
 
