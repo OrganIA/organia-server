@@ -13,8 +13,8 @@ class Person(TimedMixin, db.Base):
     """Represents a physicql person, either a patient or a staff member, holds
     information such as name, address, age, gender, etc."""
 
-    __AUTO_DICT_EXCLUDE__ = ['user_id', 'abo', 'rhesus']
-    __AUTO_DICT_INCLUDE__ = ['user', 'blood_type']
+    __AUTO_DICT_EXCLUDE__ = ['user_id']
+    __AUTO_DICT_INCLUDE__ = ['user']
 
     class Gender(EnumStr):
         MALE = enum.auto()
@@ -41,12 +41,6 @@ class Person(TimedMixin, db.Base):
     rhesus = sa.Column(sa.Enum(Rhesus))
     user = orm.relationship('User', uselist=False, back_populates='person')
     staff = orm.relation('Staff', uselist=False, back_populates='person')
-
-    @property
-    def blood_type(self):
-        if not self.abo or not self.rhesus:
-            return None
-        return f'{self.abo.name}{self.rhesus.value}'
 
     @property
     def age(self):
