@@ -11,7 +11,7 @@ pip install pytest pytest-cov requests >/dev/null
 echo
 echo Running pytest
 echo
-DB_URL='sqlite://' pytest tests --cov=app --cov-fail-under=90
+DB_URL='sqlite://' FORCE_LOGIN=1 pytest tests --cov=app --cov-fail-under=90
 last=$?
 
 # echo -n "Unit tests + coverage: "
