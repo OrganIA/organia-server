@@ -19,7 +19,7 @@ class KidneySchema(BaseModel):
     DQ: float
 
 
-class KidneyUpateSchema(KidneySchema):
+class KidneyUpdateSchema(KidneySchema):
     is_under_dialysis: bool | None
     is_retransplantation: bool | None
     dialysis_start_date: date | None
