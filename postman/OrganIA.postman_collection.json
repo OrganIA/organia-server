@@ -705,7 +705,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"person_id\": 1,\n    \"notes\": \"\",\n    \"type\": \"DONOR\",\n    \"donor\": \"true\",\n    \"organ\": \"HEART\",\n    \"tumors_number\": \"0\",\n    \"biggest_tumor_size\": \"0\",\n    \"alpha_fetoprotein\": \"0\",\n    \"is_under_dialysis\": \"false\",\n    \"dialyse_start_date\": \"2021-09-15\",\n    \"dialyse_end_date\": \"2021-09-15\",\n    \"is_retransplantation\": \"false\",\n    \"arf_date\": \"2021-09-15\",\n    \"transplantation_date\": \"2021-09-15\",\n    \"re_registration_date\": \"2021-09-15\",\n    \"A\": \"0\",\n    \"B\": \"0\",\n    \"DR\": \"0\",\n    \"DQ\": \"0\"\n}",
+							"raw": "{\n    \"person_id\": 1,\n    \"notes\": \"\",\n    \"type\": \"DONOR\",\n    \"donor\": \"true\",\n    \"organ\": \"HEART\",\n    \"tumors_count\": \"0\",\n    \"biggest_tumor_size\": \"0\",\n    \"alpha_fetoprotein\": \"0\",\n    \"is_under_dialysis\": \"false\",\n    \"dialyse_start_date\": \"2021-09-15\",\n    \"dialyse_end_date\": \"2021-09-15\",\n    \"is_retransplantation\": \"false\",\n    \"arf_date\": \"2021-09-15\",\n    \"transplantation_date\": \"2021-09-15\",\n    \"re_registration_date\": \"2021-09-15\",\n    \"A\": \"0\",\n    \"B\": \"0\",\n    \"DR\": \"0\",\n    \"DQ\": \"0\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -734,7 +734,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"person_id\": 1,\n    \"notes\": \"\",\n    \"type\": \"PATIENT\",\n    \"organ\": \"HEART\",\n    \"tumors_number\": \"1\",\n    \"hospital_id\": \"4\",\n    \"biggest_tumor_size\": \"0\",\n    \"alpha_fetoprotein\": \"0\",\n    \"is_under_dialysis\": \"false\",\n    \"dialysis_start_date\": \"2021-09-15\",\n    \"dialysis_end_date\": \"2021-09-15\",\n    \"is_retransplantation\": \"false\",\n    \"arf_date\": \"2021-09-15\",\n    \"transplantation_date\": \"2021-09-15\",\n    \"re_registration_date\": \"2021-09-15\",\n    \"A\": \"0\",\n    \"B\": \"4\",\n    \"DR\": \"0\",\n    \"DQ\": \"0\"\n}",
+							"raw": "{\n    \"person_id\": 1,\n    \"notes\": \"\",\n    \"type\": \"PATIENT\",\n    \"organ\": \"HEART\",\n    \"tumors_count\": \"1\",\n    \"hospital_id\": \"4\",\n    \"biggest_tumor_size\": \"0\",\n    \"alpha_fetoprotein\": \"0\",\n    \"is_under_dialysis\": \"false\",\n    \"dialysis_start_date\": \"2021-09-15\",\n    \"dialysis_end_date\": \"2021-09-15\",\n    \"is_retransplantation\": \"false\",\n    \"arf_date\": \"2021-09-15\",\n    \"transplantation_date\": \"2021-09-15\",\n    \"re_registration_date\": \"2021-09-15\",\n    \"A\": \"0\",\n    \"B\": \"4\",\n    \"DR\": \"0\",\n    \"DQ\": \"0\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"

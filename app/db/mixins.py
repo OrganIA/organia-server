@@ -29,7 +29,3 @@ class OrganMixin:
     @orm.declared_attr
     def listing(cls):
         return orm.relationship('Listing', uselist=False)
-
-    def match(self, receiver):
-        return 0
-        raise NotImplementedError

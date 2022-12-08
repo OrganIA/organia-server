@@ -2,8 +2,10 @@ import enum
 
 import sqlalchemy as sa
 from sqlalchemy import orm
+from sqlalchemy.ext.hybrid import hybrid_property
 
 from app import db
+from app.errors import InvalidRequest
 from app.utils.enums import EnumStr
 
 
@@ -50,25 +52,45 @@ class Listing(db.Base):
     hospital = orm.relationship('Hospital', backref='listings')
     # Use Listing.organ to access the organ
     _liver = orm.relationship(
-        'Liver', back_populates='listing', cascade='all,delete', uselist=False
+        'Liver',
+        back_populates='listing',
+        cascade='all,delete,delete-orphan',
+        uselist=False,
     )
     _lung = orm.relationship(
-        'Lung', back_populates='listing', cascade='all,delete', uselist=False
+        'Lung',
+        back_populates='listing',
+        cascade='all,delete,delete-orphan',
+        uselist=False,
     )
     kidney = orm.relationship(
         'Kidney', back_populates='listing', cascade='all, delete', uselist=False
     )
 
-    @property
+    @hybrid_property
     def organ(self):
         return self._liver or self._lung
 
     def read_dict(self, data):
+        from app.db.models import Person
+
         organ_data = data.pop('organ', None)
         organ_type = data.pop('organ_type', self.organ_type)
+        person_data = data.pop('person', None)
         if organ_data:
             if self.organ:
                 self.organ.read_dict(organ_data)
-            if organ_type:
-                self.organ = organ_type.table(**organ_data)
+            elif organ_type:
+                setattr(
+                    self,
+                    '_' + organ_type.value.lower(),
+                    organ_type.table(**organ_data),
+                )
+            else:
+                raise InvalidRequest('organ_type must be provided')
+        if person_data:
+            if self.person:
+                self.person.read_dict(person_data)
+            else:
+                self.person = Person(**person_data)
         super().read_dict(data)

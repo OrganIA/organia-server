@@ -1,7 +1,5 @@
 import math
 
-from app import db
-from app.db.models import Kidney
 from app.errors import NotFoundError
 from app.geopy import get_distance
 from app.score.kidney.antigen_score import (
@@ -57,12 +55,11 @@ def get_score_MG(hospital_1, hospital_2):
     return MG
 
 
-def get_score_NAP(receiver, donor, receiver_listing):
-    listing_kidney = (
-        db.session.query(Kidney)
-        .filter_by(listing_id=receiver_listing.id)
-        .first()
-    )
+def compute_kindey_score(donor_listing, receiver_listing):
+    listing_kidney = receiver_listing.organ
+    receiver = receiver_listing.person
+    donor = donor_listing.person
+
     if not listing_kidney:
         raise NotFoundError("No listing found in kidneys table")
 

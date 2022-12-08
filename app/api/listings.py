@@ -1,15 +1,18 @@
-import logging
+import importlib
+from datetime import date
 
 import flask
 from pydantic import BaseModel
 
 from app import db
-from app.api.kidneys import KidneySchema, compute_matches_kidney
+from app.api.kidneys import KidneySchema
 from app.api.livers import LiverSchema
-from app.api.lungs import LungSchema, compute_matches_lungs
+from app.api.lungs import LungSchema
 from app.api.person import PersonSchema
 from app.db.models import Kidney, Listing, Liver, Lung, Person
 from app.db.models.person import Person
+from app.api.person import PersonCreateSchema, PersonSchema
+from app.db.models import Listing, Person
 from app.errors import InvalidRequest, NotFoundError
 from app.utils.bp import Blueprint
 
@@ -29,6 +32,12 @@ class ListingSchema(BaseModel):
     organ_type: Listing.Organ | None
     organ: dict | None
     person: PersonSchema | None
+    start_date: date | None
+    end_date: date | None
+
+
+class ListingCreateSchema(ListingSchema):
+    person: PersonCreateSchema | None
 
 
 def create_organ(data):
@@ -111,7 +120,7 @@ def get_listing(id):
 
 
 @bp.post('/')
-def create_listing(data: ListingSchema):
+def create_listing(data: ListingCreateSchema):
     data = data.dict()
     organ_data = data.pop("organ", None)
     organ_type = data.get("organ_type", None)
@@ -128,7 +137,7 @@ def create_listing(data: ListingSchema):
 @bp.post('/<int:id>')
 def update_listing(id, data: ListingSchema):
     listing = get_listing(id)
-    data = data.dict()
+    data = data.dict(exclude_unset=True)
     listing.read_dict(data)
     db.session.commit()
     return listing
@@ -149,14 +158,21 @@ def get_listing_matches(id):
     receivers = db.session.query(Listing).filter(
         Listing.type == Listing.Type.RECEIVER,
         Listing.organ_type == listing.organ_type,
+        Listing.organ,
     )
+    organ_name = listing.organ_type.value.lower()
+    score_module = importlib.import_module(
+        f'app.score.{organ_name}.{organ_name}_score'
+    )
+    score_func = getattr(score_module, f'compute_{organ_name}_score')
     return {
         "donor": listing,
-        "matches": [
-            {
-                "receiver": receiver,
-                "score": listing.organ.match(receiver),
-            }
-            for receiver in receivers
-        ],
+        "matches": sorted(
+            [
+                {"receiver": receiver, "score": score_func(listing, receiver)}
+                for receiver in receivers
+            ],
+            key=lambda x: x['score'],
+            reverse=True,
+        ),
     }
