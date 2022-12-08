@@ -45,8 +45,8 @@ def get_score_mg(hospital_1, hospital_2):
     return MG
 
 
-def compute_liver_score(donor_organ, receiver_listing):
-    donor = donor_organ.listing.person
+def compute_liver_score(donor_listing, receiver_listing):
+    donor = donor_listing.person
     receiver = receiver_listing.person
     # donor_listing = donor_organ.listing
     receiver_organ = receiver_listing.organ

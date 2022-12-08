@@ -55,10 +55,10 @@ def get_score_MG(hospital_1, hospital_2):
     return MG
 
 
-def compute_kindey_score(donor_organ, receiver_listing):
+def compute_kindey_score(donor_listing, receiver_listing):
     listing_kidney = receiver_listing.organ
     receiver = receiver_listing.person
-    donor = donor_organ.listing.person
+    donor = donor_listing.person
 
     if not listing_kidney:
         raise NotFoundError("No listing found in kidneys table")

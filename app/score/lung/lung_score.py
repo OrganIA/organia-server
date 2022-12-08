@@ -195,7 +195,7 @@ def check_NLAS(RawScore):
         return 1
 
 
-def compute_lung_score(donor_organ, receiver_listing):
+def compute_lung_score(donor_listing, receiver_listing):
     listing_lung = receiver_listing.organ
     receiver = receiver_listing.person
 

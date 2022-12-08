@@ -1,3 +1,4 @@
+import importlib
 from datetime import date
 
 import flask
@@ -94,15 +95,16 @@ def get_listing_matches(id):
         Listing.organ_type == listing.organ_type,
         Listing.organ,
     )
-    organ = listing.organ or listing.organ_type.table(listing=listing)
+    organ_name = listing.organ_type.value.lower()
+    score_module = importlib.import_module(
+        f'app.score.{organ_name}.{organ_name}_score'
+    )
+    score_func = getattr(score_module, f'compute_{organ_name}_score')
     return {
         "donor": listing,
         "matches": sorted(
             [
-                {
-                    "receiver": receiver,
-                    "score": organ.match(receiver),
-                }
+                {"receiver": receiver, "score": score_func(listing, receiver)}
                 for receiver in receivers
             ],
             key=lambda x: x['score'],
