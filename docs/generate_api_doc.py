@@ -265,19 +265,16 @@ calls = [
     ),
     # Create a receiver listing for a lung, creating the Person and Organ in
     # one go
-    # diagnosis_group can be A, B, C, or D
-    # detailed_diagnosis can be one of the following:
-    # - BRONCHIECTASIS
-    # - EISENMENGER
-    # - BRONCHIOLITIS
-    # - LAM
-    # - SARCOIDOSIS
-    # body_mass_index for a normal person is expected to be between 18.5 and 25
-    # pulmonary_artery_systolic is expected to be between 17 and 20, > 30 is
+    # - `diagnosis_group` can be A, B, C, or D
+    # - `detailed_diagnosis` can be one of the following: BRONCHIECTASIS,
+    # EISENMENGER, BRONCHIOLITIS, LAM, or SARCOIDOSIS
+    # - `body_mass_index` for a normal person is expected to be between 18.5 and
+    # 25
+    # - `pulmonary_artery_systolic` is expected to be between 17 and 20, > 30 is
     # considered critical
-    # carbon_dioxide_partial_pressure is expected to be between 35 and 40
-    # pulmonary_capilary_wedge_pressure is expected to be between 8 and 12,
-    # > 20 is considered critical
+    # - `carbon_dioxide_partial_pressure` is expected to be between 35 and 40
+    # - `pulmonary_capilary_wedge_pressure` is expected to be between 8 and 12,
+    # \> 20 is considered critical
     Post(
         '/listings',
         {

@@ -1,5 +1,5 @@
 # API Documentation
-Generated on: 2022-12-08 at 03:24:15
+Generated on: 2022-12-08 at 03:35:50
 
 - [GET /api/](#get-api)
 - [POST /api/auth/register](#post-apiauthregister)
@@ -30,7 +30,7 @@ Generated on: 2022-12-08 at 03:24:15
 - [GET /api/listings/?type=receiver](#get-apilistingstypereceiver)
 - [GET /api/listings/1](#get-apilistings1)
 - [GET /api/listings/2/matches](#get-apilistings2matches)
-- [DELETE /api/listings/1](#delete-apilistings1)
+- [DELETE /api/listings/2](#delete-apilistings2)
 
 
 ## GET /api/
@@ -41,9 +41,9 @@ the latest version.
 ### Response
 ```json
 {
-  "version": "dfd1928",
-  "time": 1670462655.19432,
-  "datetime": "2022-12-08 02:24:15.194320",
+  "version": "52257e7",
+  "time": 1670463350.344331,
+  "datetime": "2022-12-08 02:35:50.344331",
   "software": {
     "flask": "2.2.2",
     "python": "3.10.7",
@@ -66,7 +66,7 @@ login after registering.
 ### Request
 ```json
 {
-  "email": "user773@email.com",
+  "email": "user558@email.com",
   "password": "password",
   "firstname": "prenom",
   "lastname": "nom",
@@ -77,14 +77,14 @@ login after registering.
 ### Response
 ```json
 {
-  "token": "1-1-e0a444bd391f7be1cbec22e1e1f017619799c4b1cd8bfad4680898c3e389548d",
+  "token": "1-1-c279b94b4b117e029c9e6218a65c690b0f2c7c0700672455037e3f99e6dc392b",
   "user": {
     "firstname": "prenom",
     "lastname": "nom",
     "id": 1,
-    "created_at": "2022-12-08 02:24:15.406039",
+    "created_at": "2022-12-08 02:35:50.564529",
     "updated_at": null,
-    "email": "user773@email.com",
+    "email": "user558@email.com",
     "phone_number": "01 23 45 67 89",
     "role": {
       "id": 1,
@@ -104,7 +104,7 @@ login after registering.
 ### Request
 ```json
 {
-  "email": "user773@email.com",
+  "email": "user558@email.com",
   "password": "password",
   "firstname": "prenom",
   "lastname": "nom",
@@ -115,7 +115,7 @@ login after registering.
 ### Response
 ```json
 {
-  "msg": "email \"user773@email.com\" is already taken."
+  "msg": "email \"user558@email.com\" is already taken."
 }
 ```
 
@@ -127,7 +127,7 @@ Login and get a token.
 ### Request
 ```json
 {
-  "email": "user773@email.com",
+  "email": "user558@email.com",
   "password": "password"
 }
 ```
@@ -135,14 +135,14 @@ Login and get a token.
 ### Response
 ```json
 {
-  "token": "3-1-3853090eb0686349c06b1e083361596ad1fdddbd86bec1288ba2dd7b4fa0140a",
+  "token": "3-1-d471f646e40df8f89d9e5026964279d9a1320623e79576aa722f52493b7b30af",
   "user": {
     "firstname": "prenom",
     "lastname": "nom",
     "id": 1,
-    "created_at": "2022-12-08 02:24:15.406039",
+    "created_at": "2022-12-08 02:35:50.564529",
     "updated_at": null,
-    "email": "user773@email.com",
+    "email": "user558@email.com",
     "phone_number": "01 23 45 67 89",
     "role": {
       "id": 1,
@@ -178,7 +178,7 @@ Login and get a token.
 ### Request
 ```json
 {
-  "email": "user773@email.com",
+  "email": "user558@email.com",
   "password": "not-the-password"
 }
 ```
@@ -203,9 +203,9 @@ List all users
     "firstname": "prenom",
     "lastname": "nom",
     "id": 1,
-    "created_at": "2022-12-08 02:24:15.406039",
+    "created_at": "2022-12-08 02:35:50.564529",
     "updated_at": null,
-    "email": "user773@email.com",
+    "email": "user558@email.com",
     "phone_number": "01 23 45 67 89",
     "role": {
       "id": 1,
@@ -222,9 +222,9 @@ List all users
     "firstname": null,
     "lastname": null,
     "id": 2,
-    "created_at": "2022-12-08 02:24:15.754427",
+    "created_at": "2022-12-08 02:35:50.917186",
     "updated_at": null,
-    "email": "user746@email.com",
+    "email": "user575@email.com",
     "phone_number": null,
     "role": {
       "id": 1,
@@ -241,8 +241,8 @@ List all users
     "firstname": null,
     "lastname": null,
     "id": 3,
-    "created_at": "2022-12-08 02:24:16.290573",
-    "updated_at": "2022-12-08 02:24:16.300243",
+    "created_at": "2022-12-08 02:35:51.459888",
+    "updated_at": "2022-12-08 02:35:51.470827",
     "email": "admin@localhost",
     "phone_number": null,
     "role": {
@@ -271,8 +271,8 @@ Get info about the current user
   "firstname": null,
   "lastname": null,
   "id": 3,
-  "created_at": "2022-12-08 02:24:16.290573",
-  "updated_at": "2022-12-08 02:24:16.300243",
+  "created_at": "2022-12-08 02:35:51.459888",
+  "updated_at": "2022-12-08 02:35:51.470827",
   "email": "admin@localhost",
   "phone_number": null,
   "role": {
@@ -300,9 +300,9 @@ Get info about a specific user
   "firstname": "prenom",
   "lastname": "nom",
   "id": 1,
-  "created_at": "2022-12-08 02:24:15.406039",
+  "created_at": "2022-12-08 02:35:50.564529",
   "updated_at": null,
-  "email": "user773@email.com",
+  "email": "user558@email.com",
   "phone_number": "01 23 45 67 89",
   "role": {
     "id": 1,
@@ -345,7 +345,7 @@ Create a new chat
 ```json
 {
   "id": 1,
-  "created_at": "2022-12-08 02:24:16.387216",
+  "created_at": "2022-12-08 02:35:51.554584",
   "updated_at": null,
   "name": "Chat name",
   "users": [
@@ -353,9 +353,9 @@ Create a new chat
       "firstname": "prenom",
       "lastname": "nom",
       "id": 1,
-      "created_at": "2022-12-08 02:24:15.406039",
+      "created_at": "2022-12-08 02:35:50.564529",
       "updated_at": null,
-      "email": "user773@email.com",
+      "email": "user558@email.com",
       "phone_number": "01 23 45 67 89",
       "role": {
         "id": 1,
@@ -372,9 +372,9 @@ Create a new chat
       "firstname": null,
       "lastname": null,
       "id": 2,
-      "created_at": "2022-12-08 02:24:15.754427",
+      "created_at": "2022-12-08 02:35:50.917186",
       "updated_at": null,
-      "email": "user746@email.com",
+      "email": "user575@email.com",
       "phone_number": null,
       "role": {
         "id": 1,
@@ -391,8 +391,8 @@ Create a new chat
       "firstname": null,
       "lastname": null,
       "id": 3,
-      "created_at": "2022-12-08 02:24:16.369462",
-      "updated_at": "2022-12-08 02:24:16.377141",
+      "created_at": "2022-12-08 02:35:51.535508",
+      "updated_at": "2022-12-08 02:35:51.543384",
       "email": "admin@localhost",
       "phone_number": null,
       "role": {
@@ -411,8 +411,8 @@ Create a new chat
     "firstname": null,
     "lastname": null,
     "id": 3,
-    "created_at": "2022-12-08 02:24:16.369462",
-    "updated_at": "2022-12-08 02:24:16.377141",
+    "created_at": "2022-12-08 02:35:51.535508",
+    "updated_at": "2022-12-08 02:35:51.543384",
     "email": "admin@localhost",
     "phone_number": null,
     "role": {
@@ -440,7 +440,7 @@ Get all the chats the current user is part of
 [
   {
     "id": 1,
-    "created_at": "2022-12-08 02:24:16.387216",
+    "created_at": "2022-12-08 02:35:51.554584",
     "updated_at": null,
     "name": "Chat name",
     "users": [
@@ -448,9 +448,9 @@ Get all the chats the current user is part of
         "firstname": "prenom",
         "lastname": "nom",
         "id": 1,
-        "created_at": "2022-12-08 02:24:15.406039",
+        "created_at": "2022-12-08 02:35:50.564529",
         "updated_at": null,
-        "email": "user773@email.com",
+        "email": "user558@email.com",
         "phone_number": "01 23 45 67 89",
         "role": {
           "id": 1,
@@ -467,9 +467,9 @@ Get all the chats the current user is part of
         "firstname": null,
         "lastname": null,
         "id": 2,
-        "created_at": "2022-12-08 02:24:15.754427",
+        "created_at": "2022-12-08 02:35:50.917186",
         "updated_at": null,
-        "email": "user746@email.com",
+        "email": "user575@email.com",
         "phone_number": null,
         "role": {
           "id": 1,
@@ -486,8 +486,8 @@ Get all the chats the current user is part of
         "firstname": null,
         "lastname": null,
         "id": 3,
-        "created_at": "2022-12-08 02:24:16.369462",
-        "updated_at": "2022-12-08 02:24:16.377141",
+        "created_at": "2022-12-08 02:35:51.535508",
+        "updated_at": "2022-12-08 02:35:51.543384",
         "email": "admin@localhost",
         "phone_number": null,
         "role": {
@@ -506,8 +506,8 @@ Get all the chats the current user is part of
       "firstname": null,
       "lastname": null,
       "id": 3,
-      "created_at": "2022-12-08 02:24:16.369462",
-      "updated_at": "2022-12-08 02:24:16.377141",
+      "created_at": "2022-12-08 02:35:51.535508",
+      "updated_at": "2022-12-08 02:35:51.543384",
       "email": "admin@localhost",
       "phone_number": null,
       "role": {
@@ -535,7 +535,7 @@ Get a specific chat
 ```json
 {
   "id": 1,
-  "created_at": "2022-12-08 02:24:16.387216",
+  "created_at": "2022-12-08 02:35:51.554584",
   "updated_at": null,
   "name": "Chat name",
   "users": [
@@ -543,9 +543,9 @@ Get a specific chat
       "firstname": "prenom",
       "lastname": "nom",
       "id": 1,
-      "created_at": "2022-12-08 02:24:15.406039",
+      "created_at": "2022-12-08 02:35:50.564529",
       "updated_at": null,
-      "email": "user773@email.com",
+      "email": "user558@email.com",
       "phone_number": "01 23 45 67 89",
       "role": {
         "id": 1,
@@ -562,9 +562,9 @@ Get a specific chat
       "firstname": null,
       "lastname": null,
       "id": 2,
-      "created_at": "2022-12-08 02:24:15.754427",
+      "created_at": "2022-12-08 02:35:50.917186",
       "updated_at": null,
-      "email": "user746@email.com",
+      "email": "user575@email.com",
       "phone_number": null,
       "role": {
         "id": 1,
@@ -581,8 +581,8 @@ Get a specific chat
       "firstname": null,
       "lastname": null,
       "id": 3,
-      "created_at": "2022-12-08 02:24:16.369462",
-      "updated_at": "2022-12-08 02:24:16.377141",
+      "created_at": "2022-12-08 02:35:51.535508",
+      "updated_at": "2022-12-08 02:35:51.543384",
       "email": "admin@localhost",
       "phone_number": null,
       "role": {
@@ -601,8 +601,8 @@ Get a specific chat
     "firstname": null,
     "lastname": null,
     "id": 3,
-    "created_at": "2022-12-08 02:24:16.369462",
-    "updated_at": "2022-12-08 02:24:16.377141",
+    "created_at": "2022-12-08 02:35:51.535508",
+    "updated_at": "2022-12-08 02:35:51.543384",
     "email": "admin@localhost",
     "phone_number": null,
     "role": {
@@ -638,7 +638,7 @@ Send a message
   "content": "Hello world!",
   "chat": {
     "id": 1,
-    "created_at": "2022-12-08 02:24:16.387216",
+    "created_at": "2022-12-08 02:35:51.554584",
     "updated_at": null,
     "name": "Chat name",
     "users": [
@@ -646,9 +646,9 @@ Send a message
         "firstname": "prenom",
         "lastname": "nom",
         "id": 1,
-        "created_at": "2022-12-08 02:24:15.406039",
+        "created_at": "2022-12-08 02:35:50.564529",
         "updated_at": null,
-        "email": "user773@email.com",
+        "email": "user558@email.com",
         "phone_number": "01 23 45 67 89",
         "role": {
           "id": 1,
@@ -665,9 +665,9 @@ Send a message
         "firstname": null,
         "lastname": null,
         "id": 2,
-        "created_at": "2022-12-08 02:24:15.754427",
+        "created_at": "2022-12-08 02:35:50.917186",
         "updated_at": null,
-        "email": "user746@email.com",
+        "email": "user575@email.com",
         "phone_number": null,
         "role": {
           "id": 1,
@@ -684,8 +684,8 @@ Send a message
         "firstname": null,
         "lastname": null,
         "id": 3,
-        "created_at": "2022-12-08 02:24:16.369462",
-        "updated_at": "2022-12-08 02:24:16.377141",
+        "created_at": "2022-12-08 02:35:51.535508",
+        "updated_at": "2022-12-08 02:35:51.543384",
         "email": "admin@localhost",
         "phone_number": null,
         "role": {
@@ -704,8 +704,8 @@ Send a message
       "firstname": null,
       "lastname": null,
       "id": 3,
-      "created_at": "2022-12-08 02:24:16.369462",
-      "updated_at": "2022-12-08 02:24:16.377141",
+      "created_at": "2022-12-08 02:35:51.535508",
+      "updated_at": "2022-12-08 02:35:51.543384",
       "email": "admin@localhost",
       "phone_number": null,
       "role": {
@@ -724,8 +724,8 @@ Send a message
     "firstname": null,
     "lastname": null,
     "id": 3,
-    "created_at": "2022-12-08 02:24:16.369462",
-    "updated_at": "2022-12-08 02:24:16.377141",
+    "created_at": "2022-12-08 02:35:51.535508",
+    "updated_at": "2022-12-08 02:35:51.543384",
     "email": "admin@localhost",
     "phone_number": null,
     "role": {
@@ -740,7 +740,7 @@ Send a message
     }
   },
   "id": 1,
-  "created_at": "2022-12-08 02:24:16.439636"
+  "created_at": "2022-12-08 02:35:51.606688"
 }
 ```
 
@@ -757,7 +757,7 @@ Get all chats the current user is part of and the last message of each
     "content": "Hello world!",
     "chat": {
       "id": 1,
-      "created_at": "2022-12-08 02:24:16.387216",
+      "created_at": "2022-12-08 02:35:51.554584",
       "updated_at": null,
       "name": "Chat name",
       "users": [
@@ -765,9 +765,9 @@ Get all chats the current user is part of and the last message of each
           "firstname": "prenom",
           "lastname": "nom",
           "id": 1,
-          "created_at": "2022-12-08 02:24:15.406039",
+          "created_at": "2022-12-08 02:35:50.564529",
           "updated_at": null,
-          "email": "user773@email.com",
+          "email": "user558@email.com",
           "phone_number": "01 23 45 67 89",
           "role": {
             "id": 1,
@@ -784,9 +784,9 @@ Get all chats the current user is part of and the last message of each
           "firstname": null,
           "lastname": null,
           "id": 2,
-          "created_at": "2022-12-08 02:24:15.754427",
+          "created_at": "2022-12-08 02:35:50.917186",
           "updated_at": null,
-          "email": "user746@email.com",
+          "email": "user575@email.com",
           "phone_number": null,
           "role": {
             "id": 1,
@@ -803,8 +803,8 @@ Get all chats the current user is part of and the last message of each
           "firstname": null,
           "lastname": null,
           "id": 3,
-          "created_at": "2022-12-08 02:24:16.369462",
-          "updated_at": "2022-12-08 02:24:16.377141",
+          "created_at": "2022-12-08 02:35:51.535508",
+          "updated_at": "2022-12-08 02:35:51.543384",
           "email": "admin@localhost",
           "phone_number": null,
           "role": {
@@ -823,8 +823,8 @@ Get all chats the current user is part of and the last message of each
         "firstname": null,
         "lastname": null,
         "id": 3,
-        "created_at": "2022-12-08 02:24:16.369462",
-        "updated_at": "2022-12-08 02:24:16.377141",
+        "created_at": "2022-12-08 02:35:51.535508",
+        "updated_at": "2022-12-08 02:35:51.543384",
         "email": "admin@localhost",
         "phone_number": null,
         "role": {
@@ -843,8 +843,8 @@ Get all chats the current user is part of and the last message of each
       "firstname": null,
       "lastname": null,
       "id": 3,
-      "created_at": "2022-12-08 02:24:16.369462",
-      "updated_at": "2022-12-08 02:24:16.377141",
+      "created_at": "2022-12-08 02:35:51.535508",
+      "updated_at": "2022-12-08 02:35:51.543384",
       "email": "admin@localhost",
       "phone_number": null,
       "role": {
@@ -859,7 +859,7 @@ Get all chats the current user is part of and the last message of each
       }
     },
     "id": 1,
-    "created_at": "2022-12-08 02:24:16.439636"
+    "created_at": "2022-12-08 02:35:51.606688"
   }
 ]
 ```
@@ -877,7 +877,7 @@ Get all messages for a specific chat
     "content": "Hello world!",
     "chat": {
       "id": 1,
-      "created_at": "2022-12-08 02:24:16.387216",
+      "created_at": "2022-12-08 02:35:51.554584",
       "updated_at": null,
       "name": "Chat name",
       "users": [
@@ -885,9 +885,9 @@ Get all messages for a specific chat
           "firstname": "prenom",
           "lastname": "nom",
           "id": 1,
-          "created_at": "2022-12-08 02:24:15.406039",
+          "created_at": "2022-12-08 02:35:50.564529",
           "updated_at": null,
-          "email": "user773@email.com",
+          "email": "user558@email.com",
           "phone_number": "01 23 45 67 89",
           "role": {
             "id": 1,
@@ -904,9 +904,9 @@ Get all messages for a specific chat
           "firstname": null,
           "lastname": null,
           "id": 2,
-          "created_at": "2022-12-08 02:24:15.754427",
+          "created_at": "2022-12-08 02:35:50.917186",
           "updated_at": null,
-          "email": "user746@email.com",
+          "email": "user575@email.com",
           "phone_number": null,
           "role": {
             "id": 1,
@@ -923,8 +923,8 @@ Get all messages for a specific chat
           "firstname": null,
           "lastname": null,
           "id": 3,
-          "created_at": "2022-12-08 02:24:16.369462",
-          "updated_at": "2022-12-08 02:24:16.377141",
+          "created_at": "2022-12-08 02:35:51.535508",
+          "updated_at": "2022-12-08 02:35:51.543384",
           "email": "admin@localhost",
           "phone_number": null,
           "role": {
@@ -943,8 +943,8 @@ Get all messages for a specific chat
         "firstname": null,
         "lastname": null,
         "id": 3,
-        "created_at": "2022-12-08 02:24:16.369462",
-        "updated_at": "2022-12-08 02:24:16.377141",
+        "created_at": "2022-12-08 02:35:51.535508",
+        "updated_at": "2022-12-08 02:35:51.543384",
         "email": "admin@localhost",
         "phone_number": null,
         "role": {
@@ -963,8 +963,8 @@ Get all messages for a specific chat
       "firstname": null,
       "lastname": null,
       "id": 3,
-      "created_at": "2022-12-08 02:24:16.369462",
-      "updated_at": "2022-12-08 02:24:16.377141",
+      "created_at": "2022-12-08 02:35:51.535508",
+      "updated_at": "2022-12-08 02:35:51.543384",
       "email": "admin@localhost",
       "phone_number": null,
       "role": {
@@ -979,7 +979,7 @@ Get all messages for a specific chat
       }
     },
     "id": 1,
-    "created_at": "2022-12-08 02:24:16.439636"
+    "created_at": "2022-12-08 02:35:51.606688"
   }
 ]
 ```
@@ -1150,7 +1150,7 @@ one go
   "end_date": null,
   "person": {
     "id": 1,
-    "created_at": "2022-12-08 02:24:16.599182",
+    "created_at": "2022-12-08 02:35:51.813025",
     "updated_at": null,
     "first_name": "John",
     "last_name": "Doe",
@@ -1176,19 +1176,16 @@ one go
 ## POST /api/listings
 Create a receiver listing for a lung, creating the Person and Organ in
 one go
-diagnosis_group can be A, B, C, or D
-detailed_diagnosis can be one of the following:
-- BRONCHIECTASIS
-- EISENMENGER
-- BRONCHIOLITIS
-- LAM
-- SARCOIDOSIS
-body_mass_index for a normal person is expected to be between 18.5 and 25
-pulmonary_artery_systolic is expected to be between 17 and 20, > 30 is
+- `diagnosis_group` can be A, B, C, or D
+- `detailed_diagnosis` can be one of the following: BRONCHIECTASIS,
+EISENMENGER, BRONCHIOLITIS, LAM, or SARCOIDOSIS
+- `body_mass_index` for a normal person is expected to be between 18.5 and
+25
+- `pulmonary_artery_systolic` is expected to be between 17 and 20, > 30 is
 considered critical
-carbon_dioxide_partial_pressure is expected to be between 35 and 40
-pulmonary_capilary_wedge_pressure is expected to be between 8 and 12,
-> 20 is considered critical
+- `carbon_dioxide_partial_pressure` is expected to be between 35 and 40
+- `pulmonary_capilary_wedge_pressure` is expected to be between 8 and 12,
+\> 20 is considered critical
 
 > :lock: This request requires authentication. Pass `Bearer: the-token` in the `Authorization` header.
 ### Request
@@ -1235,7 +1232,7 @@ pulmonary_capilary_wedge_pressure is expected to be between 8 and 12,
   "end_date": null,
   "person": {
     "id": 2,
-    "created_at": "2022-12-08 02:24:16.625197",
+    "created_at": "2022-12-08 02:35:51.838674",
     "updated_at": null,
     "first_name": "John",
     "last_name": "Doe",
@@ -1302,7 +1299,7 @@ Create a donor listing for a liver, creating the Person in one go
   "end_date": null,
   "person": {
     "id": 3,
-    "created_at": "2022-12-08 02:24:16.652058",
+    "created_at": "2022-12-08 02:35:51.860777",
     "updated_at": null,
     "first_name": "Johnatan",
     "last_name": "Joeystarr",
@@ -1341,7 +1338,7 @@ Update a listing
   "end_date": null,
   "person": {
     "id": 1,
-    "created_at": "2022-12-08 02:24:16.599182",
+    "created_at": "2022-12-08 02:35:51.813025",
     "updated_at": null,
     "first_name": "John",
     "last_name": "Doe",
@@ -1391,8 +1388,8 @@ Update only a subset of the fields of a listing
   "end_date": null,
   "person": {
     "id": 1,
-    "created_at": "2022-12-08 02:24:16.599182",
-    "updated_at": "2022-12-08 02:24:16.689642",
+    "created_at": "2022-12-08 02:35:51.813025",
+    "updated_at": "2022-12-08 02:35:51.894131",
     "first_name": "Jojo",
     "last_name": "Doe",
     "birth_date": "1990-02-10",
@@ -1430,8 +1427,8 @@ Get all listings
     "end_date": null,
     "person": {
       "id": 1,
-      "created_at": "2022-12-08 02:24:16.599182",
-      "updated_at": "2022-12-08 02:24:16.689642",
+      "created_at": "2022-12-08 02:35:51.813025",
+      "updated_at": "2022-12-08 02:35:51.894131",
       "first_name": "Jojo",
       "last_name": "Doe",
       "birth_date": "1990-02-10",
@@ -1458,7 +1455,7 @@ Get all listings
     "end_date": null,
     "person": {
       "id": 2,
-      "created_at": "2022-12-08 02:24:16.625197",
+      "created_at": "2022-12-08 02:35:51.838674",
       "updated_at": null,
       "first_name": "John",
       "last_name": "Doe",
@@ -1498,7 +1495,7 @@ Get all listings
     "end_date": null,
     "person": {
       "id": 3,
-      "created_at": "2022-12-08 02:24:16.652058",
+      "created_at": "2022-12-08 02:35:51.860777",
       "updated_at": null,
       "first_name": "Johnatan",
       "last_name": "Joeystarr",
@@ -1532,7 +1529,7 @@ Only get donor listings
     "end_date": null,
     "person": {
       "id": 3,
-      "created_at": "2022-12-08 02:24:16.652058",
+      "created_at": "2022-12-08 02:35:51.860777",
       "updated_at": null,
       "first_name": "Johnatan",
       "last_name": "Joeystarr",
@@ -1566,8 +1563,8 @@ Only get receiver listings
     "end_date": null,
     "person": {
       "id": 1,
-      "created_at": "2022-12-08 02:24:16.599182",
-      "updated_at": "2022-12-08 02:24:16.689642",
+      "created_at": "2022-12-08 02:35:51.813025",
+      "updated_at": "2022-12-08 02:35:51.894131",
       "first_name": "Jojo",
       "last_name": "Doe",
       "birth_date": "1990-02-10",
@@ -1594,7 +1591,7 @@ Only get receiver listings
     "end_date": null,
     "person": {
       "id": 2,
-      "created_at": "2022-12-08 02:24:16.625197",
+      "created_at": "2022-12-08 02:35:51.838674",
       "updated_at": null,
       "first_name": "John",
       "last_name": "Doe",
@@ -1645,8 +1642,8 @@ Get a specific listing
   "end_date": null,
   "person": {
     "id": 1,
-    "created_at": "2022-12-08 02:24:16.599182",
-    "updated_at": "2022-12-08 02:24:16.689642",
+    "created_at": "2022-12-08 02:35:51.813025",
+    "updated_at": "2022-12-08 02:35:51.894131",
     "first_name": "Jojo",
     "last_name": "Doe",
     "birth_date": "1990-02-10",
@@ -1681,7 +1678,7 @@ Get a list of all matching receivers for a donor listing, with the score
 
 **Status:** 422
 
-## DELETE /api/listings/1
+## DELETE /api/listings/2
 Delete a listing
 
 > :lock: This request requires authentication. Pass `Bearer: the-token` in the `Authorization` header.
