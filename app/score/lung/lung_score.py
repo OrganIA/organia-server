@@ -31,13 +31,15 @@ def calculate_next_year_survival_chance_exponent(
         e += 0.115024
     else:
         e += 0.182250
-    e += listing_lung.FVC_percentage * (-0.019675)  # FVC not sure about %
+    e += listing_lung.pulmonary_function_percentage * (
+        -0.019675
+    )  # FVC not sure about %
     if (
         listing_lung.diagnosis_group == Lung.DiagnosisGroup.A
         or listing_lung.diagnosis_group == Lung.DiagnosisGroup.D
         or listing_lung.diagnosis_group == Lung.DiagnosisGroup.C
     ):
-        e += listing_lung.PA_systolic * 0.015889  # PA
+        e += listing_lung.pulmonary_artery_systolic * 0.015889  # PA
     if (
         listing_lung.diagnosis_group == Lung.DiagnosisGroup.A
         or listing_lung.diagnosis_group == Lung.DiagnosisGroup.D
@@ -78,12 +80,12 @@ def calculate_next_year_survival_chance_exponent(
         e += -0.256480
     if (
         listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.SARCOIDOSIS
-        and receiver_listing.PA_systolic > 30
+        and receiver_listing.pulmonary_artery_systolic > 30
     ):
         e += -0.707346
     elif (
         listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.SARCOIDOSIS
-        and receiver_listing.PA_systolic <= 30
+        and receiver_listing.pulmonary_artery_systolic <= 30
     ):
         e += 0.455348
     return e
@@ -112,18 +114,19 @@ def calculate_post_transplant_survival_chance_exponent(
 
     if listing_lung.diagnosis_group == Lung.DiagnosisGroup.B:
         e += 0.623207
-        e += listing_lung.FVC_percentage
+        e += listing_lung.pulmonary_function_percentage
     elif listing_lung.diagnosis_group == Lung.DiagnosisGroup.C:
         e += 0.008514
     elif listing_lung.diagnosis_group == Lung.DiagnosisGroup.D:
         e += 0.413173
-        e += listing_lung.FVC_percentage
-        if listing_lung.PCW_over_20_mmHg:
+        e += listing_lung.pulmonary_function_percentage
+        if listing_lung.pulmonary_capilary_wedge_pressure > 20:
             e += 0.033046
 
-    e += listing_lung.age_at_transplant * 0.003510
-    e += listing_lung.creatinine_at_transplant * 0.061986
-    if listing_lung.ADL_required:
+    # e += listing_lung.age_at_transplant * 0.003510
+    e += listing_lung.listing.person.age * 0.003510
+    e += listing_lung.creatinine * 0.061986
+    if listing_lung.activities_of_daily_life_required:
         e += -0.488525
     if listing_lung.continuous_mech_ventilation:
         e += 0.312846
@@ -140,12 +143,12 @@ def calculate_post_transplant_survival_chance_exponent(
         e += -0.443786
     if (
         listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.SARCOIDOSIS
-        and listing_lung.PA_systolic > 30
+        and listing_lung.pulmonary_artery_systolic > 30
     ):
         e += -0.122351
     elif (
         listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.SARCOIDOSIS
-        and listing_lung.PA_systolic <= 30
+        and listing_lung.pulmonary_artery_systolic <= 30
     ):
         e += -0.016505
 
