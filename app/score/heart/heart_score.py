@@ -7,7 +7,7 @@ from app.db.models import Heart, Person
 
 
 def get_CAS(age_R, urgence, fICAR):
-    if age_R >= 18 and urgence == Heart.EMERGENCY.NA:
+    if age_R >= 18 and urgence == Heart.Emergency.NA:
         if fICAR < 775:
             return fICAR
         else:
@@ -17,7 +17,7 @@ def get_CAS(age_R, urgence, fICAR):
 
 
 def get_XPCA(age_R, urgence, XPC, fICAR, KXPC, DAURG):
-    if age_R >= 18 and urgence == Heart.EMERGENCY.XPCA:
+    if age_R >= 18 and urgence == Heart.Emergency.XPCA:
         if XPC == 0:
             return max(fICAR, KXPC)
         else:
@@ -34,7 +34,7 @@ def get_CPS(age_R, urgence, DA):
 
 
 def get_XPCP(urgence, KXPC, DAURG):
-    if urgence in (Heart.EMERGENCY.XPCP1, Heart.EMERGENCY.XPCP2):
+    if urgence in (Heart.Emergency.XPCP1, Heart.Emergency.XPCP2):
         return KXPC + 50 * max(0, min(1, DAURG / 24))
     else:
         return 0

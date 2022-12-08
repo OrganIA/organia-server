@@ -95,7 +95,7 @@ def update_listing(id, data: ListingSchema):
         if listing.organ:
             listing.organ.read_dict(organ_data)
         else:
-            listing.organ = organ_type.table(**organ_data)
+            organ_type.table(**organ_data, listing=listing)
     listing.read_dict(data)
     db.session.commit()
     return listing

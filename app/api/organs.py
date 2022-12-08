@@ -79,7 +79,7 @@ class LungUpdateSchema(LungSchema):
 
 
 class HeartSchema(BaseModel):
-    emergency: Heart.EMERGENCY
+    emergency: Heart.Emergency
     delay_var_bio_GRF: int
 
     MAL: Heart.DiagnosisGroup | None
@@ -103,7 +103,7 @@ class HeartSchema(BaseModel):
 
 
 class HeartUpdateSchema(BaseModel):
-    emergency: Heart.EMERGENCY | None
+    emergency: Heart.Emergency | None
     delai_var_bio_GRF: date | None
 
     DAURG: int | None

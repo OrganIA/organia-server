@@ -8,7 +8,7 @@ from app.helpers.enums import EnumStr
 
 
 class Heart(OrganMixin, db.Base):
-    class EMERGENCY(EnumStr):
+    class Emergency(EnumStr):
         XPCA = enum.auto()
         XPCP1 = enum.auto()
         XPCP2 = enum.auto()
@@ -20,7 +20,7 @@ class Heart(OrganMixin, db.Base):
         CONGENITAL_NON_EISENMENGER = enum.auto()
 
     delay_var_bio_GRF = sa.Column(sa.Integer)
-    emergency = sa.Column(sa.Enum(EMERGENCY))
+    emergency = sa.Column(sa.Enum(Emergency))
     weight_kg = sa.Column(sa.Float)
     height_cm = sa.Column(sa.Float)
 
