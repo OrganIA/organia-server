@@ -8,7 +8,6 @@ from app import db
 from app.api.person import PersonCreateSchema, PersonSchema
 from app.db.models import Listing, Person
 from app.errors import InvalidRequest, NotFoundError
-from app.score.liver.liver_score import final_score
 from app.utils.bp import Blueprint
 
 bp = Blueprint(__name__)
@@ -26,6 +25,8 @@ class ListingSchema(BaseModel):
     person: PersonSchema | None
     start_date: date | None
     end_date: date | None
+    weight_kg: float | None
+    height_cm: float | None
 
 
 class ListingCreateSchema(ListingSchema):

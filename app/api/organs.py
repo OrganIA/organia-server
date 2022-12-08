@@ -2,7 +2,7 @@ from datetime import date
 
 from pydantic import BaseModel
 
-from app.db.models import Lung
+from app.db.models import Heart, Lung
 
 
 class KidneySchema(BaseModel):
@@ -76,3 +76,47 @@ class LungUpdateSchema(LungSchema):
     creatinine: float | None
     activities_of_daily_life_required: bool | None
     pulmonary_capilary_wedge_pressure: float | None
+
+
+class HeartSchema(BaseModel):
+    emergency: Heart.EMERGENCY
+    delay_var_bio_GRF: int
+
+    MAL: Heart.DiagnosisGroup | None
+    MAL2: Heart.DiagnosisGroup | None
+    MAL3: Heart.DiagnosisGroup | None
+
+    DAURG: int
+    DA: int
+    XPC: int
+
+    BILI: float
+    CREAT: float
+    F_ICAR: float
+    ICAR: float
+    KXPC: float
+
+    DIA_is_O: bool
+
+    DBILI: date
+    DCREAT: date
+
+
+class HeartUpdateSchema(BaseModel):
+    emergency: Heart.EMERGENCY | None
+    delai_var_bio_GRF: date | None
+
+    DAURG: int | None
+    DA: int | None
+    XPC: int | None
+
+    BILI: float | None
+    CREAT: float | None
+    F_ICAR: float | None
+    ICAR: float | None
+    KXPC: float | None
+
+    DIA_is_O: bool | None
+
+    DBILI: date | None
+    DCREAT: date | None

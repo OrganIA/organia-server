@@ -24,20 +24,22 @@ class Listing(db.Base):
 
         @property
         def table(self):
-            from app.db.models import Kidney, Liver, Lung
+            from app.db.models import Heart, Kidney, Liver, Lung
 
             return {
                 self.LIVER: Liver,
                 self.LUNG: Lung,
                 self.KIDNEY: Kidney,
+                self.HEART: Heart,
             }.get(self)
 
     notes = sa.Column(sa.String)
     type = sa.Column(sa.Enum(Type))
-
     organ_type = sa.Column(sa.Enum(Organ))
     start_date = sa.Column(sa.Date)
     end_date = sa.Column(sa.Date)
+    weight_kg = sa.Column(sa.Float)
+    height_cm = sa.Column(sa.Float)
 
     person_id = sa.Column(sa.ForeignKey('persons.id'))
     hospital_id = sa.Column(sa.ForeignKey('hospitals.id'))
@@ -74,7 +76,7 @@ class Listing(db.Base):
 
     @property
     def organ(self):
-        return self._liver or self._lung or self._kidney
+        return self._liver or self._lung or self._kidney or self._heart
 
     def read_dict(self, data):
         from app.db.models import Person

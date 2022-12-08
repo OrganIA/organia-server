@@ -1,5 +1,5 @@
 # API Documentation
-Generated on: 2022-12-08 at 16:26:30
+Generated on: 2022-12-08 at 18:14:24
 
 - [GET /api/](#get-api)
 - [POST /api/auth/register](#post-apiauthregister)
@@ -26,16 +26,19 @@ Generated on: 2022-12-08 at 16:26:30
 - [POST /api/listings](#post-apilistings)
 - [POST /api/listings](#post-apilistings)
 - [POST /api/listings](#post-apilistings)
+- [POST /api/listings](#post-apilistings)
+- [POST /api/listings](#post-apilistings)
 - [POST /api/listings/1](#post-apilistings1)
 - [POST /api/listings/1](#post-apilistings1)
 - [GET /api/listings/](#get-apilistings)
 - [GET /api/listings/?type=donor](#get-apilistingstypedonor)
 - [GET /api/listings/?type=receiver](#get-apilistingstypereceiver)
 - [GET /api/listings/1](#get-apilistings1)
-- [GET /api/listings/4/matches](#get-apilistings4matches)
 - [GET /api/listings/5/matches](#get-apilistings5matches)
 - [GET /api/listings/6/matches](#get-apilistings6matches)
-- [DELETE /api/listings/2](#delete-apilistings2)
+- [GET /api/listings/7/matches](#get-apilistings7matches)
+- [GET /api/listings/8/matches](#get-apilistings8matches)
+- [DELETE /api/listings/1](#delete-apilistings1)
 
 
 ## GET /api/
@@ -46,9 +49,9 @@ the latest version.
 ### Response
 ```json
 {
-  "version": "5e495f1",
-  "time": 1670509590.026772,
-  "datetime": "2022-12-08 15:26:30.026772",
+  "version": "530b748",
+  "time": 1670516064.595169,
+  "datetime": "2022-12-08 17:14:24.595169",
   "software": {
     "flask": "2.2.2",
     "python": "3.10.7",
@@ -71,7 +74,7 @@ login after registering.
 ### Request
 ```json
 {
-  "email": "user19@email.com",
+  "email": "user407@email.com",
   "password": "password",
   "firstname": "prenom",
   "lastname": "nom",
@@ -82,14 +85,14 @@ login after registering.
 ### Response
 ```json
 {
-  "token": "1-1-87b5862e47eef0f0a13ffbc5ea6f86f95b03fd8fe34b591f2ad4331ed3bd05c2",
+  "token": "7-7-e6eca792e8f8ba56f58358acec7615cf9e597973e678897b8e22b0d3af72b0af",
   "user": {
     "firstname": "prenom",
     "lastname": "nom",
-    "id": 1,
-    "created_at": "2022-12-08 15:26:30.259557",
+    "id": 7,
+    "created_at": "2022-12-08 17:14:24.827622",
     "updated_at": null,
-    "email": "user19@email.com",
+    "email": "user407@email.com",
     "phone_number": "01 23 45 67 89",
     "role": {
       "id": 1,
@@ -109,7 +112,7 @@ login after registering.
 ### Request
 ```json
 {
-  "email": "user19@email.com",
+  "email": "user407@email.com",
   "password": "password",
   "firstname": "prenom",
   "lastname": "nom",
@@ -120,7 +123,7 @@ login after registering.
 ### Response
 ```json
 {
-  "msg": "email \"user19@email.com\" is already taken."
+  "msg": "email \"user407@email.com\" is already taken."
 }
 ```
 
@@ -132,7 +135,7 @@ Login and get a token.
 ### Request
 ```json
 {
-  "email": "user19@email.com",
+  "email": "user407@email.com",
   "password": "password"
 }
 ```
@@ -140,14 +143,14 @@ Login and get a token.
 ### Response
 ```json
 {
-  "token": "3-1-7ce49ae41b061f88bfafc27a3f0b638ee5e9d479bdb0e43435f7439d96662cec",
+  "token": "9-7-c2ca4e747fd258eb2e2f432f6f53a5dc02b9ed748d67918d7473588415609283",
   "user": {
     "firstname": "prenom",
     "lastname": "nom",
-    "id": 1,
-    "created_at": "2022-12-08 15:26:30.259557",
+    "id": 7,
+    "created_at": "2022-12-08 17:14:24.827622",
     "updated_at": null,
-    "email": "user19@email.com",
+    "email": "user407@email.com",
     "phone_number": "01 23 45 67 89",
     "role": {
       "id": 1,
@@ -183,7 +186,7 @@ Login and get a token.
 ### Request
 ```json
 {
-  "email": "user19@email.com",
+  "email": "user407@email.com",
   "password": "not-the-password"
 }
 ```
@@ -208,9 +211,9 @@ List all users
     "firstname": "prenom",
     "lastname": "nom",
     "id": 1,
-    "created_at": "2022-12-08 15:26:30.259557",
+    "created_at": "2022-12-08 17:09:27.314003",
     "updated_at": null,
-    "email": "user19@email.com",
+    "email": "user363@email.com",
     "phone_number": "01 23 45 67 89",
     "role": {
       "id": 1,
@@ -227,9 +230,47 @@ List all users
     "firstname": null,
     "lastname": null,
     "id": 2,
-    "created_at": "2022-12-08 15:26:30.655590",
+    "created_at": "2022-12-08 17:09:27.699127",
     "updated_at": null,
-    "email": "user803@email.com",
+    "email": "user241@email.com",
+    "phone_number": null,
+    "role": {
+      "id": 1,
+      "can_edit_users": true,
+      "can_edit_hospitals": true,
+      "can_edit_listings": true,
+      "can_edit_staff": true,
+      "can_edit_roles": true,
+      "can_edit_persons": true,
+      "name": "admin"
+    }
+  },
+  {
+    "firstname": "prenom",
+    "lastname": "nom",
+    "id": 4,
+    "created_at": "2022-12-08 17:10:31.105628",
+    "updated_at": null,
+    "email": "user332@email.com",
+    "phone_number": "01 23 45 67 89",
+    "role": {
+      "id": 1,
+      "can_edit_users": true,
+      "can_edit_hospitals": true,
+      "can_edit_listings": true,
+      "can_edit_staff": true,
+      "can_edit_roles": true,
+      "can_edit_persons": true,
+      "name": "admin"
+    }
+  },
+  {
+    "firstname": null,
+    "lastname": null,
+    "id": 5,
+    "created_at": "2022-12-08 17:10:31.501971",
+    "updated_at": null,
+    "email": "user316@email.com",
     "phone_number": null,
     "role": {
       "id": 1,
@@ -245,10 +286,48 @@ List all users
   {
     "firstname": null,
     "lastname": null,
-    "id": 3,
-    "created_at": "2022-12-08 15:26:31.397897",
-    "updated_at": "2022-12-08 15:26:31.406775",
+    "id": 6,
+    "created_at": "2022-12-08 17:10:32.189160",
+    "updated_at": "2022-12-08 17:10:32.197686",
     "email": "admin@localhost",
+    "phone_number": null,
+    "role": {
+      "id": 1,
+      "can_edit_users": true,
+      "can_edit_hospitals": true,
+      "can_edit_listings": true,
+      "can_edit_staff": true,
+      "can_edit_roles": true,
+      "can_edit_persons": true,
+      "name": "admin"
+    }
+  },
+  {
+    "firstname": "prenom",
+    "lastname": "nom",
+    "id": 7,
+    "created_at": "2022-12-08 17:14:24.827622",
+    "updated_at": null,
+    "email": "user407@email.com",
+    "phone_number": "01 23 45 67 89",
+    "role": {
+      "id": 1,
+      "can_edit_users": true,
+      "can_edit_hospitals": true,
+      "can_edit_listings": true,
+      "can_edit_staff": true,
+      "can_edit_roles": true,
+      "can_edit_persons": true,
+      "name": "admin"
+    }
+  },
+  {
+    "firstname": null,
+    "lastname": null,
+    "id": 8,
+    "created_at": "2022-12-08 17:14:25.222921",
+    "updated_at": null,
+    "email": "user805@email.com",
     "phone_number": null,
     "role": {
       "id": 1,
@@ -275,9 +354,9 @@ Get info about the current user
 {
   "firstname": null,
   "lastname": null,
-  "id": 3,
-  "created_at": "2022-12-08 15:26:31.397897",
-  "updated_at": "2022-12-08 15:26:31.406775",
+  "id": 6,
+  "created_at": "2022-12-08 17:10:32.189160",
+  "updated_at": "2022-12-08 17:10:32.197686",
   "email": "admin@localhost",
   "phone_number": null,
   "role": {
@@ -305,9 +384,9 @@ Get info about a specific user
   "firstname": "prenom",
   "lastname": "nom",
   "id": 1,
-  "created_at": "2022-12-08 15:26:30.259557",
+  "created_at": "2022-12-08 17:09:27.314003",
   "updated_at": null,
-  "email": "user19@email.com",
+  "email": "user363@email.com",
   "phone_number": "01 23 45 67 89",
   "role": {
     "id": 1,
@@ -329,7 +408,13 @@ Delete a user
 
 > :police_car: This request requires specific permissions. An user must be authenticated via a token and their role must have the permissions edit_users to access this route.
 ### Response
-**Status:** 204
+```json
+{
+  "msg": "The requested resource was not found"
+}
+```
+
+**Status:** 404
 
 ## POST /api/chats
 Create a new chat
@@ -350,7 +435,7 @@ Create a new chat
 ```json
 {
   "id": 1,
-  "created_at": "2022-12-08 15:26:31.511091",
+  "created_at": "2022-12-08 17:14:25.859940",
   "updated_at": null,
   "name": "Chat name",
   "users": [
@@ -358,9 +443,9 @@ Create a new chat
       "firstname": "prenom",
       "lastname": "nom",
       "id": 1,
-      "created_at": "2022-12-08 15:26:30.259557",
+      "created_at": "2022-12-08 17:09:27.314003",
       "updated_at": null,
-      "email": "user19@email.com",
+      "email": "user363@email.com",
       "phone_number": "01 23 45 67 89",
       "role": {
         "id": 1,
@@ -377,9 +462,9 @@ Create a new chat
       "firstname": null,
       "lastname": null,
       "id": 2,
-      "created_at": "2022-12-08 15:26:30.655590",
+      "created_at": "2022-12-08 17:09:27.699127",
       "updated_at": null,
-      "email": "user803@email.com",
+      "email": "user241@email.com",
       "phone_number": null,
       "role": {
         "id": 1,
@@ -395,9 +480,9 @@ Create a new chat
     {
       "firstname": null,
       "lastname": null,
-      "id": 3,
-      "created_at": "2022-12-08 15:26:31.491018",
-      "updated_at": "2022-12-08 15:26:31.498817",
+      "id": 6,
+      "created_at": "2022-12-08 17:10:32.189160",
+      "updated_at": "2022-12-08 17:10:32.197686",
       "email": "admin@localhost",
       "phone_number": null,
       "role": {
@@ -415,9 +500,9 @@ Create a new chat
   "creator": {
     "firstname": null,
     "lastname": null,
-    "id": 3,
-    "created_at": "2022-12-08 15:26:31.491018",
-    "updated_at": "2022-12-08 15:26:31.498817",
+    "id": 6,
+    "created_at": "2022-12-08 17:10:32.189160",
+    "updated_at": "2022-12-08 17:10:32.197686",
     "email": "admin@localhost",
     "phone_number": null,
     "role": {
@@ -445,7 +530,7 @@ Get all the chats the current user is part of
 [
   {
     "id": 1,
-    "created_at": "2022-12-08 15:26:31.511091",
+    "created_at": "2022-12-08 17:14:25.859940",
     "updated_at": null,
     "name": "Chat name",
     "users": [
@@ -453,9 +538,9 @@ Get all the chats the current user is part of
         "firstname": "prenom",
         "lastname": "nom",
         "id": 1,
-        "created_at": "2022-12-08 15:26:30.259557",
+        "created_at": "2022-12-08 17:09:27.314003",
         "updated_at": null,
-        "email": "user19@email.com",
+        "email": "user363@email.com",
         "phone_number": "01 23 45 67 89",
         "role": {
           "id": 1,
@@ -472,9 +557,9 @@ Get all the chats the current user is part of
         "firstname": null,
         "lastname": null,
         "id": 2,
-        "created_at": "2022-12-08 15:26:30.655590",
+        "created_at": "2022-12-08 17:09:27.699127",
         "updated_at": null,
-        "email": "user803@email.com",
+        "email": "user241@email.com",
         "phone_number": null,
         "role": {
           "id": 1,
@@ -490,9 +575,9 @@ Get all the chats the current user is part of
       {
         "firstname": null,
         "lastname": null,
-        "id": 3,
-        "created_at": "2022-12-08 15:26:31.491018",
-        "updated_at": "2022-12-08 15:26:31.498817",
+        "id": 6,
+        "created_at": "2022-12-08 17:10:32.189160",
+        "updated_at": "2022-12-08 17:10:32.197686",
         "email": "admin@localhost",
         "phone_number": null,
         "role": {
@@ -510,9 +595,9 @@ Get all the chats the current user is part of
     "creator": {
       "firstname": null,
       "lastname": null,
-      "id": 3,
-      "created_at": "2022-12-08 15:26:31.491018",
-      "updated_at": "2022-12-08 15:26:31.498817",
+      "id": 6,
+      "created_at": "2022-12-08 17:10:32.189160",
+      "updated_at": "2022-12-08 17:10:32.197686",
       "email": "admin@localhost",
       "phone_number": null,
       "role": {
@@ -540,7 +625,7 @@ Get a specific chat
 ```json
 {
   "id": 1,
-  "created_at": "2022-12-08 15:26:31.511091",
+  "created_at": "2022-12-08 17:14:25.859940",
   "updated_at": null,
   "name": "Chat name",
   "users": [
@@ -548,9 +633,9 @@ Get a specific chat
       "firstname": "prenom",
       "lastname": "nom",
       "id": 1,
-      "created_at": "2022-12-08 15:26:30.259557",
+      "created_at": "2022-12-08 17:09:27.314003",
       "updated_at": null,
-      "email": "user19@email.com",
+      "email": "user363@email.com",
       "phone_number": "01 23 45 67 89",
       "role": {
         "id": 1,
@@ -567,9 +652,9 @@ Get a specific chat
       "firstname": null,
       "lastname": null,
       "id": 2,
-      "created_at": "2022-12-08 15:26:30.655590",
+      "created_at": "2022-12-08 17:09:27.699127",
       "updated_at": null,
-      "email": "user803@email.com",
+      "email": "user241@email.com",
       "phone_number": null,
       "role": {
         "id": 1,
@@ -585,9 +670,9 @@ Get a specific chat
     {
       "firstname": null,
       "lastname": null,
-      "id": 3,
-      "created_at": "2022-12-08 15:26:31.491018",
-      "updated_at": "2022-12-08 15:26:31.498817",
+      "id": 6,
+      "created_at": "2022-12-08 17:10:32.189160",
+      "updated_at": "2022-12-08 17:10:32.197686",
       "email": "admin@localhost",
       "phone_number": null,
       "role": {
@@ -605,9 +690,9 @@ Get a specific chat
   "creator": {
     "firstname": null,
     "lastname": null,
-    "id": 3,
-    "created_at": "2022-12-08 15:26:31.491018",
-    "updated_at": "2022-12-08 15:26:31.498817",
+    "id": 6,
+    "created_at": "2022-12-08 17:10:32.189160",
+    "updated_at": "2022-12-08 17:10:32.197686",
     "email": "admin@localhost",
     "phone_number": null,
     "role": {
@@ -643,7 +728,7 @@ Send a message
   "content": "Hello world!",
   "chat": {
     "id": 1,
-    "created_at": "2022-12-08 15:26:31.511091",
+    "created_at": "2022-12-08 17:14:25.859940",
     "updated_at": null,
     "name": "Chat name",
     "users": [
@@ -651,9 +736,9 @@ Send a message
         "firstname": "prenom",
         "lastname": "nom",
         "id": 1,
-        "created_at": "2022-12-08 15:26:30.259557",
+        "created_at": "2022-12-08 17:09:27.314003",
         "updated_at": null,
-        "email": "user19@email.com",
+        "email": "user363@email.com",
         "phone_number": "01 23 45 67 89",
         "role": {
           "id": 1,
@@ -670,9 +755,9 @@ Send a message
         "firstname": null,
         "lastname": null,
         "id": 2,
-        "created_at": "2022-12-08 15:26:30.655590",
+        "created_at": "2022-12-08 17:09:27.699127",
         "updated_at": null,
-        "email": "user803@email.com",
+        "email": "user241@email.com",
         "phone_number": null,
         "role": {
           "id": 1,
@@ -688,9 +773,9 @@ Send a message
       {
         "firstname": null,
         "lastname": null,
-        "id": 3,
-        "created_at": "2022-12-08 15:26:31.491018",
-        "updated_at": "2022-12-08 15:26:31.498817",
+        "id": 6,
+        "created_at": "2022-12-08 17:10:32.189160",
+        "updated_at": "2022-12-08 17:10:32.197686",
         "email": "admin@localhost",
         "phone_number": null,
         "role": {
@@ -708,9 +793,9 @@ Send a message
     "creator": {
       "firstname": null,
       "lastname": null,
-      "id": 3,
-      "created_at": "2022-12-08 15:26:31.491018",
-      "updated_at": "2022-12-08 15:26:31.498817",
+      "id": 6,
+      "created_at": "2022-12-08 17:10:32.189160",
+      "updated_at": "2022-12-08 17:10:32.197686",
       "email": "admin@localhost",
       "phone_number": null,
       "role": {
@@ -728,9 +813,9 @@ Send a message
   "sender": {
     "firstname": null,
     "lastname": null,
-    "id": 3,
-    "created_at": "2022-12-08 15:26:31.491018",
-    "updated_at": "2022-12-08 15:26:31.498817",
+    "id": 6,
+    "created_at": "2022-12-08 17:10:32.189160",
+    "updated_at": "2022-12-08 17:10:32.197686",
     "email": "admin@localhost",
     "phone_number": null,
     "role": {
@@ -744,8 +829,8 @@ Send a message
       "name": "admin"
     }
   },
-  "id": 1,
-  "created_at": "2022-12-08 15:26:31.569125"
+  "id": 3,
+  "created_at": "2022-12-08 17:14:25.927423"
 }
 ```
 
@@ -762,7 +847,7 @@ Get all chats the current user is part of and the last message of each
     "content": "Hello world!",
     "chat": {
       "id": 1,
-      "created_at": "2022-12-08 15:26:31.511091",
+      "created_at": "2022-12-08 17:14:25.859940",
       "updated_at": null,
       "name": "Chat name",
       "users": [
@@ -770,9 +855,9 @@ Get all chats the current user is part of and the last message of each
           "firstname": "prenom",
           "lastname": "nom",
           "id": 1,
-          "created_at": "2022-12-08 15:26:30.259557",
+          "created_at": "2022-12-08 17:09:27.314003",
           "updated_at": null,
-          "email": "user19@email.com",
+          "email": "user363@email.com",
           "phone_number": "01 23 45 67 89",
           "role": {
             "id": 1,
@@ -789,9 +874,9 @@ Get all chats the current user is part of and the last message of each
           "firstname": null,
           "lastname": null,
           "id": 2,
-          "created_at": "2022-12-08 15:26:30.655590",
+          "created_at": "2022-12-08 17:09:27.699127",
           "updated_at": null,
-          "email": "user803@email.com",
+          "email": "user241@email.com",
           "phone_number": null,
           "role": {
             "id": 1,
@@ -807,9 +892,9 @@ Get all chats the current user is part of and the last message of each
         {
           "firstname": null,
           "lastname": null,
-          "id": 3,
-          "created_at": "2022-12-08 15:26:31.491018",
-          "updated_at": "2022-12-08 15:26:31.498817",
+          "id": 6,
+          "created_at": "2022-12-08 17:10:32.189160",
+          "updated_at": "2022-12-08 17:10:32.197686",
           "email": "admin@localhost",
           "phone_number": null,
           "role": {
@@ -827,9 +912,9 @@ Get all chats the current user is part of and the last message of each
       "creator": {
         "firstname": null,
         "lastname": null,
-        "id": 3,
-        "created_at": "2022-12-08 15:26:31.491018",
-        "updated_at": "2022-12-08 15:26:31.498817",
+        "id": 6,
+        "created_at": "2022-12-08 17:10:32.189160",
+        "updated_at": "2022-12-08 17:10:32.197686",
         "email": "admin@localhost",
         "phone_number": null,
         "role": {
@@ -847,9 +932,9 @@ Get all chats the current user is part of and the last message of each
     "sender": {
       "firstname": null,
       "lastname": null,
-      "id": 3,
-      "created_at": "2022-12-08 15:26:31.491018",
-      "updated_at": "2022-12-08 15:26:31.498817",
+      "id": 6,
+      "created_at": "2022-12-08 17:10:32.189160",
+      "updated_at": "2022-12-08 17:10:32.197686",
       "email": "admin@localhost",
       "phone_number": null,
       "role": {
@@ -863,8 +948,8 @@ Get all chats the current user is part of and the last message of each
         "name": "admin"
       }
     },
-    "id": 1,
-    "created_at": "2022-12-08 15:26:31.569125"
+    "id": 3,
+    "created_at": "2022-12-08 17:14:25.927423"
   }
 ]
 ```
@@ -882,7 +967,7 @@ Get all messages for a specific chat
     "content": "Hello world!",
     "chat": {
       "id": 1,
-      "created_at": "2022-12-08 15:26:31.511091",
+      "created_at": "2022-12-08 17:14:25.859940",
       "updated_at": null,
       "name": "Chat name",
       "users": [
@@ -890,9 +975,9 @@ Get all messages for a specific chat
           "firstname": "prenom",
           "lastname": "nom",
           "id": 1,
-          "created_at": "2022-12-08 15:26:30.259557",
+          "created_at": "2022-12-08 17:09:27.314003",
           "updated_at": null,
-          "email": "user19@email.com",
+          "email": "user363@email.com",
           "phone_number": "01 23 45 67 89",
           "role": {
             "id": 1,
@@ -909,9 +994,9 @@ Get all messages for a specific chat
           "firstname": null,
           "lastname": null,
           "id": 2,
-          "created_at": "2022-12-08 15:26:30.655590",
+          "created_at": "2022-12-08 17:09:27.699127",
           "updated_at": null,
-          "email": "user803@email.com",
+          "email": "user241@email.com",
           "phone_number": null,
           "role": {
             "id": 1,
@@ -927,9 +1012,9 @@ Get all messages for a specific chat
         {
           "firstname": null,
           "lastname": null,
-          "id": 3,
-          "created_at": "2022-12-08 15:26:31.491018",
-          "updated_at": "2022-12-08 15:26:31.498817",
+          "id": 6,
+          "created_at": "2022-12-08 17:10:32.189160",
+          "updated_at": "2022-12-08 17:10:32.197686",
           "email": "admin@localhost",
           "phone_number": null,
           "role": {
@@ -947,9 +1032,9 @@ Get all messages for a specific chat
       "creator": {
         "firstname": null,
         "lastname": null,
-        "id": 3,
-        "created_at": "2022-12-08 15:26:31.491018",
-        "updated_at": "2022-12-08 15:26:31.498817",
+        "id": 6,
+        "created_at": "2022-12-08 17:10:32.189160",
+        "updated_at": "2022-12-08 17:10:32.197686",
         "email": "admin@localhost",
         "phone_number": null,
         "role": {
@@ -967,9 +1052,9 @@ Get all messages for a specific chat
     "sender": {
       "firstname": null,
       "lastname": null,
-      "id": 3,
-      "created_at": "2022-12-08 15:26:31.491018",
-      "updated_at": "2022-12-08 15:26:31.498817",
+      "id": 6,
+      "created_at": "2022-12-08 17:10:32.189160",
+      "updated_at": "2022-12-08 17:10:32.197686",
       "email": "admin@localhost",
       "phone_number": null,
       "role": {
@@ -983,8 +1068,8 @@ Get all messages for a specific chat
         "name": "admin"
       }
     },
-    "id": 1,
-    "created_at": "2022-12-08 15:26:31.569125"
+    "id": 3,
+    "created_at": "2022-12-08 17:14:25.927423"
   }
 ]
 ```
@@ -1153,9 +1238,11 @@ one go
   "organ_type": "LIVER",
   "start_date": null,
   "end_date": null,
+  "weight_kg": null,
+  "height_cm": null,
   "person": {
     "id": 1,
-    "created_at": "2022-12-08 15:26:31.731578",
+    "created_at": "2022-12-08 17:14:26.107005",
     "updated_at": null,
     "first_name": "John",
     "last_name": "Doe",
@@ -1238,9 +1325,11 @@ considered critical
   "organ_type": "LUNG",
   "start_date": null,
   "end_date": null,
+  "weight_kg": null,
+  "height_cm": null,
   "person": {
     "id": 2,
-    "created_at": "2022-12-08 15:26:31.759343",
+    "created_at": "2022-12-08 17:14:26.137710",
     "updated_at": null,
     "first_name": "John",
     "last_name": "Doe",
@@ -1318,9 +1407,11 @@ Create a receiver listing for a kidney, creating the Person in one go
   "organ_type": "KIDNEY",
   "start_date": null,
   "end_date": null,
+  "weight_kg": null,
+  "height_cm": null,
   "person": {
     "id": 3,
-    "created_at": "2022-12-08 15:26:31.788394",
+    "created_at": "2022-12-08 17:14:26.168069",
     "updated_at": null,
     "first_name": "John",
     "last_name": "Doe",
@@ -1353,6 +1444,102 @@ Create a receiver listing for a kidney, creating the Person in one go
 **Status:** 200
 
 ## POST /api/listings
+Create a receiver listing for a heart, creating the Person in one go
+- `emergency` can be one of XPCA, XPCP1, XPCP2, NA
+- `MAL`, `MAL2`, and `MAL3` are expected to be either null,
+  `VALVULAR`, `CONGENITAL`, or `CONGENITAL_NON_EISENMENGER`
+
+> :lock: This request requires authentication. Pass `Bearer: the-token` in the `Authorization` header.
+### Request
+```json
+{
+  "type": "RECEIVER",
+  "person": {
+    "first_name": "John",
+    "last_name": "Doe",
+    "phone_number": "+33123456789",
+    "gender": "MALE",
+    "birth_date": "1990-02-10",
+    "abo": "A",
+    "rhesus": "+"
+  },
+  "organ": {
+    "emergency": "XPCA",
+    "delay_var_bio_GRF": 4,
+    "MAL": "VALVULAR",
+    "MAL2": null,
+    "MAL3": null,
+    "DA": 2,
+    "DAURG": 3,
+    "XPC": 4,
+    "BILI": 1.3,
+    "CREAT": 1.4,
+    "F_ICAR": 1.5,
+    "ICAR": 1.6,
+    "KXPC": 1.7,
+    "DIA_is_O": true,
+    "DBILI": "2022-12-12",
+    "DCREAT": "2022-12-12"
+  },
+  "weight_kg": 80.2,
+  "height_cm": 180.3,
+  "organ_type": "HEART"
+}
+```
+
+### Response
+```json
+{
+  "id": 4,
+  "notes": null,
+  "type": "RECEIVER",
+  "organ_type": "HEART",
+  "start_date": null,
+  "end_date": null,
+  "weight_kg": 80.2,
+  "height_cm": 180.3,
+  "person": {
+    "id": 4,
+    "created_at": "2022-12-08 17:14:26.195353",
+    "updated_at": null,
+    "first_name": "John",
+    "last_name": "Doe",
+    "birth_date": "1990-02-10",
+    "description": null,
+    "gender": "MALE",
+    "abo": "A",
+    "rhesus": "Rhesus.POSITIVE",
+    "user": null
+  },
+  "organ": {
+    "id": 1,
+    "delay_var_bio_GRF": 4,
+    "emergency": "EMERGENCY.XPCA",
+    "weight_kg": null,
+    "height_cm": null,
+    "MAL": "DiagnosisGroup.VALVULAR",
+    "MAL2": null,
+    "MAL3": null,
+    "DA": 2,
+    "DAURG": 3,
+    "XPC": 4,
+    "BILI": 1.3,
+    "CREAT": 1.4,
+    "F_ICAR": 1.5,
+    "ICAR": 1.6,
+    "KXPC": 1.7,
+    "DIA_is_O": true,
+    "DBILI": "2022-12-12",
+    "DCREAT": "2022-12-12",
+    "listing_id": 4
+  },
+  "hospital": null
+}
+```
+
+**Status:** 200
+
+## POST /api/listings
 Create a donor listing for a liver, creating the Person in one go
 
 > :lock: This request requires authentication. Pass `Bearer: the-token` in the `Authorization` header.
@@ -1376,15 +1563,17 @@ Create a donor listing for a liver, creating the Person in one go
 ### Response
 ```json
 {
-  "id": 4,
+  "id": 5,
   "notes": null,
   "type": "DONOR",
   "organ_type": "LIVER",
   "start_date": null,
   "end_date": null,
+  "weight_kg": null,
+  "height_cm": null,
   "person": {
-    "id": 4,
-    "created_at": "2022-12-08 15:26:31.817156",
+    "id": 5,
+    "created_at": "2022-12-08 17:14:26.225437",
     "updated_at": null,
     "first_name": "Johnatan",
     "last_name": "Joeystarr",
@@ -1426,15 +1615,17 @@ Create a donor listing for a kidney, creating the Person in one go
 ### Response
 ```json
 {
-  "id": 5,
+  "id": 6,
   "notes": null,
   "type": "DONOR",
   "organ_type": "KIDNEY",
   "start_date": null,
   "end_date": null,
+  "weight_kg": null,
+  "height_cm": null,
   "person": {
-    "id": 5,
-    "created_at": "2022-12-08 15:26:31.842991",
+    "id": 6,
+    "created_at": "2022-12-08 17:14:26.252807",
     "updated_at": null,
     "first_name": "Johnatan",
     "last_name": "Joeystarr",
@@ -1476,15 +1667,71 @@ Create a donor listing for a lung, creating the Person in one go
 ### Response
 ```json
 {
-  "id": 6,
+  "id": 7,
   "notes": null,
   "type": "DONOR",
   "organ_type": "LUNG",
   "start_date": null,
   "end_date": null,
+  "weight_kg": null,
+  "height_cm": null,
   "person": {
-    "id": 6,
-    "created_at": "2022-12-08 15:26:31.878462",
+    "id": 7,
+    "created_at": "2022-12-08 17:14:26.278159",
+    "updated_at": null,
+    "first_name": "Johnatan",
+    "last_name": "Joeystarr",
+    "birth_date": "1990-02-10",
+    "description": null,
+    "gender": "MALE",
+    "abo": "A",
+    "rhesus": "Rhesus.POSITIVE",
+    "user": null
+  },
+  "organ": null,
+  "hospital": null
+}
+```
+
+**Status:** 200
+
+## POST /api/listings
+Create a donor listing for a heart, creating the Person in one go
+
+> :lock: This request requires authentication. Pass `Bearer: the-token` in the `Authorization` header.
+### Request
+```json
+{
+  "type": "DONOR",
+  "person": {
+    "first_name": "Johnatan",
+    "last_name": "Joeystarr",
+    "phone_number": "+33123456789",
+    "gender": "MALE",
+    "birth_date": "1990-02-10",
+    "abo": "A",
+    "rhesus": "+"
+  },
+  "organ_type": "HEART",
+  "weight_kg": 80.2,
+  "height_cm": 180.3
+}
+```
+
+### Response
+```json
+{
+  "id": 8,
+  "notes": null,
+  "type": "DONOR",
+  "organ_type": "HEART",
+  "start_date": null,
+  "end_date": null,
+  "weight_kg": 80.2,
+  "height_cm": 180.3,
+  "person": {
+    "id": 8,
+    "created_at": "2022-12-08 17:14:26.308615",
     "updated_at": null,
     "first_name": "Johnatan",
     "last_name": "Joeystarr",
@@ -1522,9 +1769,11 @@ Update a listing
   "organ_type": "LIVER",
   "start_date": "2020-02-10",
   "end_date": null,
+  "weight_kg": null,
+  "height_cm": null,
   "person": {
     "id": 1,
-    "created_at": "2022-12-08 15:26:31.731578",
+    "created_at": "2022-12-08 17:14:26.107005",
     "updated_at": null,
     "first_name": "John",
     "last_name": "Doe",
@@ -1573,10 +1822,12 @@ Update only a subset of the fields of a listing
   "organ_type": "LIVER",
   "start_date": "2020-02-10",
   "end_date": null,
+  "weight_kg": null,
+  "height_cm": null,
   "person": {
     "id": 1,
-    "created_at": "2022-12-08 15:26:31.731578",
-    "updated_at": "2022-12-08 15:26:31.925443",
+    "created_at": "2022-12-08 17:14:26.107005",
+    "updated_at": "2022-12-08 17:14:26.353327",
     "first_name": "Jojo",
     "last_name": "Doe",
     "birth_date": "1990-02-10",
@@ -1613,10 +1864,12 @@ Get all listings
     "organ_type": "LIVER",
     "start_date": "2020-02-10",
     "end_date": null,
+    "weight_kg": null,
+    "height_cm": null,
     "person": {
       "id": 1,
-      "created_at": "2022-12-08 15:26:31.731578",
-      "updated_at": "2022-12-08 15:26:31.925443",
+      "created_at": "2022-12-08 17:14:26.107005",
+      "updated_at": "2022-12-08 17:14:26.353327",
       "first_name": "Jojo",
       "last_name": "Doe",
       "birth_date": "1990-02-10",
@@ -1642,9 +1895,11 @@ Get all listings
     "organ_type": "LUNG",
     "start_date": null,
     "end_date": null,
+    "weight_kg": null,
+    "height_cm": null,
     "person": {
       "id": 2,
-      "created_at": "2022-12-08 15:26:31.759343",
+      "created_at": "2022-12-08 17:14:26.137710",
       "updated_at": null,
       "first_name": "John",
       "last_name": "Doe",
@@ -1683,9 +1938,11 @@ Get all listings
     "organ_type": "KIDNEY",
     "start_date": null,
     "end_date": null,
+    "weight_kg": null,
+    "height_cm": null,
     "person": {
       "id": 3,
-      "created_at": "2022-12-08 15:26:31.788394",
+      "created_at": "2022-12-08 17:14:26.168069",
       "updated_at": null,
       "first_name": "John",
       "last_name": "Doe",
@@ -1716,16 +1973,18 @@ Get all listings
   {
     "id": 4,
     "notes": null,
-    "type": "DONOR",
-    "organ_type": "LIVER",
+    "type": "RECEIVER",
+    "organ_type": "HEART",
     "start_date": null,
     "end_date": null,
+    "weight_kg": 80.2,
+    "height_cm": 180.3,
     "person": {
       "id": 4,
-      "created_at": "2022-12-08 15:26:31.817156",
+      "created_at": "2022-12-08 17:14:26.195353",
       "updated_at": null,
-      "first_name": "Johnatan",
-      "last_name": "Joeystarr",
+      "first_name": "John",
+      "last_name": "Doe",
       "birth_date": "1990-02-10",
       "description": null,
       "gender": "MALE",
@@ -1733,19 +1992,42 @@ Get all listings
       "rhesus": "Rhesus.POSITIVE",
       "user": null
     },
-    "organ": null,
+    "organ": {
+      "id": 1,
+      "delay_var_bio_GRF": 4,
+      "emergency": "EMERGENCY.XPCA",
+      "weight_kg": null,
+      "height_cm": null,
+      "MAL": "DiagnosisGroup.VALVULAR",
+      "MAL2": null,
+      "MAL3": null,
+      "DA": 2,
+      "DAURG": 3,
+      "XPC": 4,
+      "BILI": 1.3,
+      "CREAT": 1.4,
+      "F_ICAR": 1.5,
+      "ICAR": 1.6,
+      "KXPC": 1.7,
+      "DIA_is_O": true,
+      "DBILI": "2022-12-12",
+      "DCREAT": "2022-12-12",
+      "listing_id": 4
+    },
     "hospital": null
   },
   {
     "id": 5,
     "notes": null,
     "type": "DONOR",
-    "organ_type": "KIDNEY",
+    "organ_type": "LIVER",
     "start_date": null,
     "end_date": null,
+    "weight_kg": null,
+    "height_cm": null,
     "person": {
       "id": 5,
-      "created_at": "2022-12-08 15:26:31.842991",
+      "created_at": "2022-12-08 17:14:26.225437",
       "updated_at": null,
       "first_name": "Johnatan",
       "last_name": "Joeystarr",
@@ -1763,12 +2045,64 @@ Get all listings
     "id": 6,
     "notes": null,
     "type": "DONOR",
+    "organ_type": "KIDNEY",
+    "start_date": null,
+    "end_date": null,
+    "weight_kg": null,
+    "height_cm": null,
+    "person": {
+      "id": 6,
+      "created_at": "2022-12-08 17:14:26.252807",
+      "updated_at": null,
+      "first_name": "Johnatan",
+      "last_name": "Joeystarr",
+      "birth_date": "1990-02-10",
+      "description": null,
+      "gender": "MALE",
+      "abo": "A",
+      "rhesus": "Rhesus.POSITIVE",
+      "user": null
+    },
+    "organ": null,
+    "hospital": null
+  },
+  {
+    "id": 7,
+    "notes": null,
+    "type": "DONOR",
     "organ_type": "LUNG",
     "start_date": null,
     "end_date": null,
+    "weight_kg": null,
+    "height_cm": null,
     "person": {
-      "id": 6,
-      "created_at": "2022-12-08 15:26:31.878462",
+      "id": 7,
+      "created_at": "2022-12-08 17:14:26.278159",
+      "updated_at": null,
+      "first_name": "Johnatan",
+      "last_name": "Joeystarr",
+      "birth_date": "1990-02-10",
+      "description": null,
+      "gender": "MALE",
+      "abo": "A",
+      "rhesus": "Rhesus.POSITIVE",
+      "user": null
+    },
+    "organ": null,
+    "hospital": null
+  },
+  {
+    "id": 8,
+    "notes": null,
+    "type": "DONOR",
+    "organ_type": "HEART",
+    "start_date": null,
+    "end_date": null,
+    "weight_kg": 80.2,
+    "height_cm": 180.3,
+    "person": {
+      "id": 8,
+      "created_at": "2022-12-08 17:14:26.308615",
       "updated_at": null,
       "first_name": "Johnatan",
       "last_name": "Joeystarr",
@@ -1795,38 +2129,17 @@ Only get donor listings
 ```json
 [
   {
-    "id": 4,
+    "id": 5,
     "notes": null,
     "type": "DONOR",
     "organ_type": "LIVER",
     "start_date": null,
     "end_date": null,
-    "person": {
-      "id": 4,
-      "created_at": "2022-12-08 15:26:31.817156",
-      "updated_at": null,
-      "first_name": "Johnatan",
-      "last_name": "Joeystarr",
-      "birth_date": "1990-02-10",
-      "description": null,
-      "gender": "MALE",
-      "abo": "A",
-      "rhesus": "Rhesus.POSITIVE",
-      "user": null
-    },
-    "organ": null,
-    "hospital": null
-  },
-  {
-    "id": 5,
-    "notes": null,
-    "type": "DONOR",
-    "organ_type": "KIDNEY",
-    "start_date": null,
-    "end_date": null,
+    "weight_kg": null,
+    "height_cm": null,
     "person": {
       "id": 5,
-      "created_at": "2022-12-08 15:26:31.842991",
+      "created_at": "2022-12-08 17:14:26.225437",
       "updated_at": null,
       "first_name": "Johnatan",
       "last_name": "Joeystarr",
@@ -1844,12 +2157,64 @@ Only get donor listings
     "id": 6,
     "notes": null,
     "type": "DONOR",
+    "organ_type": "KIDNEY",
+    "start_date": null,
+    "end_date": null,
+    "weight_kg": null,
+    "height_cm": null,
+    "person": {
+      "id": 6,
+      "created_at": "2022-12-08 17:14:26.252807",
+      "updated_at": null,
+      "first_name": "Johnatan",
+      "last_name": "Joeystarr",
+      "birth_date": "1990-02-10",
+      "description": null,
+      "gender": "MALE",
+      "abo": "A",
+      "rhesus": "Rhesus.POSITIVE",
+      "user": null
+    },
+    "organ": null,
+    "hospital": null
+  },
+  {
+    "id": 7,
+    "notes": null,
+    "type": "DONOR",
     "organ_type": "LUNG",
     "start_date": null,
     "end_date": null,
+    "weight_kg": null,
+    "height_cm": null,
     "person": {
-      "id": 6,
-      "created_at": "2022-12-08 15:26:31.878462",
+      "id": 7,
+      "created_at": "2022-12-08 17:14:26.278159",
+      "updated_at": null,
+      "first_name": "Johnatan",
+      "last_name": "Joeystarr",
+      "birth_date": "1990-02-10",
+      "description": null,
+      "gender": "MALE",
+      "abo": "A",
+      "rhesus": "Rhesus.POSITIVE",
+      "user": null
+    },
+    "organ": null,
+    "hospital": null
+  },
+  {
+    "id": 8,
+    "notes": null,
+    "type": "DONOR",
+    "organ_type": "HEART",
+    "start_date": null,
+    "end_date": null,
+    "weight_kg": 80.2,
+    "height_cm": 180.3,
+    "person": {
+      "id": 8,
+      "created_at": "2022-12-08 17:14:26.308615",
       "updated_at": null,
       "first_name": "Johnatan",
       "last_name": "Joeystarr",
@@ -1882,10 +2247,12 @@ Only get receiver listings
     "organ_type": "LIVER",
     "start_date": "2020-02-10",
     "end_date": null,
+    "weight_kg": null,
+    "height_cm": null,
     "person": {
       "id": 1,
-      "created_at": "2022-12-08 15:26:31.731578",
-      "updated_at": "2022-12-08 15:26:31.925443",
+      "created_at": "2022-12-08 17:14:26.107005",
+      "updated_at": "2022-12-08 17:14:26.353327",
       "first_name": "Jojo",
       "last_name": "Doe",
       "birth_date": "1990-02-10",
@@ -1911,9 +2278,11 @@ Only get receiver listings
     "organ_type": "LUNG",
     "start_date": null,
     "end_date": null,
+    "weight_kg": null,
+    "height_cm": null,
     "person": {
       "id": 2,
-      "created_at": "2022-12-08 15:26:31.759343",
+      "created_at": "2022-12-08 17:14:26.137710",
       "updated_at": null,
       "first_name": "John",
       "last_name": "Doe",
@@ -1952,9 +2321,11 @@ Only get receiver listings
     "organ_type": "KIDNEY",
     "start_date": null,
     "end_date": null,
+    "weight_kg": null,
+    "height_cm": null,
     "person": {
       "id": 3,
-      "created_at": "2022-12-08 15:26:31.788394",
+      "created_at": "2022-12-08 17:14:26.168069",
       "updated_at": null,
       "first_name": "John",
       "last_name": "Doe",
@@ -1981,6 +2352,52 @@ Only get receiver listings
       "listing_id": 3
     },
     "hospital": null
+  },
+  {
+    "id": 4,
+    "notes": null,
+    "type": "RECEIVER",
+    "organ_type": "HEART",
+    "start_date": null,
+    "end_date": null,
+    "weight_kg": 80.2,
+    "height_cm": 180.3,
+    "person": {
+      "id": 4,
+      "created_at": "2022-12-08 17:14:26.195353",
+      "updated_at": null,
+      "first_name": "John",
+      "last_name": "Doe",
+      "birth_date": "1990-02-10",
+      "description": null,
+      "gender": "MALE",
+      "abo": "A",
+      "rhesus": "Rhesus.POSITIVE",
+      "user": null
+    },
+    "organ": {
+      "id": 1,
+      "delay_var_bio_GRF": 4,
+      "emergency": "EMERGENCY.XPCA",
+      "weight_kg": null,
+      "height_cm": null,
+      "MAL": "DiagnosisGroup.VALVULAR",
+      "MAL2": null,
+      "MAL3": null,
+      "DA": 2,
+      "DAURG": 3,
+      "XPC": 4,
+      "BILI": 1.3,
+      "CREAT": 1.4,
+      "F_ICAR": 1.5,
+      "ICAR": 1.6,
+      "KXPC": 1.7,
+      "DIA_is_O": true,
+      "DBILI": "2022-12-12",
+      "DCREAT": "2022-12-12",
+      "listing_id": 4
+    },
+    "hospital": null
   }
 ]
 ```
@@ -2000,10 +2417,12 @@ Get a specific listing
   "organ_type": "LIVER",
   "start_date": "2020-02-10",
   "end_date": null,
+  "weight_kg": null,
+  "height_cm": null,
   "person": {
     "id": 1,
-    "created_at": "2022-12-08 15:26:31.731578",
-    "updated_at": "2022-12-08 15:26:31.925443",
+    "created_at": "2022-12-08 17:14:26.107005",
+    "updated_at": "2022-12-08 17:14:26.353327",
     "first_name": "Jojo",
     "last_name": "Doe",
     "birth_date": "1990-02-10",
@@ -2026,7 +2445,7 @@ Get a specific listing
 
 **Status:** 200
 
-## GET /api/listings/4/matches
+## GET /api/listings/5/matches
 Get a list of all matching receivers for a liver listing, with the score
 
 > :lock: This request requires authentication. Pass `Bearer: the-token` in the `Authorization` header.
@@ -2034,15 +2453,17 @@ Get a list of all matching receivers for a liver listing, with the score
 ```json
 {
   "donor": {
-    "id": 4,
+    "id": 5,
     "notes": null,
     "type": "DONOR",
     "organ_type": "LIVER",
     "start_date": null,
     "end_date": null,
+    "weight_kg": null,
+    "height_cm": null,
     "person": {
-      "id": 4,
-      "created_at": "2022-12-08 15:26:31.817156",
+      "id": 5,
+      "created_at": "2022-12-08 17:14:26.225437",
       "updated_at": null,
       "first_name": "Johnatan",
       "last_name": "Joeystarr",
@@ -2065,10 +2486,12 @@ Get a list of all matching receivers for a liver listing, with the score
         "organ_type": "LIVER",
         "start_date": "2020-02-10",
         "end_date": null,
+        "weight_kg": null,
+        "height_cm": null,
         "person": {
           "id": 1,
-          "created_at": "2022-12-08 15:26:31.731578",
-          "updated_at": "2022-12-08 15:26:31.925443",
+          "created_at": "2022-12-08 17:14:26.107005",
+          "updated_at": "2022-12-08 17:14:26.353327",
           "first_name": "Jojo",
           "last_name": "Doe",
           "birth_date": "1990-02-10",
@@ -2095,7 +2518,7 @@ Get a list of all matching receivers for a liver listing, with the score
 
 **Status:** 200
 
-## GET /api/listings/5/matches
+## GET /api/listings/6/matches
 Get a list of all matching receivers for a lung listing, with the score
 
 > :lock: This request requires authentication. Pass `Bearer: the-token` in the `Authorization` header.
@@ -2103,15 +2526,17 @@ Get a list of all matching receivers for a lung listing, with the score
 ```json
 {
   "donor": {
-    "id": 5,
+    "id": 6,
     "notes": null,
     "type": "DONOR",
     "organ_type": "KIDNEY",
     "start_date": null,
     "end_date": null,
+    "weight_kg": null,
+    "height_cm": null,
     "person": {
-      "id": 5,
-      "created_at": "2022-12-08 15:26:31.842991",
+      "id": 6,
+      "created_at": "2022-12-08 17:14:26.252807",
       "updated_at": null,
       "first_name": "Johnatan",
       "last_name": "Joeystarr",
@@ -2134,9 +2559,11 @@ Get a list of all matching receivers for a lung listing, with the score
         "organ_type": "KIDNEY",
         "start_date": null,
         "end_date": null,
+        "weight_kg": null,
+        "height_cm": null,
         "person": {
           "id": 3,
-          "created_at": "2022-12-08 15:26:31.788394",
+          "created_at": "2022-12-08 17:14:26.168069",
           "updated_at": null,
           "first_name": "John",
           "last_name": "Doe",
@@ -2172,7 +2599,7 @@ Get a list of all matching receivers for a lung listing, with the score
 
 **Status:** 200
 
-## GET /api/listings/6/matches
+## GET /api/listings/7/matches
 Get a list of all matching receivers for a kidney listing, with the score
 
 > :lock: This request requires authentication. Pass `Bearer: the-token` in the `Authorization` header.
@@ -2180,15 +2607,17 @@ Get a list of all matching receivers for a kidney listing, with the score
 ```json
 {
   "donor": {
-    "id": 6,
+    "id": 7,
     "notes": null,
     "type": "DONOR",
     "organ_type": "LUNG",
     "start_date": null,
     "end_date": null,
+    "weight_kg": null,
+    "height_cm": null,
     "person": {
-      "id": 6,
-      "created_at": "2022-12-08 15:26:31.878462",
+      "id": 7,
+      "created_at": "2022-12-08 17:14:26.278159",
       "updated_at": null,
       "first_name": "Johnatan",
       "last_name": "Joeystarr",
@@ -2211,9 +2640,11 @@ Get a list of all matching receivers for a kidney listing, with the score
         "organ_type": "LUNG",
         "start_date": null,
         "end_date": null,
+        "weight_kg": null,
+        "height_cm": null,
         "person": {
           "id": 2,
-          "created_at": "2022-12-08 15:26:31.759343",
+          "created_at": "2022-12-08 17:14:26.137710",
           "updated_at": null,
           "first_name": "John",
           "last_name": "Doe",
@@ -2253,7 +2684,95 @@ Get a list of all matching receivers for a kidney listing, with the score
 
 **Status:** 200
 
-## DELETE /api/listings/2
+## GET /api/listings/8/matches
+Get a list of all matching receivers for a heart listing, with the score
+
+> :lock: This request requires authentication. Pass `Bearer: the-token` in the `Authorization` header.
+### Response
+```json
+{
+  "donor": {
+    "id": 8,
+    "notes": null,
+    "type": "DONOR",
+    "organ_type": "HEART",
+    "start_date": null,
+    "end_date": null,
+    "weight_kg": 80.2,
+    "height_cm": 180.3,
+    "person": {
+      "id": 8,
+      "created_at": "2022-12-08 17:14:26.308615",
+      "updated_at": null,
+      "first_name": "Johnatan",
+      "last_name": "Joeystarr",
+      "birth_date": "1990-02-10",
+      "description": null,
+      "gender": "MALE",
+      "abo": "A",
+      "rhesus": "Rhesus.POSITIVE",
+      "user": null
+    },
+    "organ": null,
+    "hospital": null
+  },
+  "matches": [
+    {
+      "receiver": {
+        "id": 4,
+        "notes": null,
+        "type": "RECEIVER",
+        "organ_type": "HEART",
+        "start_date": null,
+        "end_date": null,
+        "weight_kg": 80.2,
+        "height_cm": 180.3,
+        "person": {
+          "id": 4,
+          "created_at": "2022-12-08 17:14:26.195353",
+          "updated_at": null,
+          "first_name": "John",
+          "last_name": "Doe",
+          "birth_date": "1990-02-10",
+          "description": null,
+          "gender": "MALE",
+          "abo": "A",
+          "rhesus": "Rhesus.POSITIVE",
+          "user": null
+        },
+        "organ": {
+          "id": 1,
+          "delay_var_bio_GRF": 4,
+          "emergency": "EMERGENCY.XPCA",
+          "weight_kg": null,
+          "height_cm": null,
+          "MAL": "DiagnosisGroup.VALVULAR",
+          "MAL2": null,
+          "MAL3": null,
+          "DA": 2,
+          "DAURG": 3,
+          "XPC": 4,
+          "BILI": 1.3,
+          "CREAT": 1.4,
+          "F_ICAR": 1.5,
+          "ICAR": 1.6,
+          "KXPC": 1.7,
+          "DIA_is_O": true,
+          "DBILI": "2022-12-12",
+          "DCREAT": "2022-12-12",
+          "listing_id": 4
+        },
+        "hospital": null
+      },
+      "score": 0.3
+    }
+  ]
+}
+```
+
+**Status:** 200
+
+## DELETE /api/listings/1
 Delete a listing
 
 > :lock: This request requires authentication. Pass `Bearer: the-token` in the `Authorization` header.
