@@ -1,13 +1,13 @@
 import enum
 
 import sqlalchemy as sa
-from sqlalchemy import orm
 
 from app import db
+from app.db.mixins import OrganMixin
 from app.utils.enums import EnumStr
 
 
-class Lung(db.Base):
+class Lung(OrganMixin, db.Base):
     class DetailedDiagnosis(EnumStr):
         Bronchiectasis = enum.auto()
         Eisenmenger = enum.auto()
@@ -20,8 +20,6 @@ class Lung(db.Base):
         B = enum.auto()
         C = enum.auto()
         D = enum.auto()
-
-    listing_id = sa.Column(sa.ForeignKey('listings.id'))
 
     diagnosis_group = sa.Column(sa.Enum(DiagnosisGroup))
     detailed_diagnosis = sa.Column(sa.Enum(DetailedDiagnosis))
@@ -41,5 +39,3 @@ class Lung(db.Base):
     creatinine_at_transplant = sa.Column(sa.Float)
     ADL_required = sa.Column(sa.Boolean)
     PCW_over_20_mmHg = sa.Column(sa.Boolean)
-
-    listing = orm.relationship('Listing', back_populates="lung", uselist=False)

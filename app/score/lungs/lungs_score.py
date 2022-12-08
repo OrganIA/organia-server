@@ -1,10 +1,8 @@
 import decimal
 import json
-import logging
-import math
 
 from app import db
-from app.db.models.lung import Lung
+from app.db.models.organs.lung import Lung
 from app.errors import NotFoundError
 
 

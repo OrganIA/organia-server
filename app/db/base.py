@@ -6,9 +6,6 @@ from app.utils import str_format
 
 class Base:
     __AUTO_DICT__ = True
-    # __AUTO_DICT_EXCLUDE__ = ['password', 'role_id', 'sender_id']
-    # __AUTO_DICT_INCLUDE__ = ['role', 'sender', 'chat', 'user', 'city',
-    # 'person']
     __AUTO_DICT_EXCLUDE__ = []
     __AUTO_DICT_INCLUDE__ = []
 
@@ -46,3 +43,12 @@ class Base:
             if hasattr(self, key):
                 tab[key] = getattr(self, key)
         return tab
+
+    def read_dict(self, data):
+        for key, value in data.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(**data)

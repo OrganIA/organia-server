@@ -8,8 +8,8 @@ from app.utils.enums import EnumStr
 
 
 class Listing(db.Base):
-    __AUTO_DICT_EXCLUDE__ = ['person_id']
-    __AUTO_DICT_INCLUDE__ = ['person', 'lung', 'liver']
+    __AUTO_DICT_EXCLUDE__ = ['person_id', 'hospital_id']
+    __AUTO_DICT_INCLUDE__ = ['person', 'organ', 'hospital']
 
     class Type(EnumStr):
         DONOR = enum.auto()
@@ -21,12 +21,25 @@ class Listing(db.Base):
         LUNG = enum.auto()
         LIVER = enum.auto()
 
+        @property
+        def table(self):
+            from app.db.models import Liver, Lung
+
+            return {
+                self.LIVER: Liver,
+                self.LUNG: Lung,
+            }.get(self)
+
     notes = sa.Column(sa.String)
     type = sa.Column(sa.Enum(Type))
 
     @property
     def organ(self):
         return self.liver or self.lung or self.kidney
+
+    organ_type = sa.Column(sa.Enum(Organ))
+    start_date = sa.Column(sa.Date)
+    end_date = sa.Column(sa.Date)
 
     person_id = sa.Column(sa.ForeignKey('persons.id'))
     hospital_id = sa.Column(sa.ForeignKey('hospitals.id'))
@@ -35,15 +48,27 @@ class Listing(db.Base):
         'Person', backref='listings', cascade='all,delete'
     )
     hospital = orm.relationship('Hospital', backref='listings')
-    liver = orm.relationship(
-        'Liver',
-        back_populates='listing',
-        cascade='all,delete',
-        uselist=False,
+    # Use Listing.organ to access the organ
+    _liver = orm.relationship(
+        'Liver', back_populates='listing', cascade='all,delete', uselist=False
     )
-    lung = orm.relationship(
-        'Lung', back_populates='listing', cascade='all, delete', uselist=False
+    _lung = orm.relationship(
+        'Lung', back_populates='listing', cascade='all,delete', uselist=False
     )
     kidney = orm.relationship(
         'Kidney', back_populates='listing', cascade='all, delete', uselist=False
     )
+
+    @property
+    def organ(self):
+        return self._liver or self._lung
+
+    def read_dict(self, data):
+        organ_data = data.pop('organ', None)
+        organ_type = data.pop('organ_type', self.organ_type)
+        if organ_data:
+            if self.organ:
+                self.organ.read_dict(organ_data)
+            if organ_type:
+                self.organ = organ_type.table(**organ_data)
+        super().read_dict(data)

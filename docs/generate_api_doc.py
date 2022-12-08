@@ -90,10 +90,18 @@ class Route:
 
     @property
     def href(self):
-        s = f'{self.title}'.lower()
-        for c in (' ', '/'):
-            s = s.replace(c, '-')
-        return s
+        last_was_dash = False
+        s = ''
+        for c in self.title.lower():
+            if c in (' ',):
+                if not last_was_dash:
+                    s += '-'
+                last_was_dash = True
+            else:
+                if c not in ('#', '/', ':', '(', ')', '?', '&', '=', ','):
+                    s += c
+                last_was_dash = False
+        return s.strip('-')
 
     @property
     def title(self):
@@ -238,6 +246,45 @@ calls = [
     Post('/roles/3', {"name": "Updated role"}, perms=['edit_roles']),
     # Delete a role
     Delete('/roles/3', perms=['edit_roles']),
+    # Create a donor listing, creating the Person and Organ in one go
+    Post(
+        '/listings',
+        {
+            "type": "DONOR",
+            "person": {
+                "first_name": "John",
+                "last_name": "Doe",
+                "phone_number": "+33123456789",
+                "gender": "MALE",
+                "birth_date": "1990-02-10",
+                "abo": "A",
+                "rhesus": "+",
+            },
+            "organ_type": "LIVER",
+            "organ": {
+                "tumors_count": 2,
+                "biggest_tumor_size": 10,
+                "alpha_fetoprotein": 10,
+            },
+        },
+    ),
+    # Create a receiver listing, creating the Person and Organ in one go
+    Post(
+        '/listings',
+        {
+            "type": "RECEIVER",
+            "person": {
+                "first_name": "Johnatan",
+                "last_name": "Joeystarr",
+                "phone_number": "+33123456789",
+                "gender": "MALE",
+                "birth_date": "1990-02-10",
+                "abo": "A",
+                "rhesus": "+",
+            },
+            "organ_type": "LIVER",
+        },
+    ),
 ]
 
 
