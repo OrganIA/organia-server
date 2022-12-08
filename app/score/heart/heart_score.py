@@ -1,21 +1,4 @@
-from cmath import isnan
-from datetime import datetime
-from math import ceil as round
-
 import numpy as np
-from numpy import log as ln
-
-
-def get_delai_var_bio_GRF(CEC, DRG):
-    if CEC != 'O' and DRG != 'O':
-        return 105
-    else:
-        return 4
-
-
-def get_score_NACG(score_CCP, TTLGP):
-    MG = 1 / np.exp(0.0000002 * pow(TTLGP, 2.9))
-    return score_CCP * MG
 
 
 def get_CAS(age_R, urgence, fICAR):
@@ -24,16 +7,6 @@ def get_CAS(age_R, urgence, fICAR):
             return fICAR
         else:
             return fICAR + 51
-    else:
-        return 0
-
-
-def check_CAS(CAS):
-    if CAS < 0 or (CAS > 775 and CAS < 826) or CAS > 1051:
-        raise Exception(
-            "La composante adulte standard doit se situer entre 0 et 775\n"
-            "points ou 826 et 1051 points"
-        )
     else:
         return 0
 
@@ -48,28 +21,9 @@ def get_XPCA(age_R, urgence, XPC, fICAR, KXPC, DAURG):
         return 0
 
 
-def check_XPCA(XPCA):
-    if XPCA != 900:
-        raise Exception(
-            "La composante XPCA ne peut etre differente de 900 points"
-        )
-    else:
-        return 0
-
-
 def get_CPS(age_R, urgence, DA):
     if age_R < 18 and urgence not in ['XPCA', 'XPCP1', 'XPCP2']:
         return 775 + 50 * max(0, min(1, DA / 24))
-    else:
-        return 0
-
-
-def check_CPS(CPS):
-    if CPS < 776 or CPS > 825:
-        raise Exception(
-            "La composante pediatrique standard doit se situer entre 776\
-            et 825 points"
-        )
     else:
         return 0
 
@@ -81,26 +35,24 @@ def get_XPCP(urgence, KXPC, DAURG):
         return 0
 
 
-def check_XPCP(urgence, XPCP):
-    if urgence == 'XPCP1' and XPCP < 1102 or XPCP > 1151:
-        raise Exception(
-            "Le score XPCP pour une urgence de niveau 1 doit se situer\
-                    entre 1102 et 1151 points"
-        )
-    elif urgence == 'XPCP2' and XPCP < 1051 or XPCP > 1101:
-        raise Exception(
-            "Le score XPCP pour une urgence de niveau 2 doit se situer\
-                entre 1051 et 1101 points"
-        )
-    else:
-        return 0
-
-
-def getScoreCCB(F_ICAR):
-    CAS = get_CAS(age_R, urgence, F_ICAR)
-    XPCA = get_XPCA(age_R, urgence, XPC, F_ICAR, KXPC, DAURG)
-    CPS = get_CPS(age_R, urgence, DA)
-    XPCP = get_XPCP(urgence, KXPC, DAURG)
+def getScoreCCB(receiver):
+    CAS = get_CAS(
+        receiver.person.age, receiver.organ.urgence, receiver.organ.F_ICAR
+    )
+    XPCA = get_XPCA(
+        receiver.person.age,
+        receiver.organ.urgence,
+        receiver.organ.XPC,
+        receiver.organ.F_ICAR,
+        receiver.organ.KXPC,
+        receiver.organ.DAURG,
+    )
+    CPS = get_CPS(
+        receiver.person.age, receiver.organ.urgence, receiver.organ.DA
+    )
+    XPCP = get_XPCP(
+        receiver.organ.urgence, receiver.organ.KXPC, receiver.organ.DAURG
+    )
     return CAS + XPCA + CPS + XPCP
 
 
@@ -248,288 +200,31 @@ def get_d_dfgj(sex_R, age_R, CREAT):
         return 186.3 * (pow((CREAT / 88.4), -1.154)) * (pow(age_R, -0.203)) * 1
 
 
-# ********************Score CCP******************
-
-
-# ***********************************************
-
-# Index de risque Cardiaque du jour (ICARj)
-
-# Fonction Décile des peptides natriurétiques (BNP ou NT-ProBNP) du jour
-
-
-def get_f_decile_pnj(
-    CEC,
-    CAT,
-    SIAV,
-    DBNP,
-    BNP,
-    PROBNP,
-    date_courante,
-    DPROBNP,
-    delai_var_bio_LA,
-):
-    if CEC == 'O' or CAT == 'O' or SIAV == 'B':
-        return 10
-    elif isnan(BNP) is True and isnan(PROBNP) is True:
-        return 1
-    elif (
-        isnan(PROBNP) is not True
-        and (date_courante - DPROBNP).days <= delai_var_bio_LA
-    ):
-        conditions = [928, 1478, 2044, 2661, 3416, 4406, 5645, 8000, 11332]
-        res = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        if PROBNP >= 11332:
-            return 10
-        for index, condition in enumerate(conditions):
-            if PROBNP < condition:
-                return res[index]
-    elif (
-        isnan(BNP) is not True
-        and (date_courante - DBNP).days <= delai_var_bio_LA
-    ):
-        conditions = [189, 314, 481, 622, 818, 1074, 1317, 1702, 2696]
-        res = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        if BNP >= 2696:
-            return 10
-        for index, condition in enumerate(conditions):
-            if BNP < condition:
-                return res[index]
-    else:
-        return 1
-
-
-def get_F_Ln_DFG_LAj(
-    DIA, CREAT, DCREAT, sex_R, age_R, date_courante, delai_var_bio_LA
-):
-    F_DFGj = get_d_dfgj(sex_R, age_R, CREAT)
-    if DIA == 'O':
-        return ln(15)
-    elif (
-        isnan(CREAT) is True or (date_courante - DCREAT).days > delai_var_bio_LA
-    ):
-        return ln(150)
-    else:
-        return ln(min(150, max(1, F_DFGj)))
-
-
-# Fonction Bilirubine en Liste d’attente du jour
-
-
-def getF_Ln_BILI_LAj(BILI, DBILI, date_courante, delai_var_bio_LA):
-    if isnan(BILI) is True or (date_courante - DBILI).days > delai_var_bio_LA:
-        return ln(5)
-    else:
-        return ln(min(230, max(5, BILI)))
-
-
-# Fonction Assistance de Courte Durée
-
-
-def get_f_ASCD(CEC):
-    if CEC == 'O':
-        return 1
-    else:
-        return 0
-
-
-# La fonction de risque pré-greffe en liste d’attente du jour
-
-
-def get_f_risque_pre_GRFj(F_ASCD, F_Decile_PNj, F_Ln_DFG_LAj, F_Ln_BILI_LAj):
-    return (
-        1.301335 * F_ASCD
-        + 0.157691 * F_Decile_PNj
-        - 0.510058 * F_Ln_DFG_LAj
-        + 0.615711 * F_Ln_BILI_LAj
-    )
-
-
-# La function Index de risque Cardiaque du jour (ICARj)
-
-
-def getICARj(F_RisquePreGRFj, C_ICAR):
-    return min(40, max(0, round((F_RisquePreGRFj - C_ICAR) * 10)))
-
-
-# ----------------------
-
-# Index de risque avant perfusion ou implantation CEC (ICARi)
-
-# Fonction Décile des peptides natriurétiques (BNP ou NT-ProBNP) initiale
-
-
-def get_F_decile_PNi(BNP_AVI, PBN_AVI, PROBNP, BNP, CEC, CAT, SIAV):
-    if CEC == 'O' or CAT == 'O' or SIAV == 'B':
-        return 10
-    elif isnan(BNP_AVI) is True and isnan(PBN_AVI) is True:
-        return 1
-    elif isnan(PBN_AVI) is not True:
-        conditions = [928, 1478, 2044, 2661, 3416, 4406, 5645, 8000, 11332]
-        res = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        if PROBNP >= 11332:
-            return 10
-        for index, condition in enumerate(conditions):
-            if PROBNP < condition:
-                return res[index]
-    elif isnan(BNP_AVI) is not True:
-        conditions = [189, 314, 481, 622, 818, 1074, 1317, 1702, 2696]
-        res = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        if BNP >= 2696:
-            return 10
-        for index, condition in enumerate(conditions):
-            if BNP < condition:
-                return res[index]
-    else:
-        return 1
-
-
-# Fonction Débit de Filtration Glomérulaire en Liste d’attente \
-# (méthode MDRD) initiale
-
-
-def get_f_DFGi(sex_R, CRE_AVI, age_R):
-    if sex_R == 'FEMALE':
-        return (
-            186.3 * ((CRE_AVI / 88.4) * -1.154) * (pow(age_R, -0.203)) * 0.742
-        )
-    else:
-        return 186.3 * ((CRE_AVI / 88.4) * -1.154) * (pow(age_R, -0.203)) * 1
-
-
-def get_f_Ln_DFG_LAi(DIA_AVI, CRE_AVI, sex_R, age_R):
-    F_DFGi = get_f_DFGi(sex_R, CRE_AVI, age_R)
-    if DIA_AVI == 'O':
-        return ln(15)
-    elif isnan(CRE_AVI) is True:
-        return ln(150)
-    else:
-        return ln(min(150, max(1, F_DFGi)))
-
-
-# Fonction Bilirubine en Liste d’attente initiale
-
-
-def get_f_Ln_BILI_LAi(BILI_AVI):
-    if isnan(BILI_AVI) is True:
-        return ln(5)
-    else:
-        return ln(min(230, max(5, BILI_AVI)))
-
-
-# La fonction de risque pré-greffe en liste d’attente initiale
-
-
-def get_f_risque_pre_GRFi(F_ASCD, F_decile_PNi, F_Ln_DFG_LAi, F_Ln_BILI_LAi):
-    return (
-        1.301335 * F_ASCD
-        + 0.157691 * F_decile_PNi
-        - 0.510058 * F_Ln_DFG_LAi
-        + 0.615711 * F_Ln_BILI_LAi
-    )
-
-
-# Index de risque avant perfusion ou implantation CEC (ICARi)
-
-
-def get_ICARi(F_risque_pre_GRFi, C_ICAR):
-    return min(40, max(0, round((F_risque_pre_GRFi - C_ICAR) * 10)))
-
-
-# -------------------------------------
-
-# ---------Calcul de l’Index de Risque Cardiaque (ICAR)
-
-
-def get_ICAR(sex_R, age_R):
-    date_courante = datetime.utcnow().date()
-    delai_var_bio_GRF = 30
-    if CREAT <= 0:
-        CREAT += 10
-    C_ICAR = 1.301335 * 0 + 0.157691 * 1 - 0.510058 * ln(150) + 0.615711 * ln(5)
-    F_Decile_PNj = get_f_decile_pnj(
-        CEC,
-        CAT,
-        SIAV,
-        DBNP,
-        BNP,
-        PROBNP,
-        date_courante,
-        DPROBNP,
-        delai_var_bio_GRF,
-    )
-    F_Ln_DFG_LAj = get_F_Ln_DFG_LAj(
-        DIA,
-        CREAT,
-        DCREAT,
-        sex_R,
-        age_R,
-        date_courante,
-        delai_var_bio_GRF,
-    )
-    F_Ln_BILI_LAj = getF_Ln_BILI_LAj(
-        BILI, DBILI, date_courante, delai_var_bio_GRF
-    )
-    F_ASCD = get_f_ASCD(CEC)
-    F_RisquePreGRFj = get_f_risque_pre_GRFj(
-        F_ASCD, F_Decile_PNj, F_Ln_DFG_LAj, F_Ln_BILI_LAj
-    )
-    ICARj = getICARj(F_RisquePreGRFj, C_ICAR)
-
-    F_Ln_BILI_LAi = get_f_Ln_BILI_LAi(BILI_AVI)
-    F_Ln_DFG_LAi = get_f_Ln_DFG_LAi(DIA_AVI, CRE_AVI, sex_R, age_R)
-    F_decile_PNi = getF_Decile_PNi(
-        BNP_AVI,
-        PBN_AVI,
-        PROBNP,
-        BNP,
-        CEC,
-        CAT,
-        SIAV,
-    )
-    F_risque_pre_GRFi = get_f_risque_pre_GRFi(
-        F_ASCD, F_decile_PNi, F_Ln_DFG_LAi, F_Ln_BILI_LAi
-    )
-    ICARi = get_ICARi(F_risque_pre_GRFi, C_ICAR)
-
-    if CEC != 'O' and DRG != 'O':
-        return ICARj
-    else:
-        return max(ICARj, ICARi)
-
-
-def check_ICAR(ICAR):
-    if ICAR > 40 or ICAR < 0:
-        raise Exception("Le score ICAR doit etre compris entre 0 et 40")
-    else:
-        return ICAR
-
-
 def get_score_CCP(
     receiver,
     donor,
 ):
     F_DFGj = get_d_dfgj(
-        receiver.person.gender, receiver.person.age, receiver.heart.CREAT
+        receiver.person.gender, receiver.person.age, receiver.organ.CREAT
     )
     LnDFG = get_LnDFG(
-        receiver.heart.DIA,
-        receiver.heart.CREAT,
-        receiver.heart.DCREAT,
-        receiver.heart.delai_var_bio_GRF,
+        receiver.organ.DIA,
+        receiver.organ.CREAT,
+        receiver.organ.DCREAT,
+        receiver.organ.delai_var_bio_GRF,
         F_DFGj,
-        receiver.heart.date_courante,
+        receiver.organ.date_courante,
     )
     fage_D = get_f_ageD(donor.person.age)
     sex_RD = get_sex_RD(donor.person.gender, receiver.person.gender)
     LnBili = get_LnBili(
-        receiver.heart.BILI,
-        receiver.heart.DBILI,
-        receiver.heart.delai_var_bio_GRF,
-        receiver.heart.date_courante,
+        receiver.organ.BILI,
+        receiver.organ.DBILI,
+        receiver.organ.delai_var_bio_GRF,
+        receiver.organ.date_courante,
     )
     f_MAL = get_f_MAL(
-        receiver.heart.MAL, receiver.heart.MAL2, receiver.heart.MAL3
+        receiver.organ.MAL, receiver.organ.MAL2, receiver.organ.MAL3
     )
     fage_R = get_f_age_r(receiver.person.age)
     risk_post_GRF = get_risk_post_GRF(
@@ -538,13 +233,14 @@ def get_score_CCP(
     dif_age = get_dif_age(receiver.person.age, receiver.person.age)
     ABO = get_ABO(donor.person.abo, receiver.person.abo)
     SC = get_SC(
-        receiver.heart.taille_D,
-        receiver.heart.taille_R,
-        receiver.heart.poids_D,
-        receiver.heart.poids_R,
+        receiver.organ.taille_D,
+        receiver.organ.taille_R,
+        receiver.organ.poids_D,
+        receiver.organ.poids_R,
         receiver.person.age,
         receiver.person.gender,
     )
     surv_post_GRF = get_surv_post_GRF(risk_post_GRF)
     tri_surv_post_grf = tri_surv_post_GRF(surv_post_GRF, receiver.person.age)
-    return CCB * dif_age * ABO * SC * tri_surv_post_grf
+    CCB = getScoreCCB(receiver.organ.F_ICAR)
+    return (CCB * dif_age * ABO * SC * tri_surv_post_grf) / 5

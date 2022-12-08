@@ -11,7 +11,6 @@ bp = Blueprint(__name__)
 
 
 class HeartSchema(BaseModel):
-    DPROBNP: date | None
     DCREAT: date | None
     DBILI: date | None
     urgence: date | None
@@ -26,23 +25,17 @@ class HeartSchema(BaseModel):
     CEC: str | None
     SIAV: str | None
     CAT: str | None
-    BNP: int | None
-    DBNP: int | None
-    PROBNP: float | None
     DIA: str | None
     DCREAT: date | None
     CREAT: float | None
     BILI: float | None
-    BNP_AVI: float | None
-    PBN_AVI: float | None
-    DIA_AVI: str | None
-    CRE_AVI: float | None
-    BILI_AVI: float | None
     TTLGP: float | None
     ICAR: float | None
     F_ICAR: float | None
+    D_AURG: int | None
     delai_var_bio_GRF: date | None
     date_courante: date | None
+    DA: int | None
 
 
 def update(listing, data):
