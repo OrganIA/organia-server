@@ -39,6 +39,7 @@ class Heart(db.Base):
     DPROBNP = sa.Column(sa.Date)
     DIA = sa.Column(sa.String)
     CREAT = sa.Column(sa.Float)
+    DCREAT = sa.Column(sa.Date)
     BILI = sa.Column(sa.Float)
     DBILI = sa.Column(sa.Date)
     BNP_AVI = sa.Column(sa.Float)
@@ -49,5 +50,7 @@ class Heart(db.Base):
     TTLGP = sa.Column(sa.Float)
     ICAR = sa.Column(sa.Float)
     F_ICAR = sa.Column(sa.Float)
+    delai_var_bio_GRF = sa.Column(sa.Date)
+    date_courante = sa.Column(sa.Date)
 
     listing = orm.relationship('Listing', back_populates='heart')

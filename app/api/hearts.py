@@ -30,6 +30,7 @@ class HeartSchema(BaseModel):
     DBNP: int | None
     PROBNP: float | None
     DIA: str | None
+    DCREAT: date | None
     CREAT: float | None
     BILI: float | None
     BNP_AVI: float | None
@@ -40,6 +41,8 @@ class HeartSchema(BaseModel):
     TTLGP: float | None
     ICAR: float | None
     F_ICAR: float | None
+    delai_var_bio_GRF: date | None
+    date_courante: date | None
 
 
 def update(listing, data):

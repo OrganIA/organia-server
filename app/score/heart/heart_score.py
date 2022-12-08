@@ -251,44 +251,6 @@ def get_d_dfgj(sex_R, age_R, CREAT):
 # ********************Score CCP******************
 
 
-def get_score_CCP(CCB):
-    F_DFGj = get_d_dfgj(sex_R, age_R, CREAT)
-    LnDFG = get_LnDFG(
-        DIA,
-        CREAT,
-        DCREAT,
-        delai_var_bio_GRF,
-        F_DFGj,
-        date_courante,
-    )
-    fage_D = get_f_ageD(age_D)
-    sex_RD = get_sex_RD(sex_D, sex_R)
-    LnBili = get_LnBili(
-        BILI,
-        date_DBILI,
-        delai_var_bio_GRF,
-        date_courante,
-    )
-    f_MAL = get_f_MAL(MAL, MAL2, MAL3)
-    fage_R = get_f_age_r(age_R)
-    risk_post_GRF = get_risk_post_GRF(
-        fage_R, fage_D, f_MAL, LnBili, LnDFG, sex_RD
-    )
-    dif_age = get_dif_age(age_R, age_D)
-    ABO = get_ABO(ABO_D, ABOR)
-    SC = get_SC(
-        taille_D,
-        taille_R,
-        poids_D,
-        poids_R,
-        age_R,
-        sex_D,
-    )
-    surv_post_GRF = get_surv_post_GRF(risk_post_GRF)
-    tri_surv_post_grf = tri_surv_post_GRF(surv_post_GRF, age_R)
-    return CCB * dif_age * ABO * SC * tri_surv_post_grf
-
-
 # ***********************************************
 
 # Index de risque Cardiaque du jour (ICARj)
@@ -541,3 +503,48 @@ def check_ICAR(ICAR):
         raise Exception("Le score ICAR doit etre compris entre 0 et 40")
     else:
         return ICAR
+
+
+def get_score_CCP(
+    receiver,
+    donor,
+):
+    F_DFGj = get_d_dfgj(
+        receiver.person.gender, receiver.person.age, receiver.heart.CREAT
+    )
+    LnDFG = get_LnDFG(
+        receiver.heart.DIA,
+        receiver.heart.CREAT,
+        receiver.heart.DCREAT,
+        receiver.heart.delai_var_bio_GRF,
+        F_DFGj,
+        receiver.heart.date_courante,
+    )
+    fage_D = get_f_ageD(donor.person.age)
+    sex_RD = get_sex_RD(donor.person.gender, receiver.person.gender)
+    LnBili = get_LnBili(
+        receiver.heart.BILI,
+        receiver.heart.DBILI,
+        receiver.heart.delai_var_bio_GRF,
+        receiver.heart.date_courante,
+    )
+    f_MAL = get_f_MAL(
+        receiver.heart.MAL, receiver.heart.MAL2, receiver.heart.MAL3
+    )
+    fage_R = get_f_age_r(receiver.person.age)
+    risk_post_GRF = get_risk_post_GRF(
+        fage_R, fage_D, f_MAL, LnBili, LnDFG, sex_RD
+    )
+    dif_age = get_dif_age(receiver.person.age, receiver.person.age)
+    ABO = get_ABO(donor.person.abo, receiver.person.abo)
+    SC = get_SC(
+        receiver.heart.taille_D,
+        receiver.heart.taille_R,
+        receiver.heart.poids_D,
+        receiver.heart.poids_R,
+        receiver.person.age,
+        receiver.person.gender,
+    )
+    surv_post_GRF = get_surv_post_GRF(risk_post_GRF)
+    tri_surv_post_grf = tri_surv_post_GRF(surv_post_GRF, receiver.person.age)
+    return CCB * dif_age * ABO * SC * tri_surv_post_grf
