@@ -8,7 +8,7 @@ from app.db.models import Heart, Lung
 class KidneySchema(BaseModel):
     is_under_dialysis: bool
     is_retransplantation: bool
-    dialysis_start_date: date
+    dialysis_start_date: date | None
     dialysis_end_date: date | None
     arf_date: date
     date_transplantation: date | None
@@ -22,8 +22,6 @@ class KidneySchema(BaseModel):
 class KidneyUpdateSchema(KidneySchema):
     is_under_dialysis: bool | None
     is_retransplantation: bool | None
-    dialysis_start_date: date | None
-    dialysis_end_date: date | None
     arf_date: date | None
     A: float | None
     B: float | None

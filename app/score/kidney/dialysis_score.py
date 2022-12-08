@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 
 from app.db.models import Listing
 
@@ -23,12 +23,9 @@ def get_date(listing_kidney):
         return listing_kidney.re_registration_date
 
 
-def get_score(receiver_listing: Listing, listing_kidney):
+def get_score(receiver_listing: Listing, listing_kidney, current_date):
     try:
-        s = (
-            datetime.datetime.today()
-            - get_date(receiver_listing, listing_kidney)
-        ).days
+        s = (current_date - get_date(receiver_listing, listing_kidney)).days
         if s > 3650:
             return 1
         elif s < 0:
@@ -39,14 +36,14 @@ def get_score(receiver_listing: Listing, listing_kidney):
         return 0
 
 
-def get_waiting_time(listing_kidney):
+def get_waiting_time(listing_kidney, current_date):
     # A revoir
-    DATT = datetime.date.today() - listing_kidney.dialysis_start_date
+    DATT = (current_date - listing_kidney.dialysis_start_date).days
     if listing_kidney.is_under_dialysis:
-        DDIAL = datetime.date.today() - listing_kidney.dialysis_start_date
+        DDIAL = DATT
     else:
         DDIAL = 0
-    if listing_kidney.is_retransplantation or (DATT - DDIAL).days < 365:
+    if listing_kidney.is_retransplantation or DATT < 365:
         return DATT
     elif (
         not listing_kidney.is_retransplantation
@@ -60,13 +57,13 @@ def get_waiting_time(listing_kidney):
     return -1  # need to check error
 
 
-def get_waiting_score(receiver_listing: Listing, listing_kidney):
+def get_waiting_score(receiver_listing: Listing, listing_kidney, current_date):
     # A revoir
     # if get_waiting_time(receiver_listing, listing_kidney).days >= 3650:
-    if get_waiting_time(listing_kidney).days >= 3650:
+    if get_waiting_time(listing_kidney, current_date) >= 3650:
         return 1
     else:
         # return (1 / 120) * get_waiting_time(
         #     receiver_listing, listing_kidney
         # ).days
-        return (1 / 120) * get_waiting_time(listing_kidney).days
+        return (1 / 120) * get_waiting_time(listing_kidney, current_date)
