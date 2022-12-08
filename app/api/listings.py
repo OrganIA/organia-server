@@ -1,12 +1,12 @@
+import importlib
+from datetime import date
+
 import flask
 from pydantic import BaseModel
 
 from app import db
-from app.api.hearts import HeartSchema
-from app.api.livers import LiverSchema
-from app.api.lungs import LungSchema, compute_matches
-from app.api.person import PersonSchema
-from app.db.models import Heart, Listing, Liver, Lung, Person
+from app.api.person import PersonCreateSchema, PersonSchema
+from app.db.models import Listing, Person
 from app.errors import InvalidRequest, NotFoundError
 from app.score.liver.liver_score import final_score
 from app.utils.bp import Blueprint
@@ -18,34 +18,16 @@ class ListingSchema(BaseModel):
     hospital_id: int | None
     notes: str | None
     person_id: int | None
-    type: Listing.Type
-    liver: LiverSchema | None
-    lung: LungSchema | None
-    heart: HeartSchema | None
+    type: Listing.Type | None
+    organ_type: Listing.Organ | None
+    organ: dict | None
     person: PersonSchema | None
+    start_date: date | None
+    end_date: date | None
 
 
-def update_organ(data, id):
-    organ = {}
-    if data.organ == Listing.Organ.LIVER:
-        organ = db.session.query(Liver).filter_by(listing_id=id).first()
-        organ = update(organ, data)
-        db.session.commit()
-    if data.organ == Listing.Organ.LUNG:
-        organ = db.session.query(Lung).filter_by(listing_id=id).first()
-        print("ORGAN: ", organ)
-        organ = update(organ, data)
-        db.session.commit()
-    return organ
-
-
-def update(listing, data):
-    for key, value in data.dict().items():
-        if value == 'null':
-            setattr(listing, key, None)
-        elif value is not None:
-            setattr(listing, key, value)
-    return listing
+class ListingCreateSchema(ListingSchema):
+    person: PersonCreateSchema | None
 
 
 @bp.get('/')
@@ -74,54 +56,25 @@ def get_listing(id):
 
 
 @bp.post('/')
-def create_listing(data: ListingSchema):
+def create_listing(data: ListingCreateSchema):
     data = data.dict()
-    liver_data = data.pop("liver", None)
-    lung_data = data.pop("lung", None)
-    heart_data = data.pop("heart", None)
-    person_data = data.pop("person", None)
-    if liver_data:
-        data["liver"] = Liver(**liver_data)
-    if lung_data:
-        data["lung"] = Lung(**lung_data)
-    if heart_data:
-        data["heart"] = Heart(**heart_data)
-    if person_data:
-        data["person"] = Person(**person_data)
+    organ_data = data.pop("organ", None)
+    organ_type = data.get("organ_type", None)
+    if organ_type and organ_data:
+        data['_' + organ_type.value.lower()] = organ_type.table(**organ_data)
+    if person_data := data.pop("person", None):
+        data['person'] = Person(**person_data)
     listing = Listing(**data)
     db.session.add(listing)
     db.session.commit()
-    return get_listing(listing.id)
+    return listing
 
 
 @bp.post('/<int:id>')
 def update_listing(id, data: ListingSchema):
     listing = get_listing(id)
-    data = data.dict()
-    liver_data = data.pop("liver", None)
-    lung_data = data.pop("lung", None)
-    heart_data = data.pop("heart", None)
-    person_data = data.pop("person", None)
-
-    if isinstance(listing.organ, Liver):
-        organ = db.session.query(Liver).filter_by(listing_id=id).first()
-        if organ is None:
-            raise NotFoundError("L'organe n'a pas été trouvé")
-        organ = liver_data
-    if isinstance(listing.organ, Lung):
-        organ = db.session.query(Lung).filter_by(listing_id=id).first()
-        if organ is None:
-            raise NotFoundError("L'organe n'a pas été trouvé")
-        organ = lung_data
-    if isinstance(listing.organ, Lung):
-        organ = db.session.query(Heart).filter_by(listing_id=id).first()
-        if organ is None:
-            raise NotFoundError("L'organe n'a pas été trouvé")
-        organ = heart_data
-    listing.hospital_id = data["hospital_id"]
-    listing.notes = data["notes"]
-    listing.person_id = data["person_id"]
-    listing.person_data = data["person_data"]
+    data = data.dict(exclude_unset=True)
+    listing.read_dict(data)
     db.session.commit()
     return listing
 
@@ -135,37 +88,27 @@ def delete_listing(id: int):
 
 @bp.get('/<int:id>/matches')
 def get_listing_matches(id):
-    def schemaify(listing: Listing):
-        return {
-            'id': listing.id,
-            'type': listing.type,
-            'notes': listing.notes,
-            'organ': listing.organ,
-            'person_id': listing.person_id,
-            'hospital_id': listing.hospital_id,
-        }
-
     listing = get_listing(id)
-    score = 0
-    if isinstance(listing.organ, Liver):
-        organ = db.session.query(Liver).filter_by(listing_id=id).first()
-        if organ is None:
-            raise NotFoundError("L'organe n'a pas été trouvé")
-        score = final_score(listing, listing)
-        return score
-    if listing.organ == Listing.Organ.LUNG:
-        return compute_matches(id)
-
-    return sorted(
-        [
-            {
-                "listing": schemaify(listing),
-                "score": score,
-            }
-            for listing in db.session.query(Listing).filter_by(
-                organ=listing.organ
-            )
-        ],
-        key=lambda x: x['score'],
-        reverse=True,
+    if listing.type != Listing.Type.DONOR:
+        raise InvalidRequest("You can only match from a donor")
+    receivers = db.session.query(Listing).filter(
+        Listing.type == Listing.Type.RECEIVER,
+        Listing.organ_type == listing.organ_type,
+        Listing.organ,
     )
+    organ_name = listing.organ_type.value.lower()
+    score_module = importlib.import_module(
+        f'app.score.{organ_name}.{organ_name}_score'
+    )
+    score_func = getattr(score_module, f'compute_{organ_name}_score')
+    return {
+        "donor": listing,
+        "matches": sorted(
+            [
+                {"receiver": receiver, "score": score_func(listing, receiver)}
+                for receiver in receivers
+            ],
+            key=lambda x: x['score'],
+            reverse=True,
+        ),
+    }

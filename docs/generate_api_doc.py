@@ -27,6 +27,7 @@ ADMIN_NOTE = (
 )
 
 file = inspect.getsourcelines(sys.modules[__name__])[0]
+errors = []
 
 
 @dataclass
@@ -86,14 +87,25 @@ class Route:
                     ),
                 }
             )
-            print(self.responses[-1]['response'].status_code)
+            last = self.responses[-1]['response']
+            print(last.status_code)
+            if last.status_code == 500:
+                errors.append(last)
 
     @property
     def href(self):
-        s = f'{self.title}'.lower()
-        for c in (' ', '/'):
-            s = s.replace(c, '-')
-        return s
+        last_was_dash = False
+        s = ''
+        for c in self.title.lower():
+            if c in (' ',):
+                if not last_was_dash:
+                    s += '-'
+                last_was_dash = True
+            else:
+                if c not in ('#', '/', ':', '(', ')', '?', '&', '=', ','):
+                    s += c
+                last_was_dash = False
+        return s.strip('-')
 
     @property
     def title(self):
@@ -189,16 +201,6 @@ calls = [
     Get('/users/1'),
     # Delete a user
     Delete('/users/3', perms=['edit_users']),
-    # Get the list of listings
-    Get('/listings', [{}, {'page': 2, 'per_page': 10}, {'search': 'jean'}]),
-    # Get a specific listing
-    Get('/listings/1'),
-    # Get the matching listings for an organ
-    Get('/listings/1/matches'),
-    # Only get donor listings
-    Get('/listings/?type=donor'),
-    # Only get receiver listings
-    Get('/listings/?type=receiver'),
     # Create a new chat
     Post('/chats', {"name": "Chat name", "users_ids": [1, 2]}),
     # Get all the chats the current user is part of
@@ -238,6 +240,121 @@ calls = [
     Post('/roles/3', {"name": "Updated role"}, perms=['edit_roles']),
     # Delete a role
     Delete('/roles/3', perms=['edit_roles']),
+    # Create a receiver listing for a liver, creating the Person and Organ in
+    # one go
+    Post(
+        '/listings',
+        {
+            "type": "RECEIVER",
+            "person": {
+                "first_name": "John",
+                "last_name": "Doe",
+                "phone_number": "+33123456789",
+                "gender": "MALE",
+                "birth_date": "1990-02-10",
+                "abo": "A",
+                "rhesus": "+",
+            },
+            "organ_type": "LIVER",
+            "organ": {
+                "tumors_count": 2,
+                "biggest_tumor_size": 10,
+                "alpha_fetoprotein": 10,
+            },
+        },
+    ),
+    # Create a receiver listing for a lung, creating the Person and Organ in
+    # one go
+    # - `diagnosis_group` can be A, B, C, or D
+    # - `detailed_diagnosis` can be one of the following: BRONCHIECTASIS,
+    # EISENMENGER, BRONCHIOLITIS, LAM, or SARCOIDOSIS
+    # - `body_mass_index` for a normal person is expected to be between 18.5 and
+    # 25
+    # - `pulmonary_artery_systolic` is expected to be between 17 and 20, > 30 is
+    # considered critical
+    # - `carbon_dioxide_partial_pressure` is expected to be between 35 and 40
+    # - `pulmonary_capilary_wedge_pressure` is expected to be between 8 and 12,
+    # \> 20 is considered critical
+    Post(
+        '/listings',
+        {
+            "type": "RECEIVER",
+            "person": {
+                "first_name": "John",
+                "last_name": "Doe",
+                "phone_number": "+33123456789",
+                "gender": "MALE",
+                "birth_date": "1990-02-10",
+                "abo": "A",
+                "rhesus": "+",
+            },
+            "organ_type": "LUNG",
+            "organ": {
+                "diagnosis_group": "A",
+                "detailed_diagnosis": "LAM",
+                "body_mass_index": 17.9,
+                "diabetes": False,
+                "assistance_required": False,
+                "pulmonary_function_percentage": 0.85,
+                "pulmonary_artery_systolic": 25.2,
+                "oxygen_requirement": 0.5,
+                "six_minutes_walk_distance_over_150_feet": True,
+                "continuous_mech_ventilation": True,
+                "carbon_dioxide_partial_pressure": 36.3,
+                "carbone_dioxide_partial_pressure_15_percent_increase": False,
+                "activities_of_daily_life_required": False,
+                "pulmonary_capilary_wedge_pressure": 9.2,
+            },
+        },
+    ),
+    # Create a donor listing for a liver, creating the Person in one go
+    Post(
+        '/listings',
+        {
+            "type": "DONOR",
+            "person": {
+                "first_name": "Johnatan",
+                "last_name": "Joeystarr",
+                "phone_number": "+33123456789",
+                "gender": "MALE",
+                "birth_date": "1990-02-10",
+                "abo": "A",
+                "rhesus": "+",
+            },
+            "organ_type": "LIVER",
+        },
+    ),
+    # Update a listing
+    Post(
+        '/listings/1',
+        {
+            "start_date": "2020-02-10",
+        },
+    ),
+    # Update only a subset of the fields of a listing
+    Post(
+        '/listings/1',
+        {
+            "organ": {
+                "alpha_fetoprotein": 20,
+            },
+            "person": {
+                "first_name": "Jojo",
+            },
+        },
+    ),
+    # Get all listings
+    Get('/listings/'),
+    # Only get donor listings
+    Get('/listings/?type=donor'),
+    # Only get receiver listings
+    Get('/listings/?type=receiver'),
+    # Get a specific listing
+    Get('/listings/1'),
+    # Get a list of all matching receivers for a donor listing, with the score
+    Get('/listings/2/matches'),
+    # Delete a listing
+    Delete('/listings/2'),
 ]
 
 
@@ -259,3 +376,4 @@ if __name__ == '__main__':
                 continue
             f.write(call.to_markdown())
             f.write('\n\n')
+    print('Errors:', errors)

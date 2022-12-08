@@ -834,7 +834,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"person_id\": 1,\n    \"notes\": \"a\",\n    \"type\": \"DONOR\",\n    \"organ\": \"LIVER\",\n    \"tumors_number\": \"0\",\n    \"biggest_tumor_size\": \"0\",\n    \"alpha_fetoprotein\": \"0\",\n    \"is_under_dialysis\": \"false\",\n    \"dialysis_start_date\": \"2021-09-15\",\n    \"dialysis_end_date\": \"2021-09-15\",\n    \"is_retransplantation\": \"false\",\n    \"arf_date\": \"2021-09-15\",\n    \"transplantation_date\": \"2021-09-15\",\n    \"re_registration_date\": \"2021-09-15\",\n    \"A\": \"0\",\n    \"B\": \"0\",\n    \"DR\": \"0\",\n    \"DQ\": \"0\",\n    \"hospital_id\": \"0\"\n}",
+							"raw": "{\n    \"person_id\": 1,\n    \"notes\": \"a\",\n    \"type\": \"DONOR\",\n    \"organ\": \"LIVER\",\n    \"tumors_count\": \"0\",\n    \"biggest_tumor_size\": \"0\",\n    \"alpha_fetoprotein\": \"0\",\n    \"is_under_dialysis\": \"false\",\n    \"dialysis_start_date\": \"2021-09-15\",\n    \"dialysis_end_date\": \"2021-09-15\",\n    \"is_retransplantation\": \"false\",\n    \"arf_date\": \"2021-09-15\",\n    \"transplantation_date\": \"2021-09-15\",\n    \"re_registration_date\": \"2021-09-15\",\n    \"A\": \"0\",\n    \"B\": \"0\",\n    \"DR\": \"0\",\n    \"DQ\": \"0\",\n    \"hospital_id\": \"0\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -863,7 +863,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"person_id\": 2,\n    \"notes\": \"\",\n    \"type\": \"PATIENT\",\n    \"organ\": \"LIVER\",\n    \"tumors_number\": \"5\",\n    \"hospital_id\": \"1\",\n    \"biggest_tumor_size\": \"9\",\n    \"alpha_fetoprotein\": \"1900\",\n    \"is_under_dialysis\": \"false\",\n    \"dialysis_start_date\": \"2021-09-15\",\n    \"dialysis_end_date\": \"2021-09-15\",\n    \"is_retransplantation\": \"true\",\n    \"arf_date\": \"2021-09-15\",\n    \"transplantation_date\": \"2021-09-15\",\n    \"re_registration_date\": \"2021-09-15\",\n    \"A\": \"0\",\n    \"B\": \"4\",\n    \"DR\": \"0\",\n    \"DQ\": \"0\"\n}",
+							"raw": "{\n    \"person_id\": 2,\n    \"notes\": \"\",\n    \"type\": \"PATIENT\",\n    \"organ\": \"LIVER\",\n    \"tumors_count\": \"5\",\n    \"hospital_id\": \"1\",\n    \"biggest_tumor_size\": \"9\",\n    \"alpha_fetoprotein\": \"1900\",\n    \"is_under_dialysis\": \"false\",\n    \"dialysis_start_date\": \"2021-09-15\",\n    \"dialysis_end_date\": \"2021-09-15\",\n    \"is_retransplantation\": \"true\",\n    \"arf_date\": \"2021-09-15\",\n    \"transplantation_date\": \"2021-09-15\",\n    \"re_registration_date\": \"2021-09-15\",\n    \"A\": \"0\",\n    \"B\": \"4\",\n    \"DR\": \"0\",\n    \"DQ\": \"0\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1022,7 +1022,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"listing_id\": 1,\n    \"tumors_number\": 2,\n    \"biggest_tumor_size\": 3,\n    \"alpha_fetoprotein\": 1,\n    \"score\": 1\n}",
+							"raw": "{\n    \"listing_id\": 1,\n    \"tumors_count\": 2,\n    \"biggest_tumor_size\": 3,\n    \"alpha_fetoprotein\": 1,\n    \"score\": 1\n}",
 							"options": {
 								"raw": {
 									"language": "json"

@@ -7,10 +7,10 @@ from .city import City as City
 from .heart import Heart as Heart
 from .hospital import Hospital as Hospital
 from .listing import Listing as Listing
-from .liver import Liver as Liver
 from .login_token import LoginToken as LoginToken
-from .lung import Lung as Lung
 from .message import Message as Message
+from .organs.liver import Liver as Liver
+from .organs.lung import Lung as Lung
 from .person import Person as Person
 from .roles import Role as Role
 from .staff import Staff as Staff

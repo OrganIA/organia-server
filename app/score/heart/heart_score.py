@@ -200,7 +200,7 @@ def get_d_dfgj(sex_R, age_R, CREAT):
         return 186.3 * (pow((CREAT / 88.4), -1.154)) * (pow(age_R, -0.203)) * 1
 
 
-def get_score_CCP(
+def compute_heart_score(
     receiver,
     donor,
 ):

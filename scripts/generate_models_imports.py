@@ -29,7 +29,9 @@ def main():
         classes = set()
         for line in file.read_text().splitlines():
             if line.startswith('class'):
-                classes.add(line.split()[1].split('(')[0])
+                parts = line.split()[1].split('(')
+                if len(parts) == 2:
+                    classes.add(parts[0])
         if classes:
             module_name = get_module_name(file)
             files[module_name] = sorted(classes)

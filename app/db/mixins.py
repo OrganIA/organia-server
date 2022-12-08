@@ -18,3 +18,14 @@ class TimedMixin(CreatedMixin):
     row, in addition to the `created_at` column"""
 
     updated_at = sa.Column(sa.DateTime, onupdate=datetime.utcnow)
+
+
+@orm.declarative_mixin
+class OrganMixin:
+    @orm.declared_attr
+    def listing_id(cls):
+        return sa.Column(sa.ForeignKey('listings.id'))
+
+    @orm.declared_attr
+    def listing(cls):
+        return orm.relationship('Listing', uselist=False)

@@ -43,12 +43,6 @@ class Person(TimedMixin, db.Base):
     staff = orm.relation('Staff', uselist=False, back_populates='person')
 
     @property
-    def blood_type(self):
-        if not self.abo or not self.rhesus:
-            return None
-        return f'{self.abo.name}{self.rhesus.value}'
-
-    @property
     def age(self):
         now = datetime.utcnow().date()
         aged_this_year = (now.month, now.day) >= (

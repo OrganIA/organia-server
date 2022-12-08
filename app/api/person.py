@@ -11,22 +11,21 @@ bp = Blueprint(__name__)
 
 
 class PersonSchema(BaseModel):
+    first_name: str | None
+    last_name: str | None
+    birth_date: date | None
+    description: str | None
+    abo: Person.ABO | None
+    rhesus: Person.Rhesus | None
+    gender: Person.Gender | None
+
+
+class PersonCreateSchema(PersonSchema):
     first_name: str
     last_name: str
     birth_date: date
-    description: str
     abo: Person.ABO
     rhesus: Person.Rhesus
-    gender: Person.Gender
-
-
-def update(person, data):
-    for key, value in data.dict().items():
-        if value == 'null':
-            setattr(person, key, None)
-        elif value is not None:
-            setattr(person, key, value)
-    return person
 
 
 @bp.get('/')
@@ -43,7 +42,7 @@ def get_person(id):
 
 
 @bp.post('/')
-def create_person(data: PersonSchema):
+def create_person(data: PersonCreateSchema):
     person = Person(**data.dict())
     db.session.add(person)
     db.session.commit()
@@ -52,10 +51,10 @@ def create_person(data: PersonSchema):
 
 @bp.post('/<int:id>')
 def update_person(id, data: PersonSchema):
-    person = db.session.get(Person, id)
-    person_update = update(person, data)
+    person = get_person(id)
+    person.read_data(data.dict(exclude_unset=True))
     db.session.commit()
-    return person_update
+    return person
 
 
 @bp.delete('/<int:id>')
