@@ -7,7 +7,7 @@ code=0
 export PYTHONPATH=.
 
 
-pip install pytest pytest-cov requests >/dev/null
+pip install pytest flask-sqlalchemy pytest-cov requests >/dev/null
 echo
 echo Running pytest
 echo
