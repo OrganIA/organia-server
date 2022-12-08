@@ -338,6 +338,46 @@ calls = [
             "organ_type": "KIDNEY",
         },
     ),
+    # Create a receiver listing for a heart, creating the Person in one go
+    # - `emergency` can be one of XPCA, XPCP1, XPCP2, NA
+    # - `MAL`, `MAL2`, and `MAL3` are expected to be either null,
+    #   `VALVULAR`, `CONGENITAL`, or `CONGENITAL_NON_EISENMENGER`
+    Post(
+        '/listings',
+        {
+            "type": "RECEIVER",
+            "person": {
+                "first_name": "John",
+                "last_name": "Doe",
+                "phone_number": "+33123456789",
+                "gender": "MALE",
+                "birth_date": "1990-02-10",
+                "abo": "A",
+                "rhesus": "+",
+            },
+            "organ": {
+                "emergency": 'XPCA',
+                "delay_var_bio_GRF": 4,
+                "MAL": "VALVULAR",
+                "MAL2": None,
+                "MAL3": None,
+                "DA": 2,
+                "DAURG": 3,
+                "XPC": 4,
+                "BILI": 1.3,
+                "CREAT": 1.4,
+                "F_ICAR": 1.5,
+                "ICAR": 1.6,
+                "KXPC": 1.7,
+                "DIA_is_O": True,
+                "DBILI": "2022-12-12",
+                "DCREAT": "2022-12-12",
+            },
+            "weight_kg": 80.2,
+            "height_cm": 180.3,
+            "organ_type": "HEART",
+        },
+    ),
     # Create a donor listing for a liver, creating the Person in one go
     Post(
         '/listings',
@@ -389,6 +429,25 @@ calls = [
             "organ_type": "LUNG",
         },
     ),
+    # Create a donor listing for a heart, creating the Person in one go
+    Post(
+        '/listings',
+        {
+            "type": "DONOR",
+            "person": {
+                "first_name": "Johnatan",
+                "last_name": "Joeystarr",
+                "phone_number": "+33123456789",
+                "gender": "MALE",
+                "birth_date": "1990-02-10",
+                "abo": "A",
+                "rhesus": "+",
+            },
+            "organ_type": "HEART",
+            "weight_kg": 80.2,
+            "height_cm": 180.3,
+        },
+    ),
     # Update a listing
     Post(
         '/listings/1',
@@ -417,13 +476,22 @@ calls = [
     # Get a specific listing
     Get('/listings/1'),
     # Get a list of all matching receivers for a liver listing, with the score
-    Get('/listings/4/matches'),
-    # Get a list of all matching receivers for a lung listing, with the score
     Get('/listings/5/matches'),
-    # Get a list of all matching receivers for a kidney listing, with the score
+    # Get a list of all matching receivers for a lung listing, with the score
     Get('/listings/6/matches'),
+    # Get a list of all matching receivers for a kidney listing, with the score
+    Get('/listings/7/matches'),
+    # Get a list of all matching receivers for a heart listing, with the score
+    Get('/listings/8/matches'),
     # Delete a listing
-    Delete('/listings/2'),
+    Delete('/listings/1'),
+    Delete('/listings/2', show=False),
+    Delete('/listings/3', show=False),
+    Delete('/listings/4', show=False),
+    Delete('/listings/5', show=False),
+    Delete('/listings/6', show=False),
+    Delete('/listings/7', show=False),
+    Delete('/listings/8', show=False),
 ]
 
 

@@ -10,7 +10,7 @@ from app.utils.enums import EnumStr
 
 
 class Person(TimedMixin, db.Base):
-    """Represents a physicql person, either a patient or a staff member, holds
+    """Represents a physical person, either a patient or a staff member, holds
     information such as name, address, age, gender, etc."""
 
     __AUTO_DICT_EXCLUDE__ = ['user_id']

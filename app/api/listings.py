@@ -25,6 +25,8 @@ class ListingSchema(BaseModel):
     person: PersonSchema | None
     start_date: date | None
     end_date: date | None
+    weight_kg: float | None
+    height_cm: float | None
 
 
 class ListingCreateSchema(ListingSchema):

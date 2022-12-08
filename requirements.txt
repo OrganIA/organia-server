@@ -12,6 +12,7 @@ flask
 flask-cors
 flask-sock
 passlib[bcrypt]
+numpy
 
 # api validation
 pydantic

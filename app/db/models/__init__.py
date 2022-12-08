@@ -8,6 +8,7 @@ from .hospital import Hospital as Hospital
 from .listing import Listing as Listing
 from .login_token import LoginToken as LoginToken
 from .message import Message as Message
+from .organs.heart import Heart as Heart
 from .organs.kidney import Kidney as Kidney
 from .organs.liver import Liver as Liver
 from .organs.lung import Lung as Lung
