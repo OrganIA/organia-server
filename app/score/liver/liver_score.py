@@ -54,12 +54,12 @@ def compute_liver_score(donor_listing, receiver_listing):
 
     if not receiver_organ:
         raise ValueError("No organ found for receiver")
-
+    if not receiver_listing.hospital:
+        return alpha_fetoprotein_score(receiver_organ) * meld_score()
     if donor.age > 40 and (receiver.age >= 15 and receiver.age < 40):
         return alpha_fetoprotein_score(receiver_organ) * meld_score()
-    else:
-        return (
-            alpha_fetoprotein_score(receiver_organ) * meld_score()
-        ) / get_score_MG(
-            receiver_listing.hospital.name, donor_listing.hospital.name
-        )
+    return (
+        alpha_fetoprotein_score(receiver_organ) * meld_score()
+    ) / get_score_MG(
+        receiver_listing.hospital.name, donor_listing.hospital.name
+    )
