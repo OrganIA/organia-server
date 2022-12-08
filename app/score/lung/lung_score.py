@@ -1,8 +1,7 @@
 import decimal
 import json
 
-from app import db
-from app.db.models.organs.lung import Lung
+from app.db.models import Lung
 from app.errors import NotFoundError
 
 
@@ -67,26 +66,23 @@ def calculate_next_year_survival_chance_exponent(
         e += 0.943377
     elif listing_lung.diagnosis_group == Lung.DiagnosisGroup.D:
         e += 0.996936
-    if listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.Bronchiectasis:
+    if listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.BRONCHIECTASIS:
         e += 0.157212
-    elif listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.Eisenmenger:
+    elif listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.EISENMENGER:
         e += -0.627866
-    elif (
-        listing_lung.detailed_diagnosis
-        == Lung.DetailedDiagnosis.Lymphangioleiomyomatosis
-    ):
+    elif listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.LAM:
         e += -0.197434
     elif (
-        listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.Bronchiolitis
+        listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.BRONCHIOLITIS
     ):
         e += -0.256480
     if (
-        listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.Sarcoidosis
+        listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.SARCOIDOSIS
         and receiver_listing.PA_systolic > 30
     ):
         e += -0.707346
     elif (
-        listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.Sarcoidosis
+        listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.SARCOIDOSIS
         and receiver_listing.PA_systolic <= 30
     ):
         e += 0.455348
@@ -100,7 +96,7 @@ def next_year_survival_chance(receiver, receiver_listing, listing_lung):
         receiver, receiver_listing, listing_lung
     )
     baseline_values = fetch_baseline_values(
-        './data/lungs/BaselineWaitingListSurvival.json'
+        './data/score/lungs/BaselineWaitingListSurvival.json'
     )
     for baseline_value in baseline_values:
         baseline_value = decimal.Decimal(baseline_value)
@@ -132,26 +128,23 @@ def calculate_post_transplant_survival_chance_exponent(
     if listing_lung.continuous_mech_ventilation:
         e += 0.312846
 
-    if listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.Bronchiectasis:
+    if listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.BRONCHIECTASIS:
         e += 0.056116
-    elif listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.Eisenmenger:
+    elif listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.EISENMENGER:
         e += 0.393526
-    elif (
-        listing_lung.detailed_diagnosis
-        == Lung.DetailedDiagnosis.Lymphangioleiomyomatosis
-    ):
+    elif listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.LAM:
         e += -0.624209
     elif (
-        listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.Bronchiolitis
+        listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.BRONCHIOLITIS
     ):
         e += -0.443786
     if (
-        listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.Sarcoidosis
+        listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.SARCOIDOSIS
         and listing_lung.PA_systolic > 30
     ):
         e += -0.122351
     elif (
-        listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.Sarcoidosis
+        listing_lung.detailed_diagnosis == Lung.DetailedDiagnosis.SARCOIDOSIS
         and listing_lung.PA_systolic <= 30
     ):
         e += -0.016505
@@ -166,7 +159,7 @@ def post_transplant_survival_chance(receiver, receiver_listing, listing_lung):
         receiver, receiver_listing, listing_lung
     )
     baseline_values = fetch_baseline_values(
-        './data/lungs/BaselinePostTransplantSurvival.json'
+        './data/score/lungs/BaselinePostTransplantSurvival.json'
     )
     for baseline_value in baseline_values:
         score.append(baseline_value**exponent)
@@ -185,14 +178,23 @@ def compute_under_curb_area(values):
     return res
 
 
-def lungs_final_score(receiver, donor, receiver_listing):
-    # get listing lung
-    # select * from lungs where listing_id = receiver_listing.id
-    # all values valid ? proceed : return error msg
+def normalized_lung_allocation_score(RawScore):
+    LASi = (100 * (RawScore + 730)) / 1095
+    return LASi
 
-    listing_lung = (
-        db.session.query(Lung).filter_by(listing_id=receiver_listing.id).first()
-    )
+
+def check_NLAS(RawScore):
+    if RawScore == -730 and normalized_lung_allocation_score(RawScore) == 0:
+        return 0
+    if RawScore == 365 and normalized_lung_allocation_score(RawScore) == 100:
+        return 0
+    else:
+        return 1
+
+
+def compute_lung_score(donor_organ, receiver_listing):
+    listing_lung = receiver_listing.organ
+    receiver = receiver_listing.person
 
     if not listing_lung:
         raise NotFoundError("No listing found in lungs table")
@@ -210,17 +212,3 @@ def lungs_final_score(receiver, donor, receiver_listing):
     PT = compute_under_curb_area(Stx)
     RawScore = decimal.Decimal(PT) - 2 * WL
     return RawScore
-
-
-def normalized_lung_allocation_score(RawScore):
-    LASi = (100 * (RawScore + 730)) / 1095
-    return LASi
-
-
-def check_NLAS(RawScore):
-    if RawScore == -730 and normalized_lung_allocation_score(RawScore) == 0:
-        return 0
-    if RawScore == 365 and normalized_lung_allocation_score(RawScore) == 100:
-        return 0
-    else:
-        return 1

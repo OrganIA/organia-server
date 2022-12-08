@@ -92,14 +92,20 @@ def get_listing_matches(id):
     receivers = db.session.query(Listing).filter(
         Listing.type == Listing.Type.RECEIVER,
         Listing.organ_type == listing.organ_type,
+        Listing.organ,
     )
+    organ = listing.organ or listing.organ_type.table(listing=listing)
     return {
         "donor": listing,
-        "matches": [
-            {
-                "receiver": receiver,
-                "score": listing.organ.match(receiver),
-            }
-            for receiver in receivers
-        ],
+        "matches": sorted(
+            [
+                {
+                    "receiver": receiver,
+                    "score": organ.match(receiver),
+                }
+                for receiver in receivers
+            ],
+            key=lambda x: x['score'],
+            reverse=True,
+        ),
     }

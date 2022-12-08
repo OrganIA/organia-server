@@ -1,3 +1,4 @@
+import importlib
 from datetime import datetime
 
 import sqlalchemy as sa
@@ -31,5 +32,7 @@ class OrganMixin:
         return orm.relationship('Listing', uselist=False)
 
     def match(self, receiver):
-        return 0
-        raise NotImplementedError
+        table = type(self)
+        name = table.__name__.lower()
+        module = importlib.import_module(f'app.score.{name}.{name}_score')
+        return getattr(module, f'compute_{name}_score')(self, receiver)

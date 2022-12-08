@@ -9,11 +9,11 @@ from app.utils.enums import EnumStr
 
 class Lung(OrganMixin, db.Base):
     class DetailedDiagnosis(EnumStr):
-        Bronchiectasis = enum.auto()
-        Eisenmenger = enum.auto()
-        Bronchiolitis = enum.auto()
-        Lymphangioleiomyomatosis = enum.auto()
-        Sarcoidosis = enum.auto()
+        BRONCHIECTASIS = enum.auto()
+        EISENMENGER = enum.auto()
+        BRONCHIOLITIS = enum.auto()
+        LAM = enum.auto()
+        SARCOIDOSIS = enum.auto()
 
     class DiagnosisGroup(EnumStr):
         A = enum.auto()

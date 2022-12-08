@@ -246,11 +246,11 @@ calls = [
     Post('/roles/3', {"name": "Updated role"}, perms=['edit_roles']),
     # Delete a role
     Delete('/roles/3', perms=['edit_roles']),
-    # Create a donor listing, creating the Person and Organ in one go
+    # Create a receiver listing, creating the Person and Organ in one go
     Post(
         '/listings',
         {
-            "type": "DONOR",
+            "type": "RECEIVER",
             "person": {
                 "first_name": "John",
                 "last_name": "Doe",
@@ -268,11 +268,11 @@ calls = [
             },
         },
     ),
-    # Create a receiver listing, creating the Person and Organ in one go
+    # Create a donor listing, creating the Person in one go
     Post(
         '/listings',
         {
-            "type": "RECEIVER",
+            "type": "DONOR",
             "person": {
                 "first_name": "Johnatan",
                 "last_name": "Joeystarr",
@@ -304,6 +304,13 @@ calls = [
             },
         },
     ),
+    # Get the information about a listing
+    Get('/listings/1'),
+    # Get a list of all matching receivers for a donor listing, with the score
+    Get('/listings/2/matches'),
+    # Delete a listing
+    Delete('/listings/1'),
+    Delete('/listings/2', show=False),
 ]
 
 
