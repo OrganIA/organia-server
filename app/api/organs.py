@@ -102,9 +102,9 @@ class HeartSchema(BaseModel):
     DCREAT: date
 
 
-class HeartUpdateSchema(BaseModel):
+class HeartUpdateSchema(HeartSchema):
     emergency: Heart.Emergency | None
-    delai_var_bio_GRF: date | None
+    delay_var_bio_GRF: date | None
 
     DAURG: int | None
     DA: int | None
