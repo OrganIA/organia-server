@@ -5,11 +5,10 @@ from .calendar import CalendarEvent as CalendarEvent
 from .chat import Chat as Chat, ChatMember as ChatMember
 from .city import City as City
 from .hospital import Hospital as Hospital
-from .kidney import Kidney as Kidney
 from .listing import Listing as Listing
-from .liver import Liver as Liver
 from .login_token import LoginToken as LoginToken
 from .message import Message as Message
+from .organs.kidney import Kidney as Kidney
 from .organs.liver import Liver as Liver
 from .organs.lung import Lung as Lung
 from .person import Person as Person
