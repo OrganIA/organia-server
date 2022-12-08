@@ -2,7 +2,6 @@ import enum
 
 import sqlalchemy as sa
 from sqlalchemy import orm
-from sqlalchemy.ext.hybrid import hybrid_property
 
 from app import db
 from app.errors import InvalidRequest
@@ -25,15 +24,17 @@ class Listing(db.Base):
 
         @property
         def table(self):
-            from app.db.models import Liver, Lung
+            from app.db.models import Kidney, Liver, Lung
 
             return {
                 self.LIVER: Liver,
                 self.LUNG: Lung,
+                self.KIDNEY: Kidney,
             }.get(self)
 
     notes = sa.Column(sa.String)
     type = sa.Column(sa.Enum(Type))
+
     organ_type = sa.Column(sa.Enum(Organ))
     start_date = sa.Column(sa.Date)
     end_date = sa.Column(sa.Date)
@@ -58,13 +59,22 @@ class Listing(db.Base):
         cascade='all,delete,delete-orphan',
         uselist=False,
     )
-    heart = orm.relationship(
-        'Heart', back_populates='listing', cascade='all, delete', uselist=False
+    _heart = orm.relationship(
+        'Heart',
+        back_populates='listing',
+        cascade='all,delete,delete-orphan',
+        uselist=False,
+    )
+    _kidney = orm.relationship(
+        'Kidney',
+        back_populates='listing',
+        cascade='all,delete,delete-orphan',
+        uselist=False,
     )
 
-    @hybrid_property
+    @property
     def organ(self):
-        return self._liver or self._lung
+        return self._liver or self._lung or self._kidney
 
     def read_dict(self, data):
         from app.db.models import Person

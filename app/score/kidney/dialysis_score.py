@@ -4,9 +4,9 @@ from app.db.models import Listing
 
 
 def get_date(listing_kidney):
-    if listing_kidney.is_under_dialysis is False:
+    if not listing_kidney.is_under_dialysis:
         return 0
-    elif listing_kidney.is_retransplantation is False:
+    elif not listing_kidney.is_retransplantation:
         if listing_kidney.dialysis_start_date is not None:
             return listing_kidney.dialysis_start_date
         else:
@@ -14,7 +14,7 @@ def get_date(listing_kidney):
     elif (
         listing_kidney.dialysis_end_date is not None
         and listing_kidney.dialysis_end_date
-        > listing_kidney.DateTransplantation
+        > listing_kidney.date_transplantation
     ):
         return listing_kidney.dialysis_end_date
     elif listing_kidney.arf_date is not None:
@@ -49,7 +49,7 @@ def get_waiting_time(listing_kidney):
     if listing_kidney.is_retransplantation or (DATT - DDIAL).days < 365:
         return DATT
     elif (
-        listing_kidney.is_retransplantation is False
+        not listing_kidney.is_retransplantation
         and (
             listing_kidney.dialysis_start_date
             - listing_kidney.dialysis_start_date
@@ -62,9 +62,11 @@ def get_waiting_time(listing_kidney):
 
 def get_waiting_score(receiver_listing: Listing, listing_kidney):
     # A revoir
-    if get_waiting_time(receiver_listing, listing_kidney).days >= 3650:
+    # if get_waiting_time(receiver_listing, listing_kidney).days >= 3650:
+    if get_waiting_time(listing_kidney).days >= 3650:
         return 1
     else:
-        return (1 / 120) * get_waiting_time(
-            receiver_listing, listing_kidney
-        ).days
+        # return (1 / 120) * get_waiting_time(
+        #     receiver_listing, listing_kidney
+        # ).days
+        return (1 / 120) * get_waiting_time(listing_kidney).days

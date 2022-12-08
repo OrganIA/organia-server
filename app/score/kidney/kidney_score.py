@@ -6,7 +6,6 @@ from app.score.kidney.antigen_score import (
     get_age_bonus,
     get_age_malus,
     get_antibody_score,
-    get_fag_score,
     getDQScore,
     getDRScore,
 )
@@ -21,7 +20,7 @@ def get_H_age(receiver, receiver_listing, listing_kidney):
             100 * get_antibody_score(receiver_listing)
             + 400 * getDRScore(receiver_listing)
             + 100 * getDQScore(receiver_listing)
-            + 150 * get_fag_score()
+            # + 150 * facilité d'accès à la greffe 0 | 1
         )
         * get_age_malus(receiver)
         + 750 * get_age_bonus(receiver)
@@ -55,7 +54,7 @@ def get_score_MG(hospital_1, hospital_2):
     return MG
 
 
-def compute_kindey_score(donor_listing, receiver_listing):
+def compute_kidney_score(donor_listing, receiver_listing):
     listing_kidney = receiver_listing.organ
     receiver = receiver_listing.person
     donor = donor_listing.person

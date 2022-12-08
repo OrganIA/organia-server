@@ -5,7 +5,7 @@ def snake_case(s: str) -> str:
 
 
 def pluralize(s: str) -> str:
-    if s.endswith('y'):
+    if s.endswith('y') and not s.endswith('ay') and not s.endswith('ey'):
         return s[:-1] + 'ies'
     if s.endswith('s'):
         return s

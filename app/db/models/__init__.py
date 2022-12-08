@@ -7,8 +7,14 @@ from .city import City as City
 from .heart import Heart as Heart
 from .hospital import Hospital as Hospital
 from .listing import Listing as Listing
+from .kidney import Kidney as Kidney
+
+# from .lung import Lung as Lung
 from .login_token import LoginToken as LoginToken
+
+# from .chat_group import ChatGroup as ChatGroup
 from .message import Message as Message
+
 from .organs.liver import Liver as Liver
 from .organs.lung import Lung as Lung
 from .person import Person as Person

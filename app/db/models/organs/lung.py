@@ -39,10 +39,10 @@ class Lung(OrganMixin, db.Base):
     carbon_dioxide_partial_pressure = sa.Column(
         sa.Float
     )  # pCO2, normal = 35-40 mmHg
-    carbone_dioxide_partial_pressure_15_percent_increase = sa.Column(sa.Boolean)
+    carbon_dioxide_partial_pressure_15_percent_increase = sa.Column(sa.Boolean)
 
     # age_at_transplant = sa.Column(sa.Integer)
-    creatinine = sa.Column(sa.Float)
+    creatinine = sa.Column(sa.Float)  # normal = 7-13
     activities_of_daily_life_required = sa.Column(sa.Boolean)
     pulmonary_capilary_wedge_pressure = sa.Column(
         sa.Float
