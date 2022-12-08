@@ -2,6 +2,7 @@ import functools
 import inspect
 import json
 import typing as t
+from enum import Enum
 
 import flask
 from flask import Flask
@@ -18,6 +19,8 @@ def permissive_json(x):
 
     if isinstance(x, orm.Query):
         return x.all()
+    if isinstance(x, Enum):
+        return x.value.split('.')[-1]
     if hasattr(x, 'dict'):
         x = x.dict
     elif hasattr(x, 'to_dict'):
