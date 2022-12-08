@@ -17,7 +17,6 @@ class ListingSchema(BaseModel):
     hospital_id: int | None
     notes: str | None
     person_id: int | None
-    type: Listing.Type
     person: PersonSchema | None
     type: Listing.Type | None
     organ_type: Listing.Organ | None

@@ -1,4 +1,5 @@
 import math
+from datetime import datetime
 
 from app.errors import NotFoundError
 from app.geopy import get_distance
@@ -13,9 +14,11 @@ from app.score.kidney.dialysis_score import get_score, get_waiting_score
 
 
 def get_H_age(receiver, receiver_listing, listing_kidney):
+    current_date = datetime.utcnow().date()
     return (
-        100 * get_score(receiver_listing, listing_kidney)
-        + 200 * get_waiting_score(receiver_listing, listing_kidney)
+        100 * get_score(receiver_listing, listing_kidney, current_date)
+        + 200
+        * get_waiting_score(receiver_listing, listing_kidney, current_date)
         + (
             100 * get_antibody_score(receiver_listing)
             + 400 * getDRScore(receiver_listing)
