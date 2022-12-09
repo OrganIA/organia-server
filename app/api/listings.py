@@ -122,14 +122,15 @@ def get_listing_matches(id):
         f'app.score.{organ_name}.{organ_name}_score'
     )
     score_func = getattr(score_module, f'compute_{organ_name}_score')
-    return {
+    result = {
         "donor": listing,
-        "matches": sorted(
-            [
-                {"receiver": receiver, "score": score_func(listing, receiver)}
-                for receiver in receivers
-            ],
-            key=lambda x: x['score'],
-            reverse=True,
-        ),
+        "matches": []
     }
+    for receiver in receivers:
+        try:
+            score = score_func(listing, receiver)
+        except Exception:
+            continue
+        result["matches"].append({"receiver": receiver, "score": score})
+    result["matches"].sort(key=lambda x: x['score'], reverse=True)
+    return result
