@@ -52,7 +52,7 @@ def create_person(data: PersonCreateSchema):
 @bp.post('/<int:id>')
 def update_person(id, data: PersonSchema):
     person = get_person(id)
-    person.read_data(data.dict(exclude_unset=True))
+    person.read_dict(data.dict(exclude_unset=True))
     db.session.commit()
     return person
 
