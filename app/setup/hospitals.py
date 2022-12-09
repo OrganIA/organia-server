@@ -4,6 +4,8 @@ import sys
 
 import pdftotext
 
+from . import fake
+
 from app import db
 from app.db.models import City, Hospital
 
@@ -14,7 +16,7 @@ def store_hospital(department, city, name):
     if not (city_obj := db.session.query(City).filter_by(name=city).first()):
         city_obj = City(name=city, department_code=department)
         db.session.add(city_obj)
-    hospital = Hospital(name=name, city=city_obj)
+    hospital = Hospital(name=name, city=city_obj, phone_number=fake.phone_number())
     db.session.add(hospital)
 
 
