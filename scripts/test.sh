@@ -7,20 +7,21 @@ code=0
 export PYTHONPATH=.
 
 
-pip install pytest flask-sqlalchemy pytest-cov requests >/dev/null
+pip install pytest pytest-cov requests >/dev/null
 echo
 echo Running pytest
 echo
-DB_URL='sqlite://' FORCE_LOGIN=1 pytest tests --cov=app --cov-fail-under=90
+DB_URL='sqlite://' FORCE_LOGIN=1 pytest tests \
+	--cov=app --cov-config=.coveragerc --cov-fail-under=80
 last=$?
 
-# echo -n "Unit tests + coverage: "
-# if [ $last == 0 ]; then
-# 	echo OK
-# else
-# 	code=1
-# 	echo FAIL
-# fi
+echo -n "Unit tests + coverage: "
+if [ $last == 0 ]; then
+	echo OK
+else
+	code=1
+	echo FAIL
+fi
 
 
 pip install flake8 >/dev/null

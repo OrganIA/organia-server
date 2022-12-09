@@ -1,0 +1,11 @@
+[run]
+omit =
+	app/api/calendar.py
+	app/api/chats.py                      
+	app/api/hospitals.py
+	app/api/websocket.py                  
+	app/db/models/hospital.py
+	app/geopy.py
+	app/security.py
+	app/setup/*
+	app/utils/*
