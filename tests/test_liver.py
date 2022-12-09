@@ -36,26 +36,3 @@ update_listing = {
 def test_should_status_code_ok(client):
     response = client.get('/api/')
     assert response.status_code == 200
-
-
-def test_get_listing(client):
-    response = client.get('/api/listings/')
-    assert response.status_code == 200
-
-
-def test_create_person(client):
-
-    response = client.post('/api/person/', json=person)
-    assert response.status_code == 200
-
-
-def test_create_listing(client):
-    response = client.post('/api/listings/', json=listing)
-    assert response.status_code == 200
-
-
-def test_update_listing(client):
-    response = client.post('/api/listings/', json=listing)
-    assert response.status_code == 200
-    response = client.post('/api/listings/1', json=update_listing)
-    assert response.status_code == 200
