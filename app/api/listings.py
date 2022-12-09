@@ -128,6 +128,11 @@ def get_listing_matches(id):
             score = score_func(listing, receiver)
         except Exception:
             continue
+        if score >= 1000:
+            reducer = 1 / (score / 1000)
+            score = 1000 - reducer
+        if score < -1000:
+            score = -1000
         result["matches"].append({"receiver": receiver, "score": score})
     result["matches"].sort(key=lambda x: x['score'], reverse=True)
     return result
