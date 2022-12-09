@@ -52,9 +52,9 @@ def main():
         if i <= 30:
             organ_type = 'LIVER'
             organ = {
-                "tumors_count": 0,
-                "biggest_tumor_size": 0,
-                "alpha_fetoprotein": 0,
+                "tumors_count": random.randint(0, 10),
+                "biggest_tumor_size": random.randint(0, 100),
+                "alpha_fetoprotein": random.randint(0, 1500),
             }
         elif i <= 60:
             organ_type = 'LUNG'
