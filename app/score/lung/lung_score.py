@@ -214,4 +214,4 @@ def compute_lung_score(donor_listing, receiver_listing):
     WL = compute_under_curb_area(Swl)
     PT = compute_under_curb_area(Stx)
     RawScore = decimal.Decimal(PT) - 2 * WL
-    return RawScore
+    return RawScore + 60000
