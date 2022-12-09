@@ -49,14 +49,14 @@ def main():
     while True:
         i += 1
         type = 'DONOR' if i % 10 == 0 else 'RECEIVER'
-        if i <= 50:
+        if i <= 30:
             organ_type = 'LIVER'
             organ = {
                 "tumors_count": 0,
                 "biggest_tumor_size": 0,
                 "alpha_fetoprotein": 0,
             }
-        elif i <= 100:
+        elif i <= 60:
             organ_type = 'LUNG'
             organ = {
                 "diagnosis_group": random.choice(Lung.DiagnosisGroup.values()),
@@ -80,7 +80,7 @@ def main():
                 / 10,
                 "creatinine": random.randint(0, 200) / 10,
             }
-        elif i <= 150:
+        elif i <= 90:
             organ_type = 'KIDNEY'
             dialysis = random_bool()
             retranplantation = random_bool()
@@ -100,7 +100,7 @@ def main():
                 "DR": random.randint(0, 100) / 10,
                 "DQ": random.randint(0, 100) / 10,
             }
-        elif i <= 200:
+        elif i <= 120:
             organ_type = 'HEART'
             organ = {
                 "emergency": random.choice(Heart.Emergency.values()),
