@@ -74,7 +74,9 @@ def main():
                 "carbon_dioxide_partial_pressure": (
                     random.randint(300, 500) / 10
                 ),
-                "carbon_dioxide_partial_pressure_15_percent_increase": random_bool(),
+                "carbon_dioxide_partial_pressure_15_percent_increase": (
+                    random_bool()
+                ),
                 "activities_of_daily_life_required": random_bool(),
                 "pulmonary_capilary_wedge_pressure": random.randint(0, 200)
                 / 10,
