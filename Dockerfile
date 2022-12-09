@@ -1,5 +1,8 @@
 FROM python:3.10.8-slim
 
+RUN apt-get update -y
+RUN apt-get install -y build-essential libpoppler-cpp-dev pkg-config python-dev
+
 COPY . /app
 WORKDIR /app
 ENV PYTHONPATH=/app

@@ -122,10 +122,7 @@ def get_listing_matches(id):
         f'app.score.{organ_name}.{organ_name}_score'
     )
     score_func = getattr(score_module, f'compute_{organ_name}_score')
-    result = {
-        "donor": listing,
-        "matches": []
-    }
+    result = {"donor": listing, "matches": []}
     for receiver in receivers:
         try:
             score = score_func(listing, receiver)

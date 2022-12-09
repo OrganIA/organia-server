@@ -7,12 +7,11 @@ alembic
 sqlalchemy-utils
 phonenumbers
 
-# api app
+# http api
 flask
 flask-cors
 flask-sock
 passlib[bcrypt]
-numpy
 
 # api validation
 pydantic
@@ -20,6 +19,13 @@ pydantic
 # yaml support for config files etc
 pyyaml
 
+# algorithm
+numpy
+
 # getting long/lat from addresses for hospitals etc
 geopy
 geocoder
+
+# data setup
+Faker
+pdftotext

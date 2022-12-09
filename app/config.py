@@ -47,6 +47,10 @@ FORCE_LOGIN = env('FORCE_LOGIN', False)
 
 AUTO_CREATE_DB = env('AUTO_CREATE_DB', True)
 
+LOAD_FAKE_DATA = env('LOAD_FAKE_DATA', False)
+
+ENVIRONMENT = env('ENVIRONMENT')
+
 
 def load_file():
     if not PATH.is_file():

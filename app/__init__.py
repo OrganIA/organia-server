@@ -29,4 +29,9 @@ def create_app():
     register_error_handler(app)
 
     sock.init_app(app)
+
+    from . import setup
+
+    setup.main()
+
     return app
