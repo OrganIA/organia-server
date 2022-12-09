@@ -45,12 +45,6 @@ def create_hospitals(hospital, city, data):
     hospital.city_id = city.id
     hospital.name = data["name"]
     hospital.phone_number = data["phone_number"]
-    position = geopy.get_coordinates(hospital.name)
-    if position:
-        hospital.latitude = position[0]
-        hospital.longitude = position[1]
-    else:
-        raise NotFoundError.r("L'addresse est incorrecte")
     return hospital
 
 
@@ -78,6 +72,7 @@ def create_hospital(data):
     city = create_city(city_data)
     hospital = Hospital()
     hospital = create_hospitals(hospital, city, data)
+    hospital.refresh_coordinates()
     db.session.add(hospital)
     db.session.commit()
     return get_hospital(hospital.id)
@@ -102,4 +97,5 @@ def update_hospital(id: int, data: dict):
                 setattr(hospital, 'city_id', city.id)
             else:
                 setattr(hospital, key, value)
+    hospital.refresh_coordinates()
     db.session.commit()

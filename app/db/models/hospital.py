@@ -1,7 +1,7 @@
 import sqlalchemy as sa
 from sqlalchemy import orm
 
-from app import db
+from app import db, geopy
 
 
 class Hospital(db.Base):
@@ -15,6 +15,17 @@ class Hospital(db.Base):
     longitude = sa.Column(sa.Float)
 
     city = orm.relationship('City', backref='hospitals', uselist=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.name:
+            self.refresh_coordinates()
+
+    def refresh_coordinates(self):
+        position = geopy.get_coordinates(self.name)
+        if position:
+            self.latitude = position[0]
+            self.longitude = position[1]
 
     @property
     def patients_count(self):
