@@ -53,10 +53,7 @@ def get_score_HD(receiver, donor, receiver_listing, listing_kidney):
 
 
 def get_score_MG(hospital_1, hospital_2):
-    MG = get_distance(hospital_1, hospital_2)
-    if MG == 0:
-        return 1
-    return MG
+    return get_distance(hospital_1, hospital_2) or 1
 
 
 def compute_kidney_score(donor_listing, receiver_listing):
@@ -68,7 +65,12 @@ def compute_kidney_score(donor_listing, receiver_listing):
         raise NotFoundError("No listing found in kidneys table")
 
     score_HD = get_score_HD(receiver, donor, receiver_listing, listing_kidney)
-    score_MG = get_score_MG(
-        receiver_listing.hospital.name, donor_listing.hospital.name
-    )
-    return score_HD * score_MG
+    mg = 1
+    if receiver_listing.hospital and donor_listing.hospital:
+        try:
+            mg = get_score_MG(
+                receiver_listing.hospital.name, donor_listing.hospital.name
+            )
+        except Exception:
+            pass
+    return score_HD * mg
