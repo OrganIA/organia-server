@@ -41,10 +41,7 @@ def meld_score():
 
 
 def get_score_MG(hospital_1, hospital_2):
-    MG = get_distance(hospital_1, hospital_2)
-    if MG == 0:
-        return 1
-    return MG
+    return get_distance(hospital_1, hospital_2) or 1
 
 
 def compute_liver_score(donor_listing, receiver_listing):
@@ -54,12 +51,16 @@ def compute_liver_score(donor_listing, receiver_listing):
 
     if not receiver_organ:
         raise ValueError("No organ found for receiver")
-    if not receiver_listing.hospital or donor_listing.hospital:
-        return alpha_fetoprotein_score(receiver_organ) * meld_score()
+
+    score = alpha_fetoprotein_score(receiver_organ) * meld_score()
     if donor.age > 40 and (receiver.age >= 15 and receiver.age < 40):
-        return alpha_fetoprotein_score(receiver_organ) * meld_score()
-    return (
-        alpha_fetoprotein_score(receiver_organ) * meld_score()
-    ) / get_score_MG(
-        receiver_listing.hospital.name, donor_listing.hospital.name
-    )
+        return score
+    mg = 1
+    if receiver_listing.hospital and donor_listing.hospital:
+        try:
+            mg = get_score_MG(
+                receiver_listing.hospital.name, donor_listing.hospital.name
+            )
+        except Exception:
+            pass
+    return score * mg
